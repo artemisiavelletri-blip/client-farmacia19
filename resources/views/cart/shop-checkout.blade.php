@@ -135,7 +135,7 @@
                                                                 <span>Paga con Carta</span>
                                                             </a>
                                                         </li>
-                                                        <li class="nav-item" role="presentation" data-id="paypal">
+                                                        <!-- <li class="nav-item" role="presentation" data-id="paypal">
                                                             <a class="nav-link" id="pills-tab-2" data-bs-toggle="pill"
                                                                 data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2"
                                                                 aria-selected="false">
@@ -144,7 +144,7 @@
                                                                 </div>
                                                                 <span>Paga con PayPal</span>
                                                             </a>
-                                                        </li>
+                                                        </li> -->
                                                         <li class="nav-item" role="presentation" data-id="bank_transfer">
                                                             <a class="nav-link" id="pills-tab-3" data-bs-toggle="pill"
                                                                 data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3"

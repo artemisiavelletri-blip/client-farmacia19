@@ -53,7 +53,7 @@
                             <div class="footer-payment mt-20">
                                 <img src="{{ asset('/img/payment/visa.svg') }}" alt="">
                                 <img src="{{ asset('/img/payment/mastercard.svg') }}" alt="">
-                                <img src="{{ asset('/img/payment/paypal.svg') }}" alt="">
+                                <!-- <img src="{{ asset('/img/payment/paypal.svg') }}" alt=""> -->
                             </div>
                         </div>
                     </div>
