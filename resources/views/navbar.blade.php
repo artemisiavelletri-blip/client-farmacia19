@@ -168,6 +168,30 @@
                 <div class="mobile-menu-right">
                     <div class="mobile-menu-btn">
                         <a href="#" class="nav-right-link search-box-outer"><i class="far fa-search"></i></a>
+                        @php
+                            if(Auth::user()){
+                                $view = '#';
+                            } else {
+                                $view = '/login';
+                            }
+                        @endphp
+                        <a href="{{$view}}" class="nav-right-link">
+                            <i class="far fa-user-circle"></i>
+                        </a>
+                        @if(Auth::user())
+                            <div class="dropdown-cart-menu">
+                                <span>Ciao {{Auth::user()->name}}</span>
+                                <div class="dropdown-cart-bottom">
+                                    <div class="dropdown-cart-total">
+                                        <span class="pointer" onclick="window.location.href = '/order-list';">I Miei Ordini</span><br>
+                                    </div>
+                                    <div class="dropdown-cart-total">
+                                        <span class="pointer" onclick="window.location.href = '/settings/user-profile';">Impostazioni Account</span>
+                                    </div>
+                                    <a href="/logout" class="theme-btn">Esci</a>
+                                </div>
+                            </div>
+                        @endif
                         <a href="/shop-cart" class="nav-right-link">
                             <i class="far fa-shopping-bag"></i>
                             @if(Auth::user() && Auth::user()->cartItems)
