@@ -14,7 +14,7 @@
             <div class="carousel-inner">
                 @foreach($sliders as $slider)
                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                        <img src="{{asset('/storage-admin/' . $slider->path) }}" class="d-block w-100" alt="...">
+                        <a href="{{$slider->link}}"><img src="{{asset('/storage-admin/' . $slider->path) }}" class="d-block w-100" alt="..."></a>
                     </div>
                 @endforeach
             </div>
