@@ -243,6 +243,15 @@
     margin-top: 30px!important;
 }
 
+.mb-15 {
+    margin-bottom: 15px;
+}
+
 .mb-30 {
     margin-bottom: 30px;
+}
+
+.img-small-banner {
+    border-radius: 50%!important;
+    width: 150px!important;
 }

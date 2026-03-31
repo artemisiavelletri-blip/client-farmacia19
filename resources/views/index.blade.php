@@ -56,24 +56,6 @@
         </div>
         <!-- category area end-->
 
-
-        <!-- small banner -->
-        <div class="small-banner pb-100">
-            <div class="container wow fadeInUp" data-wow-delay=".25s">
-                <div class="row g-4">
-                    @foreach($promotions as $promotion)
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="banner-item">
-                                <img src="{{asset('/storage-admin/' . $promotion->path)}}" alt="">
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-        <!-- small banner end -->
-
-
         <!-- feature area -->
         <div class="feature-area pb-100">
             <div class="container wow fadeInUp" data-wow-delay=".25s">
@@ -128,6 +110,38 @@
             </div>
         </div>
         <!-- feature area end -->
+
+
+        <!-- small banner -->
+        <div class="small-banner pb-100">
+            <div class="container wow fadeInUp" data-wow-delay=".25s">
+                <div class="row g-4">
+                    <!-- @foreach($promotions as $promotion)
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="banner-item">
+                                <img src="{{asset('/storage-admin/' . $promotion->path)}}" alt="">
+                            </div>
+                        </div>
+                    @endforeach -->
+                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                        <img class="img-small-banner" src="{{ asset('/img/doctor.png') }}">
+                        <h4 class="mt-15 mb-15">PROFESSIONALITA'</h4>
+                        <span>Rapporto di massima disponibilità con i clienti</span>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                        <img class="img-small-banner" src="{{ asset('/img/shield.png') }}">
+                        <h4 class="mt-15 mb-15">AFFIDABILITA'</h4>
+                        <span>Garantisce sempre un livello di servizio elevato</span>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                        <img class="img-small-banner" src="{{ asset('/img/pharmacy.png') }}">
+                        <h4 class="mt-15 mb-15">AL SERVIZIO DELLA SALUTE</h4>
+                        <span>Con i migliori prodotti sul mercato e al miglior prezzo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- small banner end -->       
 
 
         <!-- popular item -->
