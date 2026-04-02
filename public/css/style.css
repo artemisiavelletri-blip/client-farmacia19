@@ -1119,6 +1119,7 @@ label {
   opacity: 1;
   visibility: visible;
   top: 48px;
+  z-index: 100;
 }
 
 .dropdown-cart-header{
@@ -4175,7 +4176,7 @@ label {
 .product-img img {
     width: 100%;       /* occupa tutta la larghezza */
     height: 100%;      /* occupa tutta l’altezza del box */
-    object-fit: cover; /* mantiene proporzioni e taglia se serve */
+    object-fit: contain; /* mantiene proporzioni e taglia se serve */
     display: block;
 }
 
@@ -7873,6 +7874,7 @@ label {
   line-height: 28px;
   text-align: center;
   transition: var(--transition);
+  font-size: 11px;
 }
 
 .pagination .page-link:hover,

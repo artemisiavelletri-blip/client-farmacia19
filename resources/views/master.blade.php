@@ -77,6 +77,8 @@
                     $('#table-cart-wrapper').load(window.location.href + ' #table-cart-wrapper > *');
                     $('#shop-cart-summary').load(window.location.href + ' #shop-cart-summary > *');
                     $('#prod-info').load(window.location.href + ' #prod-info > *');
+                    $('#shop-cart-id').load(window.location.href + ' #shop-cart-id > *');
+                    $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');
                 }
             });
         });

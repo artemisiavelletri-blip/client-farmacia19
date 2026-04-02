@@ -33,7 +33,7 @@ class ProductController extends Controller
             $query->whereIn('brand_id', request('brands'));
         }
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(12)->onEachSide(0)->withQueryString();
 
         return view('products.shop-grid', [
             'category' => $category,
@@ -128,7 +128,7 @@ class ProductController extends Controller
             $type_message = 'Novità';
         }           
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(12)->onEachSide(0)->withQueryString();
 
         return view('products.shop-search', [
             'products' => $products,

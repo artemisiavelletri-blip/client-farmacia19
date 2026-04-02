@@ -12,6 +12,9 @@
                     <div class="col-lg-12">
                         <div class="user-wrapper">
                             <div class="row">
+                                <div class="col-lg-12 mb-30 back-mobile">
+                                    <a href="/order-list" class="theme-btn" style="width: 200px"><span class="fas fa-arrow-left"></span>Lista degli Ordini</a>
+                                </div>
                                 <div class="col-lg-12">
                                     <div class="user-card user-order-detail">
                                         @if(session('success'))
@@ -25,10 +28,10 @@
                                                 {{ session('error') }}
                                             </div>
                                         @endif
-                                        <div class="user-card-header">
+                                        <div class="user-card-header user-card-header">
                                             <h4 class="user-card-title">Dettagli Ordine (#{{$order->order_number}})</h4>
                                             <div class="user-card-header-right">
-                                                <a href="/order-list" class="theme-btn"><span class="fas fa-arrow-left"></span>Lista degli Ordini</a>
+                                                <a href="/order-list" class="theme-btn back-laptop"><span class="fas fa-arrow-left"></span>Lista degli Ordini</a>
                                                 @if(($cancelled || $refund) && !$order->refunds()->exists())
                                                     <div class="dropdown-custom">
                                                         <button class="btn btn-sm dropdown-btn">⋮</button>
@@ -169,7 +172,7 @@
                                                 </div>
                                             </div>
                                         </div>                                        
-                                        <div class="row">
+                                        <div class="row mt-30">
                                             <div class="col-lg-12">
                                                 <div class="order-detail">
                                                     <h5>Stato dell'ordine</h5>

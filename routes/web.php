@@ -17,15 +17,21 @@ use App\Models\Category;
 use App\Models\User;
 
 Route::middleware('doctor')->group(function () {
+    Route::get('/login', function () {
+        return view('auth.login');
+    });
+    Route::post('/login', [UserController::class, 'login'])->name('login');
+
+    Route::get('/work', function () {
+        return view('work');
+    })->name('work');
+Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/register', function () {
         return view('auth.register');
     });
 
-    Route::get('/login', function () {
-        return view('auth.login');
-    });
 
     Route::get('/contact-complete', [DashboardController::class, 'contactComplete'])->name('contact-complete');
 
@@ -69,7 +75,7 @@ Route::middleware('doctor')->group(function () {
 
     Route::get('/shop-search/{type}', [ProductController::class, 'shop_search'])->name('shop_search_type');
 
-    Route::middleware('auth')->group(function () {
+    //Route::middleware('auth')->group(function () {
 
         Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -131,16 +137,15 @@ Route::middleware('doctor')->group(function () {
         })->name('paypal.cancel');
 
         Route::post('/delete-account', [UserController::class, 'delete_account'])->name('delete-account');
-    });
+    //});
 
 
     Route::get('/cities/search', [CityController::class, 'search'])->name('cities.search');
-
-    Route::post('/login', [UserController::class, 'login'])->name('login');
     Route::post('/register', [UserController::class, 'register'])->name('register');
 
     Route::get('/track', [TrackingController::class, 'track']);
     Route::get('/contact', [DashboardController::class, 'contact'])->name('contact');
     Route::post('/sendRequestContact', [DashboardController::class, 'sendRequestContact'])->name('sendRequestContact');
     Route::get('/brand', [DashboardController::class, 'brand'])->name('brand');
+    });
 });

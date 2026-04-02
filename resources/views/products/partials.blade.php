@@ -6,14 +6,14 @@
                     @if($product->discountPrice)
                         <span class="type discount">-{{round((($product->price - $product->discountPrice) / $product->price) * 100)}}%</span>
                     @endif
-                    <a href="/shop-single/{{ $product->ean ?? $product->minsan }}">
-                        <img src="{{asset('/storage-admin/' . $product->image) }}" alt="">
+                    <a href="/shop-single/{{ !empty($product->minsan) ? $product->minsan : $product->ean }}">
+                        <img src="{{asset('/storage-admin/' . $product->image) }}" alt="" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';">
                     </a>
                 </div>
 
                 <div class="product-content">
                     <h3 class="product-title">
-                        <a href="/shop-single/{{ $product->ean ?? $product->minsan }}">
+                        <a href="/shop-single/{{ !empty($product->minsan) ? $product->minsan : $product->ean }}">
                             {{ $product->name }}
                         </a>
                     </h3>
@@ -43,7 +43,7 @@
                         <div class="row align-items-center text-center">
                             <div class="col-md-12">
                                 <div class="shop-single-btn">
-                                    <a href="/shop-single/{{ $product->ean ?? $product->minsan }}" class="theme-btn">Vai al Prodotto</a>
+                                    <a href="/shop-single/{{ !empty($product->minsan) ? $product->minsan : $product->ean }}" class="theme-btn">Vai al Prodotto</a>
                                 </div>
                             </div>
                         </div>
@@ -58,4 +58,6 @@
     @endforelse
 </div>
 
-{{ $products->links() }}
+<div class="mt-30">
+    {{ $products->links() }}
+</div>

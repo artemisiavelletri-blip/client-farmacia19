@@ -101,11 +101,11 @@
                                                 <li>
                                                     <div class="dropdown-cart-item">
                                                         <div class="cart-img">
-                                                            <a href="#"><img src="{{ asset('/storage-admin/' . $item->product()->first()->image ) }}" alt="#"></a>
+                                                            <a href="#"><img src="{{ asset('/storage-admin/' . $item->product()->first()->image ) }}" alt="#" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';"></a>
                                                         </div>
                                                         
                                                         <div class="cart-info">
-                                                            <h4><a href="/shop-single/{{ $item->product()->first()->ean ?? $item->product()->first()->minsan }}">{{$item->product()->first()->name}}</a></h4>
+                                                            <h4><a href="/shop-single/{{ !empty($item->product()->first()->minsan) ? $item->product()->first()->minsan : $item->product()->first()->ean }}">{{$item->product()->first()->name}}</a></h4>
                                                             <p class="cart-qty">{{$item->quantity}}x - 
                                                                 <span class="cart-amount">
                                                                     @if($item->product()->first()->discountPrice)
@@ -168,6 +168,8 @@
                 <div class="mobile-menu-right">
                     <div class="mobile-menu-btn">
                         <a href="#" class="nav-right-link search-box-outer"><i class="far fa-search"></i></a>
+                    </div>
+                    <div class="mobile-menu-btn dropdown-cart">
                         @php
                             if(Auth::user()){
                                 $view = '#';
@@ -175,7 +177,7 @@
                                 $view = '/login';
                             }
                         @endphp
-                        <a href="{{$view}}" class="nav-right-link">
+                        <a href="{{$view}}" class="nav-right-link list-item">
                             <i class="far fa-user-circle"></i>
                         </a>
                         @if(Auth::user())
@@ -192,7 +194,9 @@
                                 </div>
                             </div>
                         @endif
-                        <a href="/shop-cart" class="nav-right-link">
+                    </div>
+                    <div class="mobile-menu-btn">
+                        <a href="/shop-cart" class="nav-right-link" id="cart-mobile-counter">
                             <i class="far fa-shopping-bag"></i>
                             @if(Auth::user() && Auth::user()->cartItems)
                                 <span>{{Auth::user()->cartItems->sum('quantity') ?? 0}}</span>
@@ -240,9 +244,9 @@
 <!-- mobile popup search -->
     <div class="search-popup">
         <button class="close-search"><span class="far fa-times"></span></button>
-        <form action="#">
+        <form action="/shop-search">
             <div class="form-group">
-                <input type="search" name="search-field" class="form-control" placeholder="Cerca" required>
+                <input type="search" name="search" class="form-control search-btn" placeholder="Cerca" required>
                 <button type="submit"><i class="far fa-search"></i></button>
             </div>
         </form>

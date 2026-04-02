@@ -189,7 +189,7 @@
     border: 1px solid #ddd;
     padding: 10px;
     width: 180px;
-    left: 0;
+    right: 0;
     margin-bottom: 5px;
     border-radius: 5px;
 }
@@ -254,4 +254,164 @@
 .img-small-banner {
     border-radius: 50%!important;
     width: 150px!important;
+}
+
+/* Nascondi la tabella classica su mobile */
+@media (max-width: 768px) {
+    #table-cart-wrapper {
+        display: none;
+    }
+
+    .cart-mobile {
+        display: block;
+    }
+}
+
+/* Nascondi le card su desktop */
+@media (min-width: 769px) {
+    .cart-mobile {
+        display: none;
+    }
+}
+
+/* Styling card */
+.cart-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.cart-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin-right: 15px;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item-details h5 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.cart-item-details .price,
+.cart-item-details .subtotal {
+    margin-top: 5px;
+}
+
+.cart-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-item-qty input.quantity {
+    width: 50px;
+    text-align: center;
+}
+
+.cart-item-qty .cart-item-remove {
+    color: red;
+    cursor: pointer;
+    margin-left: 20px; /* vicino ai pulsanti */
+}
+
+@media (max-width: 768px) {
+    .nav-pills > .nav-item {
+        width: 100%!important;
+    }
+}
+
+
+/* Nascondi tabella su mobile */
+@media (max-width: 768px) {
+    .table-responsive {
+        display: none;
+    }
+    .orders-mobile {
+        display: block;
+    }
+    .back-laptop {
+        display: none;
+    }
+    .back-mobile {
+        display: block;
+    }
+}
+
+/* Nascondi card su desktop */
+@media (min-width: 769px) {
+    .orders-mobile {
+        display: none;
+    }
+    .back-laptop {
+        display: block;
+    }
+    .back-mobile {
+        display: none;
+    }
+}
+
+/* Solo su mobile */
+@media (max-width: 768px) {
+    .user-card-header {
+        flex-direction: row; /* mantiene gli elementi sulla stessa riga */
+        justify-content: space-between;
+    }
+
+    .user-card-header .dropdown-custom {
+        order: 1; /* forza il dropdown all'estrema destra */
+    }
+
+    .user-card-header h4.user-card-title {
+        order: 0;
+        flex: 1; /* prende tutto lo spazio disponibile */
+        min-width: 0; /* evita overflow del testo */
+        margin-top: 15px;
+    }
+
+    .step > .label {
+        display: none;
+    }
+}
+
+/* Card mobile */
+.order-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.order-card-details {
+    flex: 1;
+}
+
+.order-card-details h5 {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+}
+
+.order-card-details .info {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.order-card-details .badge {
+    font-size: 0.8rem;
 }

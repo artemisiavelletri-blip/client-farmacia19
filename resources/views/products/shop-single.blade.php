@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-md-9 col-lg-6 col-xxl-5">
                         <div class="shop-single-gallery product-img-single">
-                            <img src="{{ asset('/storage-admin/' . $product->image ) }}" alt="#">
+                            <img src="{{ asset('/storage-admin/' . $product->image ) }}" alt="#" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';">
                         </div>
                     </div>
                     <div id="prod-info" class="col-md-12 col-lg-6 col-xxl-6">
@@ -129,14 +129,14 @@
                                     <div class="col-md-3">
                                         <div class="product-item">
                                             <div class="product-img">
-                                                <a href="/shop-single/{{ $relatedProduct->ean ?? $relatedProduct->minsan }}"><img src="{{asset('/storage-admin/' . $relatedProduct->image) }}" alt=""></a>
+                                                <a href="/shop-single/{{ !empty($relatedProduct->minsan) ? $relatedProduct->minsan : $relatedProduct->ean }}"><img src="{{asset('/storage-admin/' . $relatedProduct->image) }}" alt="" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';"></a>
                                                 <div class="product-action-wrap">
                                                     <div class="product-action">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="product-content">
-                                                <h3 class="product-title"><a href="/shop-single/{{ $relatedProduct->ean ?? $relatedProduct->minsan }}">{{$relatedProduct->name}}</a></h3>
+                                                <h3 class="product-title"><a href="/shop-single/{{ !empty($relatedProduct->minsan) ? $relatedProduct->minsan : $relatedProduct->ean }}">{{$relatedProduct->name}}</a></h3>
                                                 <div class="product-bottom">
                                                     <div class="product-price">
                                                         @if(!$relatedProduct->discountPrice)
@@ -155,7 +155,7 @@
                                                     <div class="row align-items-center text-center">
                                                         <div class="col-md-12">
                                                             <div class="shop-single-btn">
-                                                                <a href="/shop-single/{{ $relatedProduct->ean ?? $relatedProduct->minsan }}" class="theme-btn">Vai al Prodotto</a>
+                                                                <a href="/shop-single/{{ !empty($relatedProduct->minsan) ? $relatedProduct->minsan : $relatedProduct->ean }}" class="theme-btn">Vai al Prodotto</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -194,6 +194,8 @@
                 success: function (response) {
                     $('#cart-wrapper').load(window.location.href + ' #cart-wrapper > *');
                     $('#prod-info').load(window.location.href + ' #prod-info > *');
+                    $('#shop-cart-id').load(window.location.href + ' #shop-cart-id > *');
+                    $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');
                     const banner = document.getElementById('cart-banner');
                     banner.classList.add('show');
 
