@@ -104,7 +104,7 @@
                         <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="nav-tab1">
                             <div class="shop-single-desc">
                                 <p>
-                                    {!! $product->description !!}
+                                    {!! html_entity_decode($product->description) !!}
                                 </p>
                             </div>
                         </div>
@@ -195,7 +195,7 @@
                     $('#cart-wrapper').load(window.location.href + ' #cart-wrapper > *');
                     $('#prod-info').load(window.location.href + ' #prod-info > *');
                     $('#shop-cart-id').load(window.location.href + ' #shop-cart-id > *');
-                    $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');
+                    $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');0
                     const banner = document.getElementById('cart-banner');
                     banner.classList.add('show');
 
