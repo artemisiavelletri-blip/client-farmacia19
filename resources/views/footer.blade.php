@@ -6,7 +6,7 @@
                     <div class="col-md-6 col-lg-3">
                         <div class="footer-widget-box about-us">
                             <a href="/" class="footer-logo">
-                                <img src="{{ asset('/img/logo/logo.png') }}" alt="">
+                                <img src="{{ asset('/img/logo-alternativo.svg') }}" alt="">
                             </a>
                             <ul class="footer-contact">
                                 <li><a href="tel:+393500337318"><i class="far fa-phone"></i>+39 350 0337 318</a></li>
