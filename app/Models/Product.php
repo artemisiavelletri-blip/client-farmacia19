@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
@@ -64,6 +65,13 @@ class Product extends Model
     public function iva()
     {
         return $this->belongsTo(Iva::class);
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('not_hidden', function (Builder $builder) {
+            $builder->where('hidden', 0);
+        });
     }
 
 }
