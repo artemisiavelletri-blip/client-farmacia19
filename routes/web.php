@@ -25,7 +25,7 @@ Route::middleware('doctor')->group(function () {
     Route::get('/work', function () {
         return view('work');
     })->name('work');
-Route::middleware('auth')->group(function () {
+//Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/register', function () {
@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/shop-search/{type}', [ProductController::class, 'shop_search'])->name('shop_search_type');
 
-    //Route::middleware('auth')->group(function () {
+    Route::middleware('auth')->group(function () {
 
         Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -137,7 +137,7 @@ Route::middleware('auth')->group(function () {
         })->name('paypal.cancel');
 
         Route::post('/delete-account', [UserController::class, 'delete_account'])->name('delete-account');
-    //});
+    });
 
 
     Route::get('/cities/search', [CityController::class, 'search'])->name('cities.search');
@@ -148,4 +148,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/sendRequestContact', [DashboardController::class, 'sendRequestContact'])->name('sendRequestContact');
     Route::get('/brand', [DashboardController::class, 'brand'])->name('brand');
     });
-});
+//});
