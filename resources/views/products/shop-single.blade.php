@@ -56,13 +56,33 @@
                                     <li>Ean: <span>{{$product->ean}}</span></li>
                                     <li>Minsan: <span>{{$product->minsan}}</span></li>
                                     <li>Brand: <a href="/shop-search?brand={{$product->brand()->id}}">{{$product->brand()->name}}</a></li>
-                                    @if($tags->isNotEmpty())
+                                    @php $limit = 6; @endphp
+
+                                    <div class="product-tags">
                                         <li>Tags: 
-                                            @foreach($tags as $tag)
-                                                <a href="/shop-search?tag={{$tag->slug}}">{{$tag->name}}</a>
+                                        {{-- primi --}}
+                                        @foreach($tags->take($limit) as $tag)
+                                            <a href="/shop-search?tag={{ $tag->slug }}">
+                                                {{ $tag->name }}
+                                            </a>@if(!$loop->last) · @endif
+                                        @endforeach
+
+                                        {{-- altri --}}
+                                        <span class="tags-more d-none">
+                                            @foreach($tags->slice($limit) as $tag)
+                                                · <a href="/shop-search?tag={{ $tag->slug }}">
+                                                    {{ $tag->name }}
+                                                </a>
                                             @endforeach
+                                        </span>
+
+                                        @if($tags->count() > $limit)
+                                            <button class="tags-toggle" type="button">
+                                                +{{ $tags->count() - $limit }} altri
+                                            </button>
+                                        @endif
                                         </li>
-                                    @endif
+                                    </div>
                                 </ul>
                             </div>
                             <div class="row">
@@ -209,6 +229,23 @@
                         window.location.href = '/login';
                     }
                 }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.tags-toggle').forEach(button => {
+                button.addEventListener('click', function () {
+                    const container = this.closest('.product-tags');
+                    const more = container.querySelector('.tags-more');
+
+                    if (more.classList.contains('d-none')) {
+                        more.classList.remove('d-none');
+                        this.textContent = 'Mostra meno';
+                    } else {
+                        more.classList.add('d-none');
+                        this.textContent = '+' + more.querySelectorAll('a').length + ' altri';
+                    }
+                });
             });
         });
     </script>

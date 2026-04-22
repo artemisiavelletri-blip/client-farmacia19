@@ -415,3 +415,32 @@
 .order-card-details .badge {
     font-size: 0.8rem;
 }
+
+.product-tags .label {
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.tags-toggle {
+    border: none;
+    background: none;
+    color: #007bff;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.tags-toggle:hover {
+    text-decoration: underline;
+}
+
+.tags-full {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.tags-full.d-none {
+    display: inline;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+}
