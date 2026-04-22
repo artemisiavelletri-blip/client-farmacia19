@@ -49,7 +49,7 @@
                                                    id="brand{{ $brand->id }}"
                                                    {{ in_array($brand->id, request('brands', [])) ? 'checked' : '' }}>
                                             <label for="brand{{ $brand->id }}">
-                                                {{ $brand->name }} ({{ $brand->products()->count() }})
+                                                {{ $brand->name }} ({{ $brand->products()->where('category_id', $category->id)->count() }})
                                             </label>
                                         </div>
                                     @endforeach                                 

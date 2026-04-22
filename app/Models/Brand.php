@@ -10,7 +10,7 @@ class Brand extends Model
 
     public function products()
     {
-        return Product::where('brand_id',$this->id);
+        return $this->hasMany(Product::class);
     }
 }
 
