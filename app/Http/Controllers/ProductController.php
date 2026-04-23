@@ -49,6 +49,13 @@ class ProductController extends Controller
         $userId = auth()->id();
         $sessionId = session()->getId();
 
+        $product = Product::where('ean', $id)
+                   ->orWhere('minsan', $id)
+                   ->firstOrFail();
+        $tags = $product->tags()->get();
+
+        $relatedProducts = $product->relatedProducts(4);
+
         $alreadyViewed = DB::table('product_views')
             ->where('product_id', $product->id)
             ->where(function ($query) use ($userId, $sessionId) {
@@ -71,14 +78,7 @@ class ProductController extends Controller
 
             // contatore veloce
             $product->increment('views_count');
-        }
-
-        $product = Product::where('ean', $id)
-                   ->orWhere('minsan', $id)
-                   ->firstOrFail();
-        $tags = $product->tags()->get();
-
-        $relatedProducts = $product->relatedProducts(4);
+        }        
 
         return view('products.shop-single', [
             'product' => $product,
