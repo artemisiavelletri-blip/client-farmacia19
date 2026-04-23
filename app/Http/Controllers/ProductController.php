@@ -45,6 +45,33 @@ class ProductController extends Controller
 
     public function shop_single(Request $request,$id)
     {
+        $userId = auth()->id();
+        $sessionId = session()->getId();
+
+        $alreadyViewed = DB::table('product_views')
+            ->where('product_id', $product->id)
+            ->where(function ($query) use ($userId, $sessionId) {
+                if ($userId) {
+                    $query->where('user_id', $userId);
+                } else {
+                    $query->where('session_id', $sessionId);
+                }
+            })
+            ->whereDate('viewed_at', today())
+            ->exists();
+
+        if (!$alreadyViewed) {
+            DB::table('product_views')->insert([
+                'product_id' => $product->id,
+                'user_id' => $userId,
+                'session_id' => $sessionId,
+                'viewed_at' => now(),
+            ]);
+
+            // contatore veloce
+            $product->increment('views_count');
+        }
+
         $product = Product::where('ean', $id)
                    ->orWhere('minsan', $id)
                    ->firstOrFail();
