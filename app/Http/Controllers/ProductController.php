@@ -90,6 +90,122 @@ class ProductController extends Controller
     public function shop_search($type = null)
     {
         $search = request('search');
+        $terms = array_filter(explode(' ', strtolower($search)));
+
+        $query = Product::query();
+
+        // 🔍 SEARCH PRINCIPALE (name + description + ean + minsan + tags + brand)
+        $query->where(function ($q) use ($search, $terms) {
+
+            // 🔹 NAME + DESCRIPTION (frase intera + parole singole)
+            $q->where(function ($q) use ($search, $terms) {
+
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%");
+
+                foreach ($terms as $term) {
+                    $q->orWhere('name', 'LIKE', "%{$term}%")
+                      ->orWhere('description', 'LIKE', "%{$term}%");
+                }
+            })
+
+            // 🔹 EAN / MINSAN (match diretto)
+            ->orWhere('ean', $search)
+            ->orWhere('minsan', $search)
+
+            // 🔹 TAGS
+            ->orWhereHas('tags', function ($q) use ($search, $terms) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('slug', 'LIKE', "%{$search}%");
+
+                foreach ($terms as $term) {
+                    $q->orWhere('name', 'LIKE', "%{$term}%")
+                      ->orWhere('slug', 'LIKE', "%{$term}%");
+                }
+            })
+
+            // 🔹 BRAND
+            ->orWhereHas('brandRelation', function ($q) use ($search, $terms) {
+                $q->where('name', 'LIKE', "%{$search}%");
+
+                foreach ($terms as $term) {
+                    $q->orWhere('name', 'LIKE', "%{$term}%");
+                }
+            });
+
+        });
+
+        // 📂 CATEGORIA
+        $category = null;
+
+        if (request('category')) {
+
+            $cat = Category::where('token', request('category'))->first();
+
+            if ($cat) {
+                $query->where('category_id', $cat->id);
+                $category = $cat->name;
+            }
+        }
+
+        // 🏷️ BRAND FILTER
+        if (request('brand')) {
+
+            $brand = Brand::find(request('brand'));
+
+            if ($brand) {
+                $query->where('brand_id', $brand->id);
+                $search = $brand->name;
+            }
+        }
+
+        // 🏷️ TAG FILTER
+        $tag = null;
+
+        if (request('tag')) {
+
+            $tagModel = Tag::where('slug', request('tag'))->first();
+
+            if ($tagModel) {
+                $query->whereHas('tags', function ($q) use ($tagModel) {
+                    $q->where('tags.id', $tagModel->id);
+                });
+
+                $tag = $tagModel->name;
+            }
+        }
+
+        // 🔥 TYPE FILTER
+        $type_message = null;
+
+        if ($type == 'offerts') {
+            $query->where('discountPrice', '>', 0);
+            $type_message = 'Prodotti in Promozione';
+        }
+
+        if ($type == 'new') {
+            $query->where('new', 1);
+            $type_message = 'Novità';
+        }
+
+        // 📦 PAGINAZIONE
+        $products = $query
+            ->paginate(12)
+            ->onEachSide(0)
+            ->withQueryString();
+
+        return view('products.shop-search', [
+            'products' => $products,
+            'search' => $search,
+            'category' => $category,
+            'tag' => $tag,
+            'type_message' => $type_message
+        ]);
+    }
+
+    public function shop_search_old($type = null)
+    {
+        $search = request('search');
         $query = Product::where(function ($q) {
             $q->where('name', 'LIKE', '%' . request('search') . '%')
             ->orWhere('ean', request('search'))
