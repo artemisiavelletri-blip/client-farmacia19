@@ -94,22 +94,23 @@ class ProductController extends Controller
 
         $query = Product::query();
 
-        // 🔍 SEARCH PRINCIPALE (name + description + ean + minsan + tags + brand)
+        // 🔍 FILTRO PRINCIPALE
         $query->where(function ($q) use ($search, $terms) {
 
-            // 🔹 NAME + DESCRIPTION (frase intera + parole singole)
             $q->where(function ($q) use ($search, $terms) {
 
+                // 🔹 frase completa (più importante)
                 $q->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('description', 'LIKE', "%{$search}%");
 
+                // 🔹 parole singole
                 foreach ($terms as $term) {
                     $q->orWhere('name', 'LIKE', "%{$term}%")
                       ->orWhere('description', 'LIKE', "%{$term}%");
                 }
             })
 
-            // 🔹 EAN / MINSAN (match diretto)
+            // 🔹 codici
             ->orWhere('ean', $search)
             ->orWhere('minsan', $search)
 
@@ -132,14 +133,12 @@ class ProductController extends Controller
                     $q->orWhere('name', 'LIKE', "%{$term}%");
                 }
             });
-
         });
 
         // 📂 CATEGORIA
         $category = null;
 
         if (request('category')) {
-
             $cat = Category::where('token', request('category'))->first();
 
             if ($cat) {
@@ -150,7 +149,6 @@ class ProductController extends Controller
 
         // 🏷️ BRAND FILTER
         if (request('brand')) {
-
             $brand = Brand::find(request('brand'));
 
             if ($brand) {
@@ -163,7 +161,6 @@ class ProductController extends Controller
         $tag = null;
 
         if (request('tag')) {
-
             $tagModel = Tag::where('slug', request('tag'))->first();
 
             if ($tagModel) {
@@ -187,6 +184,22 @@ class ProductController extends Controller
             $query->where('new', 1);
             $type_message = 'Novità';
         }
+
+        // ⭐⭐⭐ RANKING (QUI RISOLVI IL TUO PROBLEMA)
+        $query->orderByRaw("
+            CASE
+                WHEN name LIKE ? THEN 1
+                WHEN description LIKE ? THEN 2
+                WHEN name LIKE ? THEN 3
+                WHEN description LIKE ? THEN 4
+                ELSE 5
+            END
+        ", [
+            "%{$search}%",
+            "%{$search}%",
+            "%".($terms[0] ?? '')."%",
+            "%".($terms[0] ?? '')."%"
+        ]);
 
         // 📦 PAGINAZIONE
         $products = $query
