@@ -196,10 +196,12 @@ class UserController extends Controller
             if (Auth::user()->role === 'admin' || Auth::user()->role === 'doctor') {
 
                 if(Auth::user()->role === 'admin'){
+                    Auth::logout();
                     return redirect()->away('https://admin.farmacia19.it');
                 }
 
                 if(Auth::user()->role === 'doctor'){
+                    Auth::logout();
                     return redirect()->away('https://medico.farmacia19.it');
                 }
                 Auth::logout();
