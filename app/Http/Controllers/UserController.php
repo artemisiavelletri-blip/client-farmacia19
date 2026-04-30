@@ -193,8 +193,17 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->role === 'admin') {
+            if (Auth::user()->role === 'admin' || Auth::user()->role === 'doctor') {
                 Auth::logout();
+
+                if(Auth::user()->role === 'admin'){
+                    return redirect()->away('https://admin.farmacia19.it');
+                }
+
+                if(Auth::user()->role === 'doctor'){
+                    return redirect()->away('https://medico.farmacia19.it');
+                }
+
                 return back()->withErrors([
                     'email' => 'Email o password non corretti.',
                 ])->withInput();
@@ -455,7 +464,7 @@ class UserController extends Controller
                 ->withInput();
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->where('role','user')->first();
 
         if ($user) {
             $token = Str::random(64);
