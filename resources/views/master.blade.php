@@ -95,6 +95,14 @@
             });
 
         });
+        
+        setInterval(() => {
+            fetch('/refresh-csrf')
+                .then(res => res.json())
+                .then(data => {
+                    document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+                });
+        }, 300000); // ogni 5 minuti
     </script>
     @yield('js')
 </html>

@@ -17,6 +17,11 @@ use App\Models\Category;
 use App\Models\User;
 
 Route::middleware('doctor')->group(function () {
+
+    Route::get('/refresh-csrf', function () {
+        return response()->json(['token' => csrf_token()]);
+    });
+
     Route::get('/login', function () {
         return view('auth.login');
     });
@@ -25,7 +30,9 @@ Route::middleware('doctor')->group(function () {
     Route::get('/work', function () {
         return view('work');
     })->name('work');
+
 //Route::middleware('auth')->group(function () {
+    
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/register', function () {
