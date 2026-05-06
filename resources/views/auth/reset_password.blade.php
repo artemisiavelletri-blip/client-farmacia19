@@ -33,7 +33,7 @@
                                 <input type="password" class="form-control" placeholder="Password" name="password">
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
+                                <label>Conferma Password</label>
                                 <input type="password" class="form-control" placeholder="Conferma Password" name="password_confirmation">
                             </div>
                             <div class="d-flex align-items-center">
