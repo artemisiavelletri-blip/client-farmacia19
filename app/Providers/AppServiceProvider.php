@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Artisan;
 
 use App\Models\Category;
 
