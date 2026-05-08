@@ -154,7 +154,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Telefono" name="company_phone" value="{{ old('company_phone') }}">
+                                    <input type="text" class="form-control required-company" placeholder="Telefono" name="company_phone" value="{{ old('company_phone') }}">
                                 </div>
                                 <p>Indirizzo di spedizione</p>
                                 <div class="form-check">
@@ -216,43 +216,58 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            /* =========================================================
+                AUTOCOMPLETE CITTA'
+            ========================================================= */
             function setupCityAutocomplete(input, hidden) {
+
                 const dropdown = input.parentElement.querySelector('.dropdown-menu');
+
                 let selected = null;
                 let timeout = null;
 
                 input.addEventListener('input', () => {
+
                     clearTimeout(timeout);
+
                     const term = input.value.trim();
 
                     selected = null;
                     hidden.value = '';
 
-                    if(term.length < 2){
+                    if (term.length < 2) {
                         dropdown.style.display = 'none';
                         return;
                     }
 
                     timeout = setTimeout(() => {
+
                         fetch(`/cities/search?q=${encodeURIComponent(term)}`)
                             .then(res => res.json())
                             .then(data => {
+
                                 dropdown.innerHTML = '';
-                                if(data.length === 0){
+
+                                if (data.length === 0) {
                                     dropdown.style.display = 'none';
                                     return;
                                 }
 
                                 data.forEach(city => {
+
                                     const li = document.createElement('li');
+
                                     li.textContent = city.name;
                                     li.style.padding = '8px';
                                     li.style.cursor = 'pointer';
 
                                     li.addEventListener('click', () => {
+
                                         input.value = city.name;
                                         hidden.value = city.id;
+
                                         selected = city.name;
+
                                         dropdown.style.display = 'none';
                                     });
 
@@ -260,94 +275,52 @@
                                 });
 
                                 dropdown.style.display = 'block';
+                            })
+                            .catch(err => {
+                                console.error(err);
                             });
+
                     }, 300);
                 });
 
                 input.addEventListener('blur', () => {
+
                     setTimeout(() => {
-                        if(!selected){
+
+                        if (!selected) {
                             input.value = '';
                             hidden.value = '';
                         }
+
                         dropdown.style.display = 'none';
+
                     }, 150);
                 });
 
-                // chiudi dropdown cliccando fuori
                 document.addEventListener('click', e => {
-                    if(!e.target.closest('.form-group')){
+
+                    if (!e.target.closest('.form-group')) {
                         dropdown.style.display = 'none';
                     }
                 });
             }
 
-            // inizializzo tutti gli input con classe city-autocomplete
             document.querySelectorAll('.city-autocomplete').forEach(input => {
+
                 const hidden = input.parentElement.querySelector('input[type="hidden"]');
-                setupCityAutocomplete(input, hidden);
+
+                if (hidden) {
+                    setupCityAutocomplete(input, hidden);
+                }
             });
 
-        });
 
-        $( document ).ready(function() {
-            if(!$('#addressChek').is(':checked')) {
-                $('.notSame').removeClass('hidden'); // mostra div se checkbox disabilitata
-            } else {
-                $('.notSame').addClass('hidden'); // nasconde div se checkbox abilitata
-            }
-
-            if(!$('#addressCheckCompany').is(':checked')) {
-                $('.notSameCompany').removeClass('hidden'); // mostra div se checkbox disabilitata
-            } else {
-                $('.notSameCompany').addClass('hidden'); // nasconde div se checkbox abilitata
-            }
-
-            if(!$('#privateUser').is(':checked')) {
-                $('.companyUser').removeClass('hidden'); 
-            }
-        });
-
-
-        $('#addressChek').on('change',function(){
-            if(!$('#addressChek').is(':checked')) {
-                $('.notSame').removeClass('hidden'); // mostra div se checkbox disabilitata
-            } else {
-                $('.notSame').addClass('hidden'); // nasconde div se checkbox abilitata
-            }
-        });
-
-        $('#addressCheckCompany').on('change',function(){
-            if(!$('#addressCheckCompany').is(':checked')) {
-                $('.notSameCompany').removeClass('hidden'); // mostra div se checkbox disabilitata
-            } else {
-                $('.notSameCompany').addClass('hidden'); // nasconde div se checkbox abilitata
-            }
-        });
-
-        $('#privateUser').on('change',function(){
-            if($(this).prop('checked')){
-                $('.privateUser').removeClass('hidden');
-                $('.companyUser').addClass('hidden');
-            } else {
-                $('.privateUser').addClass('hidden');
-                $('.companyUser').removeClass('hidden');
-            }
-        });
-
-        $('#companyUser').on('change',function(){
-            if($(this).prop('checked')){
-                $('.privateUser').addClass('hidden');
-                $('.companyUser').removeClass('hidden');               
-            } else {
-                $('.privateUser').removeClass('hidden');
-                $('.companyUser').addClass('hidden');
-            }
-        })
-
-        document.addEventListener('DOMContentLoaded', () => {
+            /* =========================================================
+                FORM
+            ========================================================= */
 
             const form = document.getElementById('registerForm');
+
             if (!form) return;
 
             const privateRadio = document.getElementById('privateUser');
@@ -356,123 +329,229 @@
             const privateBox = document.querySelector('.privateUser');
             const companyBox = document.querySelector('.companyUser');
 
-            // Checkbox per indirizzo di spedizione
             const privateCheck = document.getElementById('addressChek');
             const companyCheck = document.getElementById('addressCheckCompany');
 
             const privateShipping = document.querySelector('.notSame');
             const companyShipping = document.querySelector('.notSameCompany');
 
-            /* ---------- TOGGLE SEZIONI ---------- */
+
+
+            /* =========================================================
+                TOGGLE UTENTE
+            ========================================================= */
+
             function toggleUserType() {
+
                 if (privateRadio.checked) {
-                    privateBox.style.display = 'block';
-                    companyBox.style.display = 'none';
-                } else if (companyRadio.checked) {
-                    privateBox.style.display = 'none';
-                    companyBox.style.display = 'block';
+
+                    privateBox.classList.remove('hidden');
+                    companyBox.classList.add('hidden');
+
+                } else {
+
+                    privateBox.classList.add('hidden');
+                    companyBox.classList.remove('hidden');
                 }
             }
 
             privateRadio.addEventListener('change', toggleUserType);
             companyRadio.addEventListener('change', toggleUserType);
-            toggleUserType(); // inizializza la vista
 
-            // Toggle indirizzo spedizione
+            toggleUserType();
+
+
+
+            /* =========================================================
+                TOGGLE SHIPPING
+            ========================================================= */
+
             function toggleShipping(checkbox, container) {
+
                 if (!checkbox || !container) return;
-                container.style.display = checkbox.checked ? 'none' : 'block';
+
+                if (checkbox.checked) {
+                    container.classList.add('hidden');
+                } else {
+                    container.classList.remove('hidden');
+                }
             }
 
-            privateCheck?.addEventListener('change', () => toggleShipping(privateCheck, privateShipping));
-            companyCheck?.addEventListener('change', () => toggleShipping(companyCheck, companyShipping));
+            privateCheck?.addEventListener('change', () => {
+                toggleShipping(privateCheck, privateShipping);
+            });
 
-            // inizializza shipping
+            companyCheck?.addEventListener('change', () => {
+                toggleShipping(companyCheck, companyShipping);
+            });
+
             toggleShipping(privateCheck, privateShipping);
             toggleShipping(companyCheck, companyShipping);
 
-            /* ---------- ERRORI ---------- */
+
+
+            /* =========================================================
+                ERRORI
+            ========================================================= */
+
             function showError(input, message = 'Campo richiesto') {
+
                 input.classList.add('is-invalid');
 
-                if (input.nextElementSibling?.classList.contains('invalid-feedback')) return;
+                const existing =
+                    input.parentNode.querySelector('.invalid-feedback');
+
+                if (existing) return;
 
                 const error = document.createElement('div');
+
                 error.className = 'invalid-feedback';
                 error.textContent = message;
+
                 input.parentNode.appendChild(error);
             }
 
             function clearError(input) {
+
                 input.classList.remove('is-invalid');
-                if (input.nextElementSibling?.classList.contains('invalid-feedback')) {
-                    input.nextElementSibling.remove();
+
+                const feedback =
+                    input.parentNode.querySelector('.invalid-feedback');
+
+                if (feedback) {
+                    feedback.remove();
                 }
             }
 
-            /* ---------- SUBMIT ---------- */
+
+
+            /* =========================================================
+                SUBMIT
+            ========================================================= */
+
             form.addEventListener('submit', (e) => {
+
                 e.preventDefault();
+
                 let valid = true;
 
-                form.querySelectorAll('.is-invalid').forEach(clearError);
+                form.querySelectorAll('.is-invalid')
+                    .forEach(el => clearError(el));
 
-                // Campi sempre obbligatori
+
+
+                /* ---------- SEMPRE OBBLIGATORI ---------- */
+
                 form.querySelectorAll('.required-always').forEach(input => {
+
                     if (!input.value.trim()) {
+
                         showError(input);
+
                         valid = false;
                     }
                 });
 
-                // PRIVATO
+
+
+                /* ---------- PRIVATO ---------- */
+
                 if (privateRadio.checked) {
-                    form.querySelectorAll('.required-private').forEach(input => {
-                        if (!input.offsetParent) return; // ignora campi nascosti
-                        if (input.type === 'hidden') return;
-                        if (!input.value.trim()) {
-                            showError(input);
-                            valid = false;
-                        }
-                    });
+
+                    form.querySelectorAll('.required-private')
+                        .forEach(input => {
+
+                            if (!input.offsetParent) return;
+
+                            if (input.type === 'hidden') return;
+
+                            if (!input.value.trim()) {
+
+                                showError(input);
+
+                                valid = false;
+                            }
+                        });
                 }
 
-                // AZIENDA
-                if (companyRadio.checked) {
-                    form.querySelectorAll('.required-company').forEach(input => {
-                        if (!input.offsetParent) return; // ignora campi nascosti
-                        if (!input.value.trim()) {
-                            showError(input);
-                            valid = false;
-                        }
-                    });
 
-                    // PEC / SDI → almeno uno obbligatorio
+
+                /* ---------- AZIENDA ---------- */
+
+                if (companyRadio.checked) {
+
+                    form.querySelectorAll('.required-company')
+                        .forEach(input => {
+
+                            if (!input.offsetParent) return;
+
+                            if (!input.value.trim()) {
+
+                                showError(input);
+
+                                valid = false;
+                            }
+                        });
+
                     const pec = form.querySelector('.company-pec');
                     const sdi = form.querySelector('.company-sdi');
 
                     if ((!pec?.value.trim()) && (!sdi?.value.trim())) {
-                        if (pec) showError(pec, 'Inserisci PEC o SDI');
-                        if (sdi) showError(sdi, 'Inserisci PEC o SDI');
+
+                        if (pec) {
+                            showError(pec, 'Inserisci PEC o SDI');
+                        }
+
+                        if (sdi) {
+                            showError(sdi, 'Inserisci PEC o SDI');
+                        }
+
                         valid = false;
                     }
                 }
 
+
+
+                /* ---------- BLOCCA ---------- */
+
                 if (!valid) {
-                    form.querySelector('.is-invalid')?.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
+
+                    $('.preloader').hide();
+
+                    form.querySelector('.is-invalid')
+                        ?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+
                     return;
                 }
 
-                form.submit();
+
+
+                /* ---------- SUBMIT REALE ---------- */
+
+                HTMLFormElement.prototype.submit.call(form);
             });
 
-            /* ---------- RIMUOVE ERRORI AL DIGITARE ---------- */
-            form.querySelectorAll('input').forEach(input => {
-                input.addEventListener('input', () => clearError(input));
-            });
+
+
+            /* =========================================================
+                CLEAR ERROR LIVE
+            ========================================================= */
+
+            form.querySelectorAll('input, select, textarea')
+                .forEach(input => {
+
+                    input.addEventListener('input', () => {
+                        clearError(input);
+                    });
+
+                    input.addEventListener('change', () => {
+                        clearError(input);
+                    });
+                });
+
         });
 
     </script>

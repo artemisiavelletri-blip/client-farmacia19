@@ -68,6 +68,7 @@ class UserController extends Controller
                 'company_address'  => 'required|string|max:255',
                 'company_city_id'  => 'required|integer',
                 'company_cap'      => 'required|digits:5',
+                'company_phone'    => 'required|string|max:20'
             ]);
 
             if (!$request->boolean('company_check_second_address')) {
