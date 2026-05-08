@@ -39,5 +39,10 @@ class AppServiceProvider extends ServiceProvider
             Artisan::call('cart:clear-old');
             Log::info('Cart items vecchi eliminati tramite scheduler.');
         })->daily();
+
+        $schedule->call(function () {
+            Artisan::call('app:site-map-update');
+            Log::info('SiteMap aggiornato tramite scheduler.');
+        })->daily();
     }
 }
