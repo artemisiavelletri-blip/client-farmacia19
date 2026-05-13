@@ -32,6 +32,7 @@ class UpdateTracking extends Command
 
         $orders = Order::whereNotNull('tracking_number')
             ->where('status', '!=', 'delivered') // evita già consegnati
+            ->where('status', '!=', 'cancelled') // evita annullati
             ->get();
 
         $service = new Track123Service();
