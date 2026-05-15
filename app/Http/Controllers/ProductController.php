@@ -89,24 +89,38 @@ class ProductController extends Controller
 
     public function shop_search($type = null)
     {
-        $search = request('search');
-        $searchTrim = explode(' ', $search);
-        $query = Product::where(function ($q) {
-            $q->where(function ($query) use ($searchTrim) {
-                foreach ($searchTrim as $term) {
+        $search = trim(request('search'));
+
+        $searchTerms = collect(explode(' ', $search))
+            ->filter()
+            ->values();
+
+        $query = Product::where(function ($q) use ($search, $searchTerms) {
+
+            // Tutte le parole devono essere presenti nel nome
+            $q->where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
                     $query->where('name', 'LIKE', '%' . $term . '%');
                 }
-            })->orWhere('ean', request('search'))
-            ->orWhere('minsan', request('search'))
+            })
 
-            ->orWhereHas('tags', function ($q) {
-              $q->where('name', 'LIKE', '%' . request('search') . '%')
-                ->orWhere('slug', 'LIKE', '%' . request('search') . '%');
-          })
+            // Match esatto
+            ->orWhere('ean', $search)
+            ->orWhereRaw(
+                'CAST(minsan AS UNSIGNED) = ?',
+                [(int) ltrim($search, '0')]
+            )
 
-          ->orWhereHas('brandRelation', function ($q) {
-              $q->where('name', 'LIKE', '%' . request('search') . '%');
-          });
+            // Tag
+            ->orWhereHas('tags', function ($query) use ($search) {
+                $query->where('name', 'LIKE', '%' . $search . '%')
+                      ->orWhere('slug', 'LIKE', '%' . $search . '%');
+            })
+
+            // Brand
+            ->orWhereHas('brandRelation', function ($query) use ($search) {
+                $query->where('name', 'LIKE', '%' . $search . '%');
+            });
         });
 
         $category = null;
