@@ -90,9 +90,13 @@ class ProductController extends Controller
     public function shop_search($type = null)
     {
         $search = request('search');
+        $searchTrim = explode(' ', $search);
         $query = Product::where(function ($q) {
-            $q->where('name', 'LIKE', '%' . request('search') . '%')
-            ->orWhere('ean', request('search'))
+            $q->where(function ($query) use ($searchTrim) {
+                foreach ($searchTrim as $term) {
+                    $query->where('name', 'LIKE', '%' . $term . '%');
+                }
+            })->orWhere('ean', request('search'))
             ->orWhere('minsan', request('search'))
 
             ->orWhereHas('tags', function ($q) {
