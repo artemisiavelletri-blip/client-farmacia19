@@ -17,7 +17,7 @@ class DashboardController extends Controller
     {
         $categories = Category::whereNotNull('position')->orderBy('position')->get();
         $productsDiscounted = Product::where('discounted',1)->get();
-        $sliders = Image::where('dashboard',1)->get();
+        $sliders = Image::where('dashboard',1)->orderBy('position')->get();
         $promotions = Image::where('dashboard',2)->get();
 
         return view('index', [
