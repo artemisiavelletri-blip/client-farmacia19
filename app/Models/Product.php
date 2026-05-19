@@ -67,10 +67,18 @@ class Product extends Model
         return $this->belongsTo(Iva::class);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     protected static function booted()
     {
         static::addGlobalScope('not_hidden', function (Builder $builder) {
-            $builder->where('hidden', 0);
+            $builder->where('hidden', 0)
+                    ->whereHas('category', function ($q) {
+                        $q->where('hidden', 0);
+                    });
         });
     }
 
