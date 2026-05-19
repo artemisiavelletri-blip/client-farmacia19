@@ -45,4 +45,11 @@ class Category extends Model
     {
         return $this->hasMany(Product::class)->where('bestseller', 1)->limit(4);
     }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('not_hidden', function (Builder $builder) {
+            $builder->where('hidden', 0);
+        });
+    }
 }
