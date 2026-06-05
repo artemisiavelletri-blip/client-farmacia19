@@ -190,7 +190,7 @@
                                                                 data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2"
                                                                 aria-selected="false">
                                                                 <div class="checkout-payment-img">
-                                                                    <img src="{{ asset('/img/payment/paypal-2.svg') }}" alt="">
+                                                                    <img src="{{ asset('/img/payment/paypal.png') }}" alt="">
                                                                 </div>
                                                                 <span>Paga con PayPal</span>
                                                             </a>
