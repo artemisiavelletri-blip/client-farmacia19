@@ -376,6 +376,16 @@
 
         });
 
+        $('#pills-tab-1').on('click',function(){
+            const element = document.getElementById('pills-tabContent');
+            const navbarHeight = 150; // altezza navbar in px
+
+            window.scrollTo({
+                top: element.offsetTop - navbarHeight,
+                behavior: 'smooth'
+            });
+        })
+
         $('#pay').on('click',function(){
             $('#payForm').submit();
         });
