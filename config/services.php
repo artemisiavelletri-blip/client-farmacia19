@@ -59,4 +59,9 @@ return [
         'host' => env('TRACKINGMORE_API_HOST'),
     ],
 
+    'nexi' => [
+        'api_key' => env('NEXI_API_KEY'),
+        'base_url' => env('NEXI_BASE_URL'),
+    ],
+
 ];

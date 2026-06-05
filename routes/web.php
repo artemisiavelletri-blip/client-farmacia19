@@ -54,6 +54,10 @@ Route::middleware('doctor')->group(function () {
         return view('quick_links.terms-of-sell');
     });
 
+    Route::get('/cards/esito.php', function () {
+        return view('cards.esito');
+    });
+
     Route::get('/modalita-costi-spedizione', function () {
         return view('quick_links.modalita-costi-spedizione');
     });
@@ -86,6 +90,8 @@ Route::middleware('doctor')->group(function () {
 
         Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        Route::get('/cart/pagamento', [CheckoutController::class, 'pagamento'])->name('cart.pagamento');
+
         Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
         Route::get('/shop-cart', [CartController::class, 'shop_cart'])->name('cart.shop_cart');
@@ -126,7 +132,7 @@ Route::middleware('doctor')->group(function () {
         });
 
         Route::post('/payment/customer/create', [PaymentController::class, 'createCustomer'])->name('payment.customer.create');
-        Route::post('/payment-method/store', [PaymentMethodController::class, 'store'])->name('payment-method.store');
+        Route::get('/payment-method/store', [PaymentMethodController::class, 'store'])->name('payment-method.store');
         Route::delete('/payment-method/delete/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('payment-method.destroy');
         Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 

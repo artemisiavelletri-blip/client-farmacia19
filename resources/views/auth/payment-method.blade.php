@@ -1,4 +1,47 @@
 @extends('master')
+    <?php
+
+    // Pagamento OneClik - Primo pagamento - Avvio pagamento
+
+    // Alias e chiave segreta 
+    $ALIAS = env('XPAY_ALIAS'); // Sostituire con il valore fornito da Nexi
+    $CHIAVESEGRETA = env('XPAY_SECRET'); // Sostituire con il valore fornito da Nexi
+
+    $requestUrl = "https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet";
+    //$merchantServerUrl = "http://" . $_SERVER['HTTP_HOST'] . "/cards/";
+    $merchantServerUrl = "https://" . $_SERVER['HTTP_HOST'];
+
+    $codTrans = "PS" . date('YmdHis');
+    $divisa = "EUR";
+    $importo = 0;
+
+    // Calcolo MAC
+    $mac = sha1('codTrans=' . $codTrans . 'divisa=' . $divisa . 'importo=' . $importo . $CHIAVESEGRETA);
+
+    $numContratto = "NC_" . date('YmdHis');
+    $tipoRichiesta = 'PP';
+
+    // Parametri obbligatori
+    $obbligatori = array(
+        'alias' => $ALIAS,
+        'importo' => $importo,
+        'divisa' => $divisa,
+        'codTrans' => $codTrans,
+        'url' => $merchantServerUrl . "/payment-method/store",
+        'url_back' => $merchantServerUrl . "/settings/payment-method",
+        'mac' => $mac,
+        'num_contratto' => $numContratto,
+        'tipo_servizio' => 'paga_oc3d',
+        'tipo_richiesta' => $tipoRichiesta,
+        );
+
+    // Parametri facoltativi
+    $facoltativi = array(
+    );
+
+    $requestParams = array_merge($obbligatori, $facoltativi);
+
+    ?>
 
 @section('content')
 
@@ -19,7 +62,13 @@
                                         <div class="user-card-header">
                                             <h4 class="user-card-title">Metodo di Pagamento</h4>
                                             <div class="user-card-header-right">
-                                                <a href="/settings/add-payment" class="theme-btn"><span class="far fa-plus-circle"></span>Aggiungi Metodo di Pagamento</a>
+                                                <form method='POST' action='<?php echo $requestUrl ?>'>
+                                                    <?php foreach ($requestParams as $name => $value) { ?>
+                                                        <input type='hidden' name='<?php echo $name; ?>' value='<?php echo htmlentities($value); ?>' />
+                                                    <?php } ?>
+                                                    
+                                                    <button class="theme-btn"><span class="far fa-plus-circle"></span>Aggiungi Metodo di Pagamento</button>
+                                                </form>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
@@ -38,7 +87,7 @@
                                                         <tr>
                                                             <td>
                                                                 <div class="table-list-img w-25">
-                                                                    @if($card->brand == 'visa')
+                                                                    @if($card->brand == 'visa' || $card->brand == 'VISA')
                                                                         <img class="rounded-3" src="{{ asset('/img/payment/visa.svg') }}" alt="">
                                                                     @elseif($card->brand == 'mastercard')
                                                                         <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">

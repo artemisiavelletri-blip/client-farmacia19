@@ -1,5 +1,55 @@
 @extends('master')
 
+<?php
+
+    // Pagamento OneClik - Primo pagamento - Avvio pagamento
+
+    // Alias e chiave segreta 
+    $ALIAS = env('XPAY_ALIAS'); // Sostituire con il valore fornito da Nexi
+    $CHIAVESEGRETA = env('XPAY_SECRET'); // Sostituire con il valore fornito da Nexi
+
+    $requestUrl = "https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet";
+    //$merchantServerUrl = "http://" . $_SERVER['HTTP_HOST'] . "/cards/";
+    $merchantServerUrl = "https://" . $_SERVER['HTTP_HOST'];
+
+    $codTrans = "PS" . date('YmdHis');
+    $divisa = "EUR";
+    $importo = 0;
+
+    // Calcolo MAC
+    $mac = sha1('codTrans=' . $codTrans . 'divisa=' . $divisa . 'importo=' . $importo . $CHIAVESEGRETA);
+
+    $numContratto = "NC_" . date('YmdHis');
+    $tipoRichiesta = 'PP';
+
+    // Parametri obbligatori
+    $obbligatori = array(
+        'alias' => $ALIAS,
+        'importo' => $importo,
+        'divisa' => $divisa,
+        'codTrans' => $codTrans,
+        'url' => $merchantServerUrl . "/payment-method/store",
+        'url_back' => $merchantServerUrl . "/shop-checkout",
+        'mac' => $mac,
+        'num_contratto' => $numContratto,
+        'tipo_servizio' => 'paga_oc3d',
+        'tipo_richiesta' => $tipoRichiesta,
+        );
+
+    // Parametri facoltativi
+    $facoltativi = array(
+    );
+
+    $requestParams = array_merge($obbligatori, $facoltativi);
+
+    ?>
+
+    <form method='POST' id="addCardForm" action='<?php echo $requestUrl ?>'>
+        <?php foreach ($requestParams as $name => $value) { ?>
+            <input type='hidden' name='<?php echo $name; ?>' value='<?php echo htmlentities($value); ?>' />
+        <?php } ?>
+    </form>
+
 @section('content')
 
     <main class="main">
@@ -22,7 +72,7 @@
                             {{ session()->get('error') }}
                         </div>
                     @endif
-                    <form action="/payment/order" method="POST">
+                    <form action="/payment/order" id="payForm" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-lg-8">
@@ -135,7 +185,7 @@
                                                                 <span>Paga con Carta</span>
                                                             </a>
                                                         </li>
-                                                        <!-- <li class="nav-item" role="presentation" data-id="paypal">
+                                                        <li class="nav-item" role="presentation" data-id="paypal">
                                                             <a class="nav-link" id="pills-tab-2" data-bs-toggle="pill"
                                                                 data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2"
                                                                 aria-selected="false">
@@ -144,7 +194,7 @@
                                                                 </div>
                                                                 <span>Paga con PayPal</span>
                                                             </a>
-                                                        </li> -->
+                                                        </li>
                                                         <li class="nav-item" role="presentation" data-id="bank_transfer">
                                                             <a class="nav-link" id="pills-tab-3" data-bs-toggle="pill"
                                                                 data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3"
@@ -203,7 +253,7 @@
                                                                         </tbody>
                                                                     </table>
                                                                     <div class="text-center">
-                                                                        <a href="/settings/add-payment" class="theme-btn">Aggiungi Carta</a>
+                                                                        <button class="theme-btn" type="button" id="addCard"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -263,7 +313,7 @@
                                         </span></li>
                                     </ul>
                                     <div class="text-end mt-40">
-                                        <button type="submit" class="theme-btn">Concludi Ordine<i
+                                        <button type="button" id="pay" class="theme-btn">Concludi Ordine<i
                                                 class="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
@@ -324,6 +374,14 @@
 
             });
 
+        });
+
+        $('#pay').on('click',function(){
+            $('#payForm').submit();
+        });
+
+        $('#addCard').on('click',function(){
+            $('#addCardForm').submit();
         });
     </script>
 

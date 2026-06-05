@@ -34,7 +34,7 @@
                                                         <tr>
                                                             <td>                                                               
                                                                 <div class="table-list-img table-list-code text-center">
-                                                                    <img src="{{asset('/storage-admin/' . $order->items()->first()->product()->first()->image) }}" width="80px">
+                                                                    <img src="{{ asset('/storage-admin/' . ($order->items()->first()?->product()->first()?->image ?? 'default.jpg')) }}" width="80">
                                                                 </div>
                                                             </td>
                                                             <td><span class="table-list-code">#{{$order->order_number}}</span></td>
@@ -67,10 +67,10 @@
                                         <div class="orders-mobile">
                                             @foreach($orders as $order)
                                                 @php
-                                                    $product = $order->items()->first()->product()->first();
+                                                    $product = $order->items()->first()?->product()->first();
                                                 @endphp
                                                 <div class="order-card">
-                                                    <img src="{{ asset('/storage-admin/' . $product->image) }}" alt="{{ $product->name }}">
+                                                    <img src="{{ asset('/storage-admin/' . ($order->items()->first()?->product()->first()?->image ?? 'default.jpg')) }}" width="80">
                                                     <div class="order-card-details">
                                                         <h5>Ordine #{{ $order->order_number }}</h5>
                                                         <div class="info">Data: {{ $order->created_at->translatedFormat('d F Y') }}</div>

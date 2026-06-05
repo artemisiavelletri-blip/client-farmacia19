@@ -11,7 +11,7 @@ use App\Models\PaymentMethod;
 
 class PaymentMethodController extends Controller
 {
-    public function store(Request $request)
+    public function store_stripe(Request $request)
     {
 
         $request->validate([
@@ -76,6 +76,40 @@ class PaymentMethodController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        //dd($request->all());
+
+        $user = auth()->user();
+
+        try {
+
+            $anno = substr($request->scadenza_pan, 0, 4);
+            $mese = substr($request->scadenza_pan, 4, 2);
+
+
+            /** 4️⃣ SALVA NEL DB */
+            PaymentMethod::create([
+                'holder_name' => $request->nome . ' ' . $request->cognome,
+                'user_id' => $user->id,
+                'stripe_payment_method_id' => $request->num_contratto,
+                'brand' => $request->brand ?? null,
+                'last4' => substr($request->pan, -4) ?? null,
+                'exp_month' => $mese ?? null,
+                'exp_year' => $anno ?? null,
+                'is_default' => 1,
+            ]);
+
+            return redirect()->route('settingspayment_method');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function destroy(Request $request, $pm)
     {
         $user = auth()->user();
@@ -89,7 +123,7 @@ class PaymentMethodController extends Controller
             abort(403);
         }
 
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        /*\Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
             $stripePm = \Stripe\PaymentMethod::retrieve(
@@ -135,6 +169,15 @@ class PaymentMethodController extends Controller
 
             return response()->json(['success' => true]);
 
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }*/
+        try {
+            $paymentMethod->delete();
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

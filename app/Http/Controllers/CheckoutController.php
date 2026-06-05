@@ -14,6 +14,7 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PaymentMethod;
 
 use App\Mail\OrderMail;
 
@@ -60,7 +61,7 @@ class CheckoutController extends Controller
 
     protected function processStripe($user, $total, $request)
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        /*Stripe::setApiKey(config('services.stripe.secret'));
 
         if ($request->selected_card_id) {
             // Usa carta salvata
@@ -90,7 +91,180 @@ class CheckoutController extends Controller
             return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'stripe']);
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
+        }*/
+
+        $paymentMethod = PaymentMethod::where(
+            'id',
+            $request['selected_card_id']
+        )->firstOrFail();
+
+        if ($paymentMethod->user_id !== $user->id) {
+            abort(403);
         }
+
+        $importo = intval($total * 100);
+
+        // Pagamento OneClik - Pagamenti successivi - Tramite redirezione - Avvio pagamento
+
+        $requestUrl = "https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet";
+        $merchantServerUrl = "http://" . $_SERVER['HTTP_HOST'] . "/cart/pagamento";
+        $merchantServerUrlBack = "http://" . $_SERVER['HTTP_HOST'] . "/shop-checkout";
+
+        //PARAMETRI PER CALCOLO MAC
+        $codTrans = "PS" . date('YmdHis');
+        $chiaveSegreta = env('XPAY_SECRET');
+        $divisa = "EUR"; /* <-- EUR oppure 978 */
+
+        //CALCOLO MAC
+        $mac = sha1('codTrans=' . $codTrans . 'divisa=' . $divisa . 'importo=' . $importo . $chiaveSegreta);
+
+        //Param Obbligatori
+        $params = array(
+            'importo' => $importo,
+            'alias' => env('XPAY_ALIAS'),
+            'divisa' => $divisa,
+            'codTrans' => $codTrans,
+            'mac' => $mac,
+            'url' => $merchantServerUrl, //necessita HTTP:// oppure HTTPS://
+            'url_back' => $merchantServerUrlBack, //necessita HTTP:// oppure HTTPS://
+            'num_contratto' => $paymentMethod->stripe_payment_method_id,
+            'tipo_servizio' => 'paga_oc3d',
+            'tipo_richiesta' => 'PR', /* <-- PR = Pagamento Ricorrente */
+        );
+
+        return view('cart.pagamento', compact('requestUrl', 'params'));
+
+        $connection = curl_init();
+
+        if ($connection) {
+
+            $requestURL = "https://int-ecommerce.nexi.it/"; // URL
+            $requestURI = "ecomm/api/recurring/creaNonceRico3DS"; // URI
+
+            $apiKey = env('XPAY_ALIAS'); // Sostituire con il valore fornito da Nexi
+            $chiaveSegreta = env('XPAY_SECRET'); // Sostituire con il valore fornito da Nexi
+
+
+            $timeStamp = (time()) * 1000;
+            $numeroContratto = $paymentMethod->stripe_payment_method_id;
+            $codiceTransazione = "XPAY" . time();
+            $importo = intval($total * 100);
+            $divisa = 978;
+            $urlRisposta = "https://" . $_SERVER['HTTP_HOST'] . "/pagamento.php";
+            $scadenza = date('Y') . '12';
+            
+            // Calcolo MAC
+            $mac = sha1('apiKey=' . $apiKey
+                    . 'numeroContratto=' . $numeroContratto
+                    . 'codiceTransazione=' . $codiceTransazione
+                    . 'importo=' . $importo
+                    . 'divisa=' . $divisa
+                    . 'codiceGruppo=' . ''
+                    . 'timeStamp=' . $timeStamp
+                    . $chiaveSegreta);
+            //dd($mac);
+
+            // Parametri
+            $parametri = array(
+                'apiKey' => $apiKey,
+                'numeroContratto' => $numeroContratto,
+                'codiceTransazione' => $codiceTransazione,
+                'importo' => $importo,
+                'divisa' => $divisa,
+                'urlRisposta' => $urlRisposta,
+                'timeStamp' => $timeStamp,
+                'mac' => $mac,
+            );
+
+            curl_setopt_array($connection, array(
+                CURLOPT_URL => $requestURL . $requestURI,
+                CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+                CURLOPT_POST => 1,
+                CURLOPT_POSTFIELDS => json_encode($parametri),
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLINFO_HEADER_OUT => true,
+                CURLOPT_SSL_VERIFYPEER => 0
+            ));
+
+            $risposta = curl_exec($connection);
+
+            curl_close($connection);
+
+            // Decodifico risposta
+            $json = json_decode($risposta, true);
+            //dd($risposta);
+
+            // Controllo JSON di risposta
+            if (json_last_error() === JSON_ERROR_NONE) {
+
+                $MACrisposta = sha1('esito=' . $json['esito'] . 'idOperazione=' . $json['idOperazione'] . 'timeStamp=' . $json['timeStamp'] . $chiaveSegreta);
+
+                // Controllo MAC di risposta
+                if ($json['mac'] == $MACrisposta) {
+
+                    // Controllo esito
+                    if ($json['esito'] == 'OK') {
+                        //$order_number = $this->createOrder($user, $total, 'stripe', $codiceTransazione);
+                        //return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'stripe']);
+                        echo $json['html'];
+                    } else {
+                        return back()->with('error', 'Si è verificato un errore nel pagamento! Si prega di riprovare o cambiare metodo di pagamento');
+                    }
+                } else {
+                    return back()->with('error', 'Si è verificato un errore nel pagamento! Si prega di riprovare o cambiare metodo di pagamento');
+                }
+            } else {
+                return back()->with('error', 'Si è verificato un errore nel pagamento! Si prega di riprovare o cambiare metodo di pagamento');
+            }
+        } else {
+            return back()->with('error', 'Si è verificato un errore nel pagamento! Si prega di riprovare o cambiare metodo di pagamento');
+        }
+    }
+
+    public function pagamento(Request $request)
+    {
+        $total = (float)$request['importo']/100;
+        $user = auth()->user();
+
+        $erroriUtente = [
+            116 => 'Pagamento annullato.',
+            121 => 'La sessione di pagamento è scaduta. Riprova.',
+
+            400 => 'Pagamento non autorizzato. Verifica i dati della carta o contatta la tua banca.',
+            401 => 'La carta risulta scaduta o la data di scadenza non è corretta.',
+            402 => 'La carta non è valida. Utilizza un altro metodo di pagamento.',
+            404 => 'La banca ha rifiutato il pagamento. Utilizza un altro metodo di pagamento.',
+            405 => 'Fondi insufficienti sulla carta.',
+            407 => 'Non è stato possibile contattare la banca. Riprova tra qualche minuto.',
+            408 => 'La banca richiede una nuova autenticazione. Riprova il pagamento.',
+            409 => 'Il pagamento è stato rifiutato per motivi di sicurezza. Contatta la tua banca.',
+            410 => 'Troppi tentativi di autenticazione non riusciti. Riprova più tardi.',
+            411 => 'Contatta la tua banca per autorizzare il pagamento.',
+            412 => 'La carta risulta bloccata, smarrita o non utilizzabile.',
+            414 => 'È stato raggiunto il limite di spesa della carta.',
+        ];
+
+        $codiceEsito = (int) request('codiceEsito');       
+
+
+        if(!$codiceEsito){
+            try {
+
+                // Segna ordine come pagato
+                $order_number = $this->createOrder($user, $total, 'stripe', $request['codTrans'],$request['num_contratto']);
+
+                return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'stripe']);
+            } catch (\Exception $e) {
+                return back()->with('error', $e->getMessage());
+            }
+        } else {
+            $messaggio = $erroriUtente[$codiceEsito] 
+                            ?? 'Si è verificato un problema durante il pagamento. Riprova più tardi.';
+            return redirect()
+                ->route('cart.shop_checkout')
+                ->with('error', $messaggio);
+        }
+
     }
 
     protected function processPaypal($user, $total)
@@ -165,7 +339,7 @@ class CheckoutController extends Controller
         return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'cash_on_delivery']);
     }
 
-    protected function createOrder($user, $total, $method, $transactionId = null)
+    protected function createOrder($user, $total, $method, $transactionId = null, $paymentGateway = null)
     {
         $prescriberId = session('prescriber_id') ?? $user->prescriber_id ?? null;
 
@@ -208,6 +382,7 @@ class CheckoutController extends Controller
             'shipping_cost' => $shipping_cost,
             'total' => $total,
             'payment_method' => $payment_method,
+            'payment_gateway' => $paymentGateway,
             'payment_status' => $payment_status,
             'transaction_id' => $transactionId, 
             'status' => 'pending',
