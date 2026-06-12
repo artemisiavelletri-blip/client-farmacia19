@@ -100,8 +100,8 @@
                                             @foreach(Auth::user()->cartItems as $item)
                                                 <li>
                                                     <div class="dropdown-cart-item">
-                                                        <div class="cart-img">
-                                                            <a href="#"><img src="{{ asset('/storage-admin/' . $item->product()->first()->image ) }}" alt="#" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';"></a>
+                                                        <div class="cart-img" style="display: flex;justify-content: center;align-items: center;">
+                                                            <a href="#"><img src="{{ asset('/storage-admin/' . $item->product()->first()->image ) }}" alt="#" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';" style="height: 100%!important;"></a>
                                                         </div>
                                                         
                                                         <div class="cart-info">
