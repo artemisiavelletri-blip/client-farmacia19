@@ -53,11 +53,11 @@
                                                         </td>
                                                         <td>
                                                             <div class="shop-cart-qty shop-cart-qty-laptop" data-id="{{ $item->id }}">
-                                                                <button class="minus-btn" data-id="{{ $item->id }}"><i class="fal fa-minus"></i></button>
+                                                                <button type="button" class="minus-btn" data-id="{{ $item->id }}"><i class="fal fa-minus"></i></button>
                                                                 <input class="quantity" type="text" value="{{ $item->quantity }}" 
                                                                        data-id="{{ $item->id }}" 
-                                                                       max="{{ $item->quantity + $item->product->stock }}">
-                                                                <button class="plus-btn" data-id="{{ $item->id }}"><i class="fal fa-plus"></i></button>
+                                                                       max="{{ $item->quantity + $item->product->stock }}" readonly>
+                                                                <button type="button" class="plus-btn" data-id="{{ $item->id }}"><i class="fal fa-plus"></i></button>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -94,9 +94,9 @@
                                                         <b class="subtotalPrice-mobile" data-id="{{ $item->id }}">€{{ number_format((float)$item->subtotal, 2, '.', '') }}</b>
                                                     </div>
                                                     <div class="cart-item-qty mt-30 shop-cart-qty">
-                                                        <button class="minus-btn" data-id="{{ $item->id }}"><i class="fal fa-minus"></i></button>
-                                                        <input type="text" class="quantity" value="{{ $item->quantity }}" data-id="{{ $item->id }}" max="{{ $item->quantity + $product->stock }}" disabled>
-                                                        <button class="plus-btn" data-id="{{ $item->id }}"><i class="fal fa-plus"></i></button>
+                                                        <button type="button" class="minus-btn" data-id="{{ $item->id }}"><i class="fal fa-minus"></i></button>
+                                                        <input type="text" class="quantity" value="{{ $item->quantity }}" data-id="{{ $item->id }}" max="{{ $item->quantity + $product->stock }}" readonly>
+                                                        <button type="button" class="plus-btn" data-id="{{ $item->id }}"><i class="fal fa-plus"></i></button>
                                                         <span class="btn btn-light btn-sm cart-remove" data-id="{{ $item->id }}" style="margin-left: 20px;">Rimuovi</span>
                                                     </div>
                                                 </div>
@@ -111,12 +111,12 @@
                                         <div class="shop-cart-coupon">
                                             <div class="form-group">
                                                 <input type="text" class="form-control" placeholder="Coupon">
-                                                <button class="theme-btn" type="submit">Applica Coupon</button>
+                                                <button class="theme-btn coupon" type="submit">Applica Coupon</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>  -->
                         </div>
                         @if(!auth()->user()->cartItems()->exists())
                             <div class="col-lg-12">
@@ -170,22 +170,57 @@
     
     <script type="text/javascript">
 
-        function updateQuantity(button) {
-            let $button = $(button);
-            let $wrapper = $button.closest('.shop-cart-qty'); // solo il container del prodotto
-            let $input = $wrapper.find('.quantity'); // input corretto
-            let currentQty = parseInt($input.val());
+        function updateButtons($wrapper) {
+
+            let $input = $wrapper.find('.quantity');
+            let qty = parseInt($input.val());
             let max = parseInt($input.attr('max'));
 
-            if ($button.hasClass('plus-btn')) {
-                if (currentQty > max) return;
-            } else {
-                if (currentQty < 1) return;
+            let $plus = $wrapper.find('.plus-btn');
+            let $minus = $wrapper.find('.minus-btn');
+
+            $plus.prop('disabled', qty >= max);
+            $minus.prop('disabled', qty <= 1);
+        }
+
+        function updateQuantity(button) {
+            let $button = $(button);
+
+            // Evita doppie esecuzioni
+            if ($button.data('loading')) {
+                return;
             }
 
-            // Aggiorna input per UX
+            let $wrapper = $button.closest('.shop-cart-qty');
+            let $input = $wrapper.find('.quantity');
+
+            let currentQty = parseInt($input.val()) || 0;
+            let max = parseInt($input.attr('max')) || 999999;
+
+            if ($button.hasClass('plus-btn')) {
+
+                if (currentQty >= max) {
+                    updateButtons($wrapper);
+                    return;
+                }
+
+                currentQty++;
+
+            } else {
+
+                if (currentQty <= 1) {
+                    updateButtons($wrapper);
+                    return;
+                }
+
+                currentQty--;
+            }
+
+            // Aggiorna subito la UI
             $input.val(currentQty);
-            // AJAX per aggiornare carrello
+
+            $button.data('loading', true);
+
             $.ajax({
                 url: '/cart/update-quantity/' + $input.data('id'),
                 type: 'POST',
@@ -193,69 +228,49 @@
                     quantity: currentQty,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function(response) {
-                    // Ricarica solo le sezioni interessate
-                    $('#cart-wrapper').load(window.location.href + ' #cart-wrapper > *');
-                    $('#table-cart-wrapper').load(window.location.href + ' #table-cart-wrapper > *');
-                    $('#shop-cart-summary').load(window.location.href + ' #shop-cart-summary > *');
-                    $('#cart-table-id').load(window.location.href + ' #cart-table-id > *');
-                    $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');
+                complete: function () {
+                    $button.data('loading', false);
                 },
-                error: function(xhr) {
-                    // rollback in caso di errore
-                    $input.val(currentQty - ($button.hasClass('plus-btn') ? 1 : -1));
+                success: function (response) {
+
+                    // aggiorna quantità
+                    $input.val(response.quantity);
+
+                    // aggiorna subtotale desktop
+                    $('.subtotalPrice[data-id="' + response.cart_item_id + '"]')
+                        .text('€' + response.subtotal);
+
+                    // aggiorna subtotale mobile
+                    $('.subtotalPrice-mobile[data-id="' + response.cart_item_id + '"]')
+                        .text('€' + response.subtotal);
+
+                    $('#cart-wrapper').load(location.href + ' #cart-wrapper > *');
+                    $('#shop-cart-summary').load(location.href + ' #shop-cart-summary > *');
+                    $('#shop-cart-id').load(location.href + ' #shop-cart-id > *');
+                    $('#cart-mobile-counter').load(location.href + ' #cart-mobile-counter > *');
+                    
+                },
+                error: function () {
+                    if ($button.hasClass('plus-btn')) {
+                        $input.val(currentQty - 1);
+                    } else {
+                        $input.val(currentQty + 1);
+                    }
                 }
             });
         }
 
-        $('.minus-btn').on('click',function(){
+        // UN SOLO listener
+        $(document).off('click', '.plus-btn, .minus-btn');
+
+        $(document).on('click', '.plus-btn, .minus-btn', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
             updateQuantity(this);
         });
 
-        $(document).ready(function() {
-            $(document).on('click', '.plus-btn, .minus-btn', function() {
-                updateQuantity(this); // qui richiamo la funzione
-            });
-        });
-
-
-        $(document).on('click', '.plus-btn, .minus-btn', function() {
-            let $button = $(this);
-            let $wrapper = $button.closest('.shop-cart-qty'); // solo il container del prodotto
-            let $input = $wrapper.find('.quantity'); // input corretto
-            let currentQty = parseInt($input.val());
-            let max = parseInt($input.attr('max'));
-
-            if ($button.hasClass('plus-btn')) {
-                if (currentQty > max) return;
-                currentQty++;
-            } else {
-                if (currentQty < 1) return;
-                currentQty--;
-            }
-
-            // Aggiorna input per UX
-            $input.val(currentQty);
-
-            // AJAX per aggiornare carrello
-            $.ajax({
-                url: '/cart/update-quantity/' + $input.data('id'),
-                type: 'POST',
-                data: {
-                    quantity: currentQty,
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#cart-wrapper').load(window.location.href + ' #cart-wrapper > *');
-                    $('#table-cart-wrapper').load(window.location.href + ' #table-cart-wrapper > *');
-                    $('#shop-cart-summary').load(window.location.href + ' #shop-cart-summary > *');
-                    $('#shop-cart-id').load(window.location.href + ' #shop-cart-id > *');
-                    $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');
-                },
-                error: function(xhr) {
-                    $input.val(currentQty - ($button.hasClass('plus-btn') ? 1 : -1));
-                }
-            });
+        $('.shop-cart-qty').each(function() {
+            updateButtons($(this));
         });
     </script>
 

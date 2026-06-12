@@ -388,50 +388,6 @@ Version         : 1.0
     }
 
 
-    //cart quantity
-    $(".shop-cart-qty").each(function() {
-        var $qtyWrapper = $(this);
-        var $input = $qtyWrapper.find(".quantity");
-        var $minus = $qtyWrapper.find(".minus-btn");
-        var $plus = $qtyWrapper.find(".plus-btn");
-        var max = parseInt($input.attr("max")) || 999;
-
-        // inizializza i pulsanti
-        updateButtons();
-
-        $plus.on("click", function() {
-            var val = parseInt($input.val()) || 1;
-            if(val < max) {
-                $input.val(val + 1);
-                updateButtons();
-            }
-        });
-
-        $minus.on("click", function() {
-            var val = parseInt($input.val()) || 1;
-            if(val > 1) {
-                $input.val(val - 1);
-                updateButtons();
-            }
-        });
-
-        // opzionale: blocca input manuale oltre i limiti
-        $input.on("input", function() {
-            var val = parseInt($input.val()) || 1;
-            if(val > max) val = max;
-            if(val < 1) val = 1;
-            $input.val(val);
-            updateButtons();
-        });
-
-        function updateButtons() {
-            var val = parseInt($input.val()) || 1;
-            $minus.prop("disabled", val <= 1);
-            $plus.prop("disabled", val >= max);
-        }
-    });
-
-
     // flexslider
     if ($('.flexslider-thumbnails').length) {
         $('.flexslider-thumbnails').flexslider({

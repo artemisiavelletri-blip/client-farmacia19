@@ -57,7 +57,11 @@
     <script src="{{ asset('/js/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset('/js/countdown.min.js') }}"></script>
     <script src="{{ asset('/js/wow.min.js') }}"></script>
-    <script src="{{ asset('/js/main.js') }}"></script>
+    @if(Route::currentRouteName() != 'cart.shop_cart')
+        <script src="{{ asset('/js/main.js') }}"></script>
+    @else
+        <script src="{{ asset('/js/mainNoQty.js') }}"></script>
+    @endif
     <script type="text/javascript">
         $(document).on('click', '.cart-remove', function () {
             let itemId = $(this).data('id');

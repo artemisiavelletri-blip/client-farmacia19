@@ -463,3 +463,9 @@
 .footer-carrier .dhl {
     background-color: #ffcb01!important;
 }
+
+.plus-btn:disabled,
+.minus-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
