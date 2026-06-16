@@ -225,8 +225,14 @@
                 },
                 error: function (xhr) {
                     if (xhr.status === 401) {
-                        // Non loggato → redirect al login
-                        window.location.href = '/login';
+
+                        $.post('/store-intended-url', {
+                            url: window.location.href,
+                            _token: $('meta[name="csrf-token"]').attr('content')
+                        }).done(function () {
+                            window.location.href = '/login';
+                        });
+
                     }
                 }
             });

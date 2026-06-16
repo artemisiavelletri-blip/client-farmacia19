@@ -31,6 +31,14 @@ Route::middleware('doctor')->group(function () {
         return view('work');
     })->name('work');
 
+    Route::post('/store-intended-url', function (\Illuminate\Http\Request $request) {
+        session(['url.intended' => $request->url]);
+
+        return response()->json([
+            'success' => true
+        ]);
+    });
+
 //Route::middleware('auth')->group(function () {
     
     Route::get('/', [DashboardController::class, 'index'])->name('index');
