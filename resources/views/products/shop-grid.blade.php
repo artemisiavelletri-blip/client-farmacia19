@@ -16,21 +16,21 @@
                             <div class="shop-widget">
                                 <div class="shop-search-form">
                                     <h4 class="shop-widget-title">Cerca Prodotto</h4>
-                                    <form action="#">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="search" placeholder="Cerca">
-                                        </div>
-                                    </form>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="search" placeholder="Cerca" value="{{ $search ?? '' }}">
+                                    </div>
                                 </div>
                             </div>
                             <div class="shop-widget">
                                 <h4 class="shop-widget-title">Sotto Categorie</h4>
                                 <ul class="shop-category-list">
-                                    <li><a href="{{ request()->fullUrlWithQuery(['sub_category' => 0]) }}" class="{{ request('sub_category') == 0 ? 'active' : '' }}">Tutte<span>({{$category->products()->count()}})</span></a></li>
+                                    <li>
+                                        <a data-id="0">Tutte<span>({{$category->products()->count()}})</span></a>
+                                    </li>
                                     @foreach($subcategory as $sub)
                                         <li>
-                                            <a href="{{ request()->fullUrlWithQuery(['sub_category' => $sub->id]) }}"
-                                               class="{{ request('sub_category') == $sub->id ? 'active' : '' }}">
+                                            <a
+                                                data-id="{{$sub->id}}">
                                                 {{ $sub->name }}
                                                 <span>({{ $sub->products_number() }})</span>
                                             </a>
@@ -92,12 +92,16 @@
        function updateProducts() {
             // Prendi valori filtri
             let search = $('#search').val();
-            let subCategory = new URLSearchParams(window.location.search).get('sub_category');
+
+            let subCategory = $('.shop-category-list a.active').data('id');
+
             let brands = [];
             $('.brand-checkbox:checked').each(function () {
                 brands.push($(this).val());
             });
 
+
+            console.log(subCategory);
             // Costruisci query string
             let params = new URLSearchParams();
             if (search) params.set('search', search);
@@ -123,12 +127,10 @@
         });
 
         // Click su sotto-categorie
-        $('.sidebar a').on('click', function (e) {
-            e.preventDefault();
-            let urlParams = new URLSearchParams(new URL($(this).attr('href')).search);
-            let subCategory = urlParams.get('sub_category');
-            // Aggiorna sub_category
-            history.replaceState(null, '', window.location.pathname + '?sub_category=' + subCategory);
+        $('.shop-category-list a').on('click', function (e) {
+            e.preventDefault();   
+            $('.shop-category-list a').removeClass('active');
+            $(this).addClass('active');      
             updateProducts();
         });
 
@@ -141,6 +143,7 @@
             // Pulisci input e checkbox
             $('#search').val('');
             $('.brand-checkbox').prop('checked', false);
+            $('.shop-category-list a').removeClass('active');
 
             // Torna a sub_category = 0 (tutte)
             let params = new URLSearchParams();

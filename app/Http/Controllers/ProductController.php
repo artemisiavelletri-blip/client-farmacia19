@@ -17,6 +17,7 @@ class ProductController extends Controller
     {
         $category = Category::where('token',$token)->firstOrFail();
         $subcategory = $category->subCategories()->orderBy('name')->get();
+        $search = null;
         
         $query = Product::where('category_id', $category->id);
 
@@ -28,6 +29,7 @@ class ProductController extends Controller
             $query->where(function ($q) {
                 $q->where('name', 'LIKE', '%' . request('search') . '%');
             });
+            $search = request('search');
         }
 
         if (request()->filled('brands')) {
@@ -39,7 +41,8 @@ class ProductController extends Controller
         return view('products.shop-grid', [
             'category' => $category,
             'subcategory' => $subcategory,
-            'products' => $products
+            'products' => $products,
+            'search' => $search
         ]);
     }
 

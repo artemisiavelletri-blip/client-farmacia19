@@ -469,3 +469,11 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.shop-category-list a.active {
+    font-weight: bold;
+}
+
+.shop-category-list a {
+    cursor: pointer;
+}
