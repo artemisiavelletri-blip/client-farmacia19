@@ -256,6 +256,31 @@
                                                                         <button class="theme-btn" type="button" id="addCard"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
                                                                     </div>
                                                                 </div>
+                                                                <div class="cart-mobile">
+                                                                    <h5 class="mb-3">Seleziona carta</h5>
+                                                                    @foreach($user->paymentMethods()->get() as $card)
+                                                                        <div class="card-box {{ $loop->first ? 'card-box-active' : '' }}">
+                                                                            <input type="radio" name="selected_card_id" value="{{ $card->id }}" class="select-card-mobile hidden" {{ $loop->first ? 'checked' : '' }}>
+                                                                            <div class="card-box-img">
+                                                                                @if($card->brand == 'visa')
+                                                                                    <img class="rounded-3" style="width: 80px!important;" src="{{ asset('/img/payment/visa.svg') }}" alt="">
+                                                                                @elseif($card->brand == 'mastercard')
+                                                                                    <img class="rounded-3" style="width: 80px!important;" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
+                                                                                @else
+                                                                                    <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="card-box-info">
+                                                                                <h5 class="table-list-code">{{$card->holder_name}}</h5>
+                                                                                <h5>***********{{$card->last4}}</h5>
+                                                                                <h5>{{$card->exp_month}}/{{$card->exp_year}}</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                    <div class="text-center">
+                                                                        <button class="theme-btn" type="button" id="addCard"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="tab-pane fade" id="pills-2" role="tabpanel"
@@ -374,6 +399,17 @@
 
             });
 
+        });
+
+        $('.card-box').on('click', function() {
+            $('.card-box input[type="radio"]').prop('checked', false);
+            $('.card-box').removeClass('card-box-active');
+
+            $(this).find('input[type="radio"]').prop('checked', true);
+            $(this).addClass('card-box-active');
+            const selected = $('input[type="radio"]:checked');
+
+console.log(selected);
         });
 
         $('#pills-tab-1').on('click',function(){

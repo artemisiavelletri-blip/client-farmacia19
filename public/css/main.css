@@ -477,3 +477,31 @@
 .shop-category-list a {
     cursor: pointer;
 }
+
+.card-box {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: transparent !important;
+    border: 1px solid var(--border-info-color);
+    text-align: center;
+    border-radius: 12px;
+    margin-right: 15px;
+    margin-bottom: 20px;
+    position: relative;
+    padding: 30px;
+    cursor: pointer;
+}
+
+.card-box-img {
+    width: 100px;
+    flex-shrink: 0;
+}
+
+.card-box-info {
+    flex: 1;
+}
+
+.card-box-active {
+    background-color: var(--theme-color) !important;
+}
