@@ -64,6 +64,7 @@ class OrderController extends Controller
         if ($oggi->between($inizioFinestra, $fineFinestra) && $order->status != 'cancelled' && $order->returns->isEmpty()) {
             $refund = true;
         }
+        dd($order);
 
         return view('auth.order-detail', [
             'order' => $order,
