@@ -49,6 +49,20 @@ class DashboardController extends Controller
             'message.required' => 'Il campo messaggio è obbligatorio'
         ]);
 
+        $response = Http::asForm()->post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            [
+                'secret' => env('RECAPTCHA_SECRET_KEY'),
+                'response' => $request->input('g-recaptcha-response'),
+            ]
+        );
+
+        if (!$response->json('success')) {
+            return back()->withErrors([
+                'captcha' => 'Captcha non valido.'
+            ]);
+        }
+
         if ($validator->fails()) {
             return redirect()
                 ->back()
@@ -78,7 +92,6 @@ class DashboardController extends Controller
         if (!$request->session()->has('success') && !$request->session()->has('error')) {
             return redirect()->route('index');
         }
-
 
         return view('contact-complete');
     }

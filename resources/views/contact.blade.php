@@ -87,6 +87,12 @@
                                         <textarea name="message" cols="30" rows="4" class="form-control"
                                             placeholder="Messaggio" required></textarea>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="g-recaptcha"
+                                             data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="recaptcha_token" id="recaptcha_token">
                                     <button type="submit" class="theme-btn">Invia
                                         Richiesta <i class="far fa-paper-plane"></i></button>
                                     <div class="col-md-12 my-3">
@@ -103,4 +109,8 @@
 
     </main>
 
+@endsection
+
+@section('js')
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endsection
