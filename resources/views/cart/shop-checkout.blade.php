@@ -253,7 +253,7 @@
                                                                         </tbody>
                                                                     </table>
                                                                     <div class="text-center">
-                                                                        <button class="theme-btn" type="button" id="addCard"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
+                                                                        <button class="theme-btn addCard" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="cart-mobile">
@@ -278,7 +278,7 @@
                                                                         </div>
                                                                     @endforeach
                                                                     <div class="text-center">
-                                                                        <button class="theme-btn" type="button" id="addCard"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
+                                                                        <button class="theme-btn addCard" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -407,9 +407,6 @@
 
             $(this).find('input[type="radio"]').prop('checked', true);
             $(this).addClass('card-box-active');
-            const selected = $('input[type="radio"]:checked');
-
-console.log(selected);
         });
 
         $('#pills-tab-1').on('click',function(){
@@ -426,7 +423,7 @@ console.log(selected);
             $('#payForm').submit();
         });
 
-        $('#addCard').on('click',function(){
+        $('.addCard').on('click',function(){
             $('#addCardForm').submit();
         });
     </script>
