@@ -269,38 +269,36 @@ class CheckoutController extends Controller
 
     protected function processPaypal($user, $total)
     {
-        $provider = new \Srmklive\PayPal\Services\PayPal;
-        $provider->setApiCredentials(config('paypal'));
-        //dd($provider);
-        $provider->getAccessToken();
+        $provider = new PayPalClient;
+       $provider->setApiCredentials(config('paypal'));
+       $paypalToken = $provider->getAccessToken();
 
-        $response = $provider->createOrder([
-            "intent" => "CAPTURE",
-            "purchase_units" => [
-                [
-                    "amount" => [
-                        "currency_code" => "EUR",
-                        "value" => number_format($total, 2, '.', '')
-                    ]
-                ]
-            ],
-            "application_context" => [
-                "cancel_url" => route('paypal.cancel'),
-                "return_url" => route('paypal.success')
-            ]
-        ]);
+       $response = $provider->createOrder([
+           "intent" => "CAPTURE",
+           "purchase_units" => [
+               [
+                   "amount" => [
+                       "currency_code" => "USD",
+                       "value" => "100.00"
+                   ]
+               ]
+           ],
+           "application_context" => [
+               "cancel_url" => route('paypal.cancel'),
+               "return_url" => route('paypal.success'),
+           ]
+       ]);
 
-        if (!isset($response['links'])) {
-            return back()->with('error', 'Errore PayPal: ' . json_encode($response));
-        }
+       if (isset($response['id']) && $response['id'] != null) {
+           foreach ($response['links'] as $link) {
+               if ($link['rel'] === 'approve') {
+                   return redirect()->away($link['href']);
+               }
+           }
+       }
 
-        foreach ($response['links'] as $link) {
-            if ($link['rel'] === 'approve') {
-                return redirect()->away($link['href']);
-            }
-        }
 
-        return back()->with('error', 'Link PayPal non trovato');
+       return redirect()->route('paypal.cancel');
     }
 
     public function success(Request $request, $orderId)
@@ -449,7 +447,7 @@ class CheckoutController extends Controller
         ]);
 
         $orderItems = $order->items;
-        Mail::to($user->email)->send(new OrderMail($order, $orderItems));
+        Mail::to($user->email)->queue(new OrderMail($order, $orderItems));
 
         return $order->order_number;
     }
