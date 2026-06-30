@@ -168,7 +168,7 @@ class ProductController extends Controller
         $type_message = null;
 
         if ($type == 'offerts') {
-            $query->where('discountPrice', '>', 0);
+            $query->where('discountPrice', '>', 0)->where('stock','>',0);
             $type_message = 'Prodotti in Promozione';
         } 
 
