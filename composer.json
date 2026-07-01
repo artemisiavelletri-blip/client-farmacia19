@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "cmixin/business-day": "^1.20",
+        "google/apiclient": "^2.19",
         "irazasyed/telegram-bot-sdk": "^3.15",
         "laravel/framework": "^12.0",
         "laravel/scout": "^11.2",
@@ -87,7 +88,7 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": false
         }
     },
     "minimum-stability": "stable",

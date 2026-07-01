@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\PaypalController;
 use App\Services\Track123Service;
 
 
@@ -16,11 +17,26 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\User;
 
+use Google\Client;
+
+use Illuminate\Http\Request;
+use App\Services\Google\GmailService;
+
 Route::middleware('doctor')->group(function () {
 
     Route::get('/refresh-csrf', function () {
         return response()->json(['token' => csrf_token()]);
     });
+
+
+Route::get('/test-mail', function (GmailService $gmail) {
+
+    return $gmail->sendEmail(
+        'infopharmamontsrl@gmail.com',
+        'Ordine ricevuto',
+        'Grazie per il tuo ordine!'
+    );
+});
 
     Route::get('/login', function () {
         return view('auth.login');
@@ -38,6 +54,20 @@ Route::middleware('doctor')->group(function () {
             'success' => true
         ]);
     });
+
+
+Route::get('/oauth/google/callback', function (Request $request) {
+
+    $client = new Client();
+
+    $client->setAuthConfig(storage_path('app/google/client_secret.json'));
+
+    $client->setRedirectUri('http://localhost:8000/oauth/google/callback');
+
+    $token = $client->fetchAccessTokenWithAuthCode($request->get('code'));
+
+    dd($token);
+});
 
 //Route::middleware('auth')->group(function () {
     
@@ -137,6 +167,7 @@ Route::middleware('doctor')->group(function () {
             Route::get('/add-payment', function () {
                 return view('auth.add-payment');
             });
+
         });
 
         Route::post('/payment/customer/create', [PaymentController::class, 'createCustomer'])->name('payment.customer.create');
@@ -158,6 +189,12 @@ Route::middleware('doctor')->group(function () {
         })->name('paypal.cancel');
 
         Route::post('/delete-account', [UserController::class, 'delete_account'])->name('delete-account');
+
+        Route::post('/paypal/order/create', [PaypalController::class, 'createOrder'])
+            ->name('paypal.create');
+
+        Route::post('/paypal/order/{orderId}/capture', [PaypalController::class, 'captureOrder'])
+            ->name('paypal.capture');
     });
 
 
