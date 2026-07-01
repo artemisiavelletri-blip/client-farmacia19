@@ -31,11 +31,15 @@ Route::middleware('doctor')->group(function () {
 
 Route::get('/test-mail', function (GmailService $gmail) {
 
-    return $gmail->sendEmail(
-        'infopharmamontsrl@gmail.com',
-        'Ordine ricevuto',
+    $gmail->sendEmail(
+        'infopharmamontsrl@email.com',
+        'Ordine confermato',
         'Grazie per il tuo ordine!'
     );
+
+    return response()->json([
+        'success' => true
+    ]);
 });
 
     Route::get('/login', function () {
