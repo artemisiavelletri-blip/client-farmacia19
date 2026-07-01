@@ -57,18 +57,12 @@ Route::get('/test-mail', function (GmailService $gmail) {
 
 
 Route::get('/oauth/google/callback', function (Request $request) {
-    dd([
-    'url' => request()->fullUrl(),
-    'client_id' => (new \Google\Client())
-        ->setAuthConfig(storage_path('app/google/client_secret.json'))
-        ->getClientId()
-]);
 
     $client = new Client();
 
     $client->setAuthConfig(storage_path('app/google/client_secret.json'));
 
-    $client->setRedirectUri('http://localhost:8000/oauth/google/callback');
+    $client->setRedirectUri(config('app.url') . '/oauth/google/callback');
 
     $token = $client->fetchAccessTokenWithAuthCode($request->get('code'));
 
