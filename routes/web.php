@@ -30,26 +30,6 @@ Route::middleware('doctor')->group(function () {
         return response()->json(['token' => csrf_token()]);
     });
 
-
-Route::get('/test-mail2', function (GmailService $gmail) {
-
-    $user = auth()->user();
-
-    $order = Order::find(9);
-    $orderItems = OrderItem::where('order_id',9)->get();
-
-    $gmail->sendEmail(
-        'infopharmamontsrl@gmail.com',
-        'Ordine #' . $order->order_number,
-        'emails.order', // 👈 blade
-        [
-            'order' => $order,
-            'orderItems' => $orderItems
-        ]
-    );
-    return true;
-});
-
     Route::get('/login', function () {
         return view('auth.login');
     });
@@ -68,18 +48,18 @@ Route::get('/test-mail2', function (GmailService $gmail) {
     });
 
 
-Route::get('/oauth/google/callback', function (Request $request) {
+    Route::get('/oauth/google/callback', function (Request $request) {
 
-    $client = new Client();
+        $client = new Client();
 
-    $client->setAuthConfig(storage_path('app/google/client_secret.json'));
+        $client->setAuthConfig(storage_path('app/google/client_secret.json'));
 
-    $client->setRedirectUri(config('app.url') . '/oauth/google/callback');
+        $client->setRedirectUri(config('app.url') . '/oauth/google/callback');
 
-    $token = $client->fetchAccessTokenWithAuthCode($request->get('code'));
+        $token = $client->fetchAccessTokenWithAuthCode($request->get('code'));
 
-    dd($token);
-});
+        dd($token);
+    });
 
 //Route::middleware('auth')->group(function () {
     
