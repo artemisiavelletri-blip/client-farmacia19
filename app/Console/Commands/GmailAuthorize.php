@@ -34,7 +34,7 @@ class GmailAuthorize extends Command
 
         $client->setPrompt('consent');
 
-        $client->setRedirectUri('https://farmacia19.it/oauth/google/callback');
+        $client->setRedirectUri(config('app.url') . '/oauth/google/callback');
 
         $client->addScope(\Google\Service\Gmail::GMAIL_SEND);
 
