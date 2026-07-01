@@ -447,7 +447,16 @@ class CheckoutController extends Controller
         ]);
 
         $orderItems = $order->items;
-        Mail::to($user->email)->queue(new OrderMail($order, $orderItems));
+
+        $gmail->sendEmail(
+            $user->email,
+            'Ordine #' . $order->order_number,
+            'emails.order', // 👈 blade
+            [
+                'order' => $order,
+                'orderItems' => $orderItems
+            ]
+        );
 
         return $order->order_number;
     }

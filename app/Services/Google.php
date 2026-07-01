@@ -53,21 +53,35 @@ class GmailService
     /**
      * Invia email Gmail API
      */
-    public function sendEmail(string $to, string $subject, string $body)
+    public function sendEmail(string $to, string $subject, string $view, array $data = []): bool
     {
         $client = $this->getClient();
 
         $service = new Gmail($client);
 
+        // 👇 genera HTML dal Blade
+        $html = view($view, $data)->render();
+
+        $boundary = uniqid('np');
+
         $messageText =
             "To: {$to}\r\n" .
             "Subject: {$subject}\r\n" .
-            "Content-Type: text/plain; charset=utf-8\r\n\r\n" .
-            $body;
+            "MIME-Version: 1.0\r\n" .
+            "Content-Type: multipart/alternative; boundary=\"{$boundary}\"\r\n\r\n" .
 
-        $rawMessage = rtrim(strtr(base64_encode($messageText), '+/', '-_'), '=');
+            "--{$boundary}\r\n" .
+            "Content-Type: text/html; charset=UTF-8\r\n\r\n" .
+            $html . "\r\n\r\n" .
 
-        $message = new Gmail\Message();
+            "--{$boundary}--";
+
+        $rawMessage = rtrim(
+            strtr(base64_encode($messageText), '+/', '-_'),
+            '='
+        );
+
+        $message = new \Google\Service\Gmail\Message();
         $message->setRaw($rawMessage);
 
         return $service->users_messages->send("me", $message);
