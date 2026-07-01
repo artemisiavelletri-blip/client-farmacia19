@@ -53,7 +53,7 @@ class GmailService
     /**
      * Invia email Gmail API
      */
-    public function sendEmail(string $to, string $subject, string $body): bool
+    public function sendEmail(string $to, string $subject, string $body)
     {
         $client = $this->getClient();
 
@@ -65,17 +65,12 @@ class GmailService
             "Content-Type: text/plain; charset=utf-8\r\n\r\n" .
             $body;
 
-        $rawMessage = rtrim(
-            strtr(base64_encode($messageText), '+/', '-_'),
-            '='
-        );
+        $rawMessage = rtrim(strtr(base64_encode($messageText), '+/', '-_'), '=');
 
-        $message = new \Google\Service\Gmail\Message();
+        $message = new Gmail\Message();
         $message->setRaw($rawMessage);
 
-        $service->users_messages->send("me", $message);
-
-        return true;
+        return $service->users_messages->send("me", $message);
     }
 
     /**
