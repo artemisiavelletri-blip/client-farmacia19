@@ -21,6 +21,8 @@ use App\Models\PaymentMethod;
 use App\Mail\ResetPasswordMail;
 use App\Mail\RegistrazioneMail;
 
+use App\Services\Google\GmailService;
+
 class UserController extends Controller
 {
     public function register(Request $request)
@@ -173,7 +175,14 @@ class UserController extends Controller
             }
         }
 
-        Mail::to($user->email)->send(new RegistrazioneMail());
+        $gmail = app(GmailService::class);
+
+        $gmail->sendEmail(
+            $user->email,
+            'Registrazione Farmacia19',
+            'emails.register', // 👈 blade
+            []
+        );
 
         return redirect()->route('login')->with('success', 'Registrazione completata con successo!');
     }
@@ -476,7 +485,17 @@ class UserController extends Controller
                 ['token' => $token, 'created_at' => Carbon::now()]
             );
 
-            Mail::to($user->email)->send(new ResetPasswordMail($user, $token));
+            $gmail = app(GmailService::class);
+
+            $gmail->sendEmail(
+                $user->email,
+                'Reset Password Farmacia19',
+                'emails.reset_password', // 👈 blade
+                [
+                    'user' => $user,
+                    'token' => $token
+                ]
+            );
         }
 
         // Messaggio generico, sempre mostrato

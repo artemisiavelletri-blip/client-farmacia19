@@ -19,6 +19,8 @@ use App\Models\ReasonReturn;
 use App\Mail\RefundMail;
 use App\Mail\OrderCancelledMail;
 
+use App\Services\Google\GmailService;
+
 class OrderController extends Controller
 {
     public function index()
@@ -131,7 +133,16 @@ class OrderController extends Controller
                     'parse_mode' => 'HTML'
                 ]);
 
-                Mail::to(auth()->user()->email)->send(new OrderCancelledMail($order));
+                $gmail = app(GmailService::class);
+
+                $gmail->sendEmail(
+                    auth()->user()->email,
+                    'Ordine #' . $order->order_number . ' - Cancellato',
+                    'emails.orderCancelled', // 👈 blade
+                    [
+                        'order' => $order
+                    ]
+                );
 
                 return redirect()
                     ->back()
@@ -246,7 +257,16 @@ class OrderController extends Controller
                 break;
         }
 
-        Mail::to(auth()->user()->email)->send(new RefundMail($order->order_number,'Richiesta di rimborso – Ordine #' . $order->order_number));
+        $gmail = app(GmailService::class);
+
+        $gmail->sendEmail(
+            auth()->user()->email,
+            'Richiesta di rimborso – Ordine #' . $order->order_number,
+            'emails.refund', // 👈 blade
+            [
+                'order_number' => $order->order_number
+            ]
+        );
 
         $chatId = '-5268274429';
         $text = "⚠️ <b>Richiesta Reso.</b>\n<b>Reso Numero:</b> " . $return->token .  "\n<b>Medoto Pagamento:</b> " . $payment_method_telegram;
