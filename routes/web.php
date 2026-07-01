@@ -57,6 +57,12 @@ Route::get('/test-mail', function (GmailService $gmail) {
 
 
 Route::get('/oauth/google/callback', function (Request $request) {
+    dd([
+    'url' => request()->fullUrl(),
+    'client_id' => (new \Google\Client())
+        ->setAuthConfig(storage_path('app/google/client_secret.json'))
+        ->getClientId()
+]);
 
     $client = new Client();
 
