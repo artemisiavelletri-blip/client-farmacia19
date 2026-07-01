@@ -18,6 +18,8 @@ use App\Models\PaymentMethod;
 
 use App\Mail\OrderMail;
 
+use App\Services\Google\GmailService;
+
 class CheckoutController extends Controller
 {
     public function checkout(Request $request)
@@ -255,6 +257,7 @@ class CheckoutController extends Controller
 
                 return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'stripe']);
             } catch (\Exception $e) {
+                dd($e);
                 return back()->with('error', $e->getMessage());
             }
         } else {
@@ -447,6 +450,8 @@ class CheckoutController extends Controller
         ]);
 
         $orderItems = $order->items;
+
+        $gmail = app(GmailService::class);
 
         $gmail->sendEmail(
             $user->email,

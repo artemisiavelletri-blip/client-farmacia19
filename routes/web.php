@@ -16,6 +16,8 @@ use App\Services\Track123Service;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\OrderItem;
 
 use Google\Client;
 
@@ -29,12 +31,21 @@ Route::middleware('doctor')->group(function () {
     });
 
 
-Route::get('/test-mail', function (GmailService $gmail) {
+Route::get('/test-mail2', function (GmailService $gmail) {
+
+    $user = auth()->user();
+
+    $order = Order::find(9);
+    $orderItems = OrderItem::where('order_id',9)->get();
 
     $gmail->sendEmail(
         'infopharmamontsrl@gmail.com',
-        'Ordine ricevuto',
-        'Grazie per il tuo ordine!'
+        'Ordine #' . $order->order_number,
+        'emails.order', // 👈 blade
+        [
+            'order' => $order,
+            'orderItems' => $orderItems
+        ]
     );
     return true;
 });
