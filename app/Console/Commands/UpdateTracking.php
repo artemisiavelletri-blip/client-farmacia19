@@ -99,8 +99,8 @@ class UpdateTracking extends Command
     private function mapStatus(?string $status): string
     {
         return match ($status) {
-            'INIT', 'NO_RECORD' => 'processing',
-            'INFO_RECEIVED' => 'processing',
+            'INIT', 'NO_RECORD' => 'shipped',
+            'INFO_RECEIVED' => 'shipped',
             'IN_TRANSIT', 'WAITING_DELIVERY' => 'shipped',
             'DELIVERED' => 'delivered',
             default => 'pending',

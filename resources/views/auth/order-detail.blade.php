@@ -134,6 +134,20 @@
                                                 </tbody>
                                             </table>
                                         </div>
+                                        <div class="orders-mobile">
+                                            @foreach($order->items as $item)
+                                                <div class="order-card">
+                                                    <a href="/shop-single/{{ $item->product()->first()->ean ?? $item->product()->first()->minsan }}">
+                                                        <img src="{{asset('/storage-admin/' . $item->product()->first()->image) }}" width="80px">
+                                                        <div class="order-card-details">
+                                                            <h5>{{$item->product_name}}</h5>
+                                                            <div class="info">Quantità: {{$item->quantity}}</div>
+                                                            <div class="info">Prezzo: €{{$item->price}}</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="order-detail-content">
