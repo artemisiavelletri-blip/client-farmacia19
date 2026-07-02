@@ -136,15 +136,15 @@
                                         </div>
                                         <div class="orders-mobile">
                                             @foreach($order->items as $item)
-                                                <div class="order-detail-content">
-                                                    <a href="/shop-single/{{ $item->product()->first()->ean ?? $item->product()->first()->minsan }}">
-                                                        <img src="{{asset('/storage-admin/' . $item->product()->first()->image) }}" width="80px">
-                                                        <div class="order-card-details" style="margin-top: 20px">
+                                                <div class="order-detail-content">                                                    
+                                                    <img src="{{asset('/storage-admin/' . $item->product()->first()->image) }}" width="80px">
+                                                    <div class="order-card-details" style="margin-top: 20px">
+                                                        <a href="/shop-single/{{ $item->product()->first()->ean ?? $item->product()->first()->minsan }}">
                                                             <h5>{{$item->product_name}}</h5>
-                                                            <div class="info">Quantità: {{$item->quantity}}</div>
-                                                            <div class="info">Prezzo: €{{$item->price}}</div>
-                                                        </div>
-                                                    </a>
+                                                        </a>
+                                                        <div class="info">Quantità: {{$item->quantity}}</div>
+                                                        <div class="info">Prezzo: €{{$item->price}}</div>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
