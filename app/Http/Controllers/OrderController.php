@@ -82,23 +82,6 @@ class OrderController extends Controller
         $method = $order->payment_method;
         if ($order->created_at >= now()->subHours(24) && !$order->tracking_number && $order->status != 'cancelled') {
 
-            if($order->payment_method == 'stripe'){
-                Stripe::setApiKey(config('services.stripe.secret'));
-
-                try {
-                    $refund = \Stripe\Refund::create([
-                        'payment_intent' => $order->transaction_id,
-                    ]);
-
-                    $order->update([
-                        'payment_status' => 'refunded'
-                    ]);                    
-
-                } catch (\Exception $e) {
-                    return back()->with('error', $e->getMessage());
-                }
-            }
-
             try{
                 foreach ($order->items as $item) {
                     $product = $item->product()->first();
