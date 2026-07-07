@@ -389,7 +389,7 @@
     border-radius: 5px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 50px;
 }
 
 .order-card img {
