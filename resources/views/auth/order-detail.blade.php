@@ -55,7 +55,7 @@
                                                         <h5>Stato Reso/Rimborso</h5>
                                                         <div class="order-progress"> 
                                                             @php
-                                                                if ($order->refunds()->exists()) {
+                                                                if ($order->returns->first()->refund_type !== null) {
                                                                     $step_refund = 100;
                                                                 } elseif ($order->returns->first()->status >= 1 && $order->returns->first()->status != 2) {
                                                                     $step_refund = 50;
