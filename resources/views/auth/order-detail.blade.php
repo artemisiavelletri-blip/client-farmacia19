@@ -80,7 +80,7 @@
                                                                 <div class="label">In Lavorazione</div>
                                                             </div>
 
-                                                            <div class="step {{ ($order->refunds()->exists() ? 'active' : '') }}">
+                                                            <div class="step {{ ($order->returns->first()->refund_type !== null ? 'active' : '') }}">
                                                                 <div class="icon">
                                                                     <i class="fa fa-eur" aria-hidden="true"></i>
                                                                 </div>
