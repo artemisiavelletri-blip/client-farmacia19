@@ -265,4 +265,17 @@ class OrderController extends Controller
             ->with('success', 'Richiesta di reso inviata con successo.');
 
     }
+
+    public function refundRequestTracking(Request $request,$token)
+    {
+        $order = Order::whereHas('returns', function ($q) use ($token) {
+            $q->where('token', $token);
+        })->firstOrFail();
+
+        $refund = $order->returns->first();
+        $refund->tracking_refund = $request->tracking;
+        $refund->save();
+        return redirect()->route('orders.detail', $order->order_number)
+        ->with('success', 'Tracking aggiornato con successo.');
+    }
 }

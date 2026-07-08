@@ -294,7 +294,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
 
-                    <form action="#" method="POST">
+                    <form action="{{ asset('/refund-request/tracking/'.$order->returns->first()->token) }}" method="POST">
                         @csrf
 
                         <div class="modal-header">
@@ -306,7 +306,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Codice Tracciamento</label>
-                                <input type="text" name="name" class="form-control" required>
+                                <input type="text" name="tracking" class="form-control" required>
                             </div>
 
                         </div>

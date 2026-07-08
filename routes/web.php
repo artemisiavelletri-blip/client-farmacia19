@@ -171,6 +171,7 @@ Route::middleware('doctor')->group(function () {
 
         Route::get('/refund-request/{id}',[OrderController::class, 'refundRequest'])->name('refund-request');
         Route::post('/refund-request/{id}',[OrderController::class, 'refundRequestPost'])->name('refund-request-post');
+        Route::post('/refund-request/tracking/{token}',[OrderController::class, 'refundRequestTracking'])->name('refund-request-tracking');
 
         Route::get('/paypal/pay/{order}', [CheckoutController::class,'createPayment'])->name('paypal.pay');
 
