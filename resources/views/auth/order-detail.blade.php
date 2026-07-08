@@ -306,7 +306,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Codice Tracciamento</label>
-                                <input type="text" name="tracking" class="form-control" required>
+                                <input type="text" name="tracking" class="form-control" required value="{{ $order->returns->first()->tracking_refund ?? '' }}">
                             </div>
 
                         </div>
