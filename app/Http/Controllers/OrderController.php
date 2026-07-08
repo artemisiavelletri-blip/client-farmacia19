@@ -275,7 +275,7 @@ class OrderController extends Controller
         $refund = $order->returns->first();
         $refund->tracking_refund = $request->tracking;
         $refund->save();
-        return redirect()->route('orders.detail', $order->order_number)
+        return redirect()->route('orderDetail', $order->order_number)
         ->with('success', 'Tracking aggiornato con successo.');
     }
 }
