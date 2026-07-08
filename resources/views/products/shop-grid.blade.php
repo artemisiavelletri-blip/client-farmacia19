@@ -20,8 +20,8 @@
                                         <input type="text" class="form-control" id="search" placeholder="Cerca" value="{{ $search ?? '' }}">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="shop-widget">
+                            </div>                            
+                            <div class="shop-widget filters mobile-hidden">
                                 <h4 class="shop-widget-title">Sotto Categorie</h4>
                                 <ul class="shop-category-list">
                                     <li>
@@ -38,7 +38,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            <div class="shop-widget">
+                            <div class="shop-widget filters mobile-hidden">
                                 <h4 class="shop-widget-title">Brands</h4>
                                 <ul class="shop-checkbox-list">
                                     @foreach($category->brands() as $brand)
@@ -55,6 +55,7 @@
                                     @endforeach                                 
                                 </ul>
                             </div>
+                            <button id="show-filters" class="btn btn-md btn-outline-secondary mb-15 mobile-show" style="width:100%">Mostra Filtri</button>
                             <button id="reset-filters" class="btn btn-md btn-outline-secondary" style="width:100%">Azzera filtri</button>
 
                             <div class="shop-widget-banner mt-30 mb-50">
@@ -161,6 +162,14 @@
             });
         });
 
-
+        $('.mobile-show').on('click',function(){
+            if($('.filters').hasClass('mobile-hidden')){
+                $('.filters').removeClass('mobile-hidden');
+                $('.mobile-show').text('Nascondi Filtri');
+            } else {
+                $('.filters').addClass('mobile-hidden');
+                $('.mobile-show').text('Mostra Filtri');
+            }
+        })
     </script>
 @endsection

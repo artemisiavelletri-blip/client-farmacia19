@@ -383,6 +383,14 @@
     .brand-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .mobile-hidden {
+        display: none!important;
+    }
+
+    .mobile-show {
+        display: block!important;
+    }
 }
 
 .order-preview {
@@ -543,4 +551,12 @@
 
 .card-box-active {
     background-color: var(--theme-color) !important;
+}
+
+.mobile-hidden {
+    display: block;
+}
+
+.mobile-show {
+    display: none;
 }
