@@ -93,10 +93,10 @@
                                                                 Richiesta Rifiutata
                                                             </div>
                                                         @endif
-                                                        @if($order->refunds()->exists())
+                                                        @if($order->returns->first()->refund_type !== null)
                                                             <div class="alert alert-success text-center">
                                                                 <i class="bi bi-x-circle"></i>
-                                                                E' stato emesso un rimborso pari a € {{$order->refunds->amount}}
+                                                                E' stato emesso un rimborso pari a € {{$order->returns->first()->refund_value}}
                                                             </div>
                                                         @endif
                                                     </div>
