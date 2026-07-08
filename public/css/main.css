@@ -379,6 +379,45 @@
     .step > .label {
         display: none;
     }
+
+    .brand-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.order-preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.order-preview img {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid white;
+}
+
+.order-preview img:nth-child(1) {
+    top: 0;
+    left: 0;
+}
+
+.order-preview img:nth-child(2) {
+    top: 0;
+    right: 0;
+}
+
+.order-preview img:nth-child(3) {
+    bottom: 0;
+    left: 0;
+}
+
+.order-preview img:nth-child(4) {
+    bottom: 0;
+    right: 0;
 }
 
 /* Card mobile */
