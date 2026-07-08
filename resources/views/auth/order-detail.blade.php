@@ -98,6 +98,16 @@
                                                                 <i class="bi bi-x-circle"></i>
                                                                 E' stato emesso un rimborso pari a € {{$order->returns->first()->refund_value}}
                                                             </div>
+                                                        @else
+                                                            @if($order->returns->first()->tracking_refund)
+                                                                <div class="alert alert-light text-center">
+                                                                    <i class="bi bi-x-circle"></i>
+                                                                    <b>Codice tracciamento: </b>{{$order->returns->first()->tracking_refund}}
+                                                                </div>
+                                                            @endif
+                                                            <button type="button" class="btn btn-md btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#userModal" style="width: 100%;">
+                                                                Aggiungi o modifica tracciamento del reso
+                                                            </button>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -280,6 +290,42 @@
             </div>
         </div>
         <!-- user dashboard end -->
+        <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <form action="#" method="POST">
+                        @csrf
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="userModalLabel">Aggiungi o modifica tracciamento del reso</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+
+                            <div class="mb-3">
+                                <label class="form-label">Codice Tracciamento</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Chiudi
+                            </button>
+
+                            <button type="submit" class="btn btn-primary">
+                                Salva
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
 
     </main>
 @endsection
