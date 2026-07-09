@@ -3,8 +3,16 @@
         <div class="col-md-6 col-lg-4">
             <div class="product-item">
                 <div class="product-img">
-                    @if($product->discountPrice)
-                        <span class="type discount">-{{round((($product->price - $product->discountPrice) / $product->price) * 100)}}%</span>
+                    @php
+                        $discount = 0;
+
+                        if ($product->price > 0 && $product->discountPrice) {
+                            $discount = round((($product->price - $product->discountPrice) / $product->price) * 100);
+                        }
+                    @endphp
+
+                    @if($discount > 0)
+                        <span class="type discount">-{{ $discount }}%</span>
                     @endif
                     <a href="/shop-single/{{ !empty($product->minsan) ? $product->minsan : $product->ean }}">
                         <img src="{{asset('/storage-admin/' . $product->image) }}" alt="" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';">
