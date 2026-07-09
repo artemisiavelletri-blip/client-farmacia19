@@ -41,11 +41,6 @@ class OrderController extends Controller
         $service = new Track123Service();
         $trackingData = $service->track($order->tracking_number);
 
-        $service2 = new Track123Service();
-        $trackingData2 = $service2->track("1UW0MPZ184705");
-
-        dd($trackingData2);
-
         $tracking = $trackingData['tracking'] ?? null;
         $status = $trackingData['status'] ?? null;
 
