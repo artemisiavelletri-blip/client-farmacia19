@@ -31,54 +31,48 @@ class OrderController extends Controller
         ]);
     }
 
-    public function orderDetail(Request $request, $id)
+    public function orderDetail(Request $request,$id)
     {
-        $order = Order::with(['city', 'returns'])
-            ->where('order_number', $id)
-            ->firstOrFail();
+        $order = Order::with('city')->where('order_number',$id)->firstOrFail();
 
-        // Tracking
+        $courierCode = 'poste-italiane';
+        $trackingNumber = $order->tracking_number;
+
+        // Chiama la funzione dal servizio
         $service = new Track123Service();
-        $trackingData = $service->track($order->tracking_number);
 
-        $tracking = $trackingData['tracking'] ?? null;
-        $status = $trackingData['status'] ?? null;
+        $trackingData = $service->track($order->tracking_number, 'poste-italiane');
 
-        // Annullamento ordine
         $cancelled = false;
-        if (
-            $order->created_at >= now()->subHours(24) &&
-            empty($order->tracking_number) &&
-            $order->status !== 'cancelled'
-        ) {
+        if ($order->created_at >= now()->subHours(24) && !$order->tracking_number && $order->status != 'cancelled') {
             $cancelled = true;
-        }
+        }       
 
-        // Gestione giorni lavorativi
+        // Abilitiamo la gestione dei giorni lavorativi per l'Italia
         BusinessDay::enable(Carbon::class, 'it-national');
 
+        // Data dell'ordine
         $ordine = Carbon::parse($order->created_at);
 
-        // Dopo 3 giorni lavorativi
+        // Calcolo il limite minimo (3 giorni lavorativi dopo l'ordine)
         $inizioFinestra = $ordine->copy()->addBusinessDays(3);
 
-        // Entro 15 giorni dall'inizio della finestra
+        // Calcolo il limite massimo (15 giorni naturali dall'inizio della finestra)
         $fineFinestra = $inizioFinestra->copy()->addDays(15);
 
+        $refund = false;
         $oggi = Carbon::now();
-
-        $refund = (
-            $oggi->between($inizioFinestra, $fineFinestra) &&
-            $order->status !== 'cancelled' &&
-            $order->returns->isEmpty()
-        );
+        // Controllo se la data calcolata rientra nella finestra
+        if ($oggi->between($inizioFinestra, $fineFinestra) && $order->status != 'cancelled' && $order->returns->isEmpty()) {
+            $refund = true;
+        }
 
         return view('auth.order-detail', [
-            'order'        => $order,
-            'trackingData' => $tracking,
-            'status'       => $status,
-            'cancelled'    => $cancelled,
-            'refund'       => $refund,
+            'order' => $order,
+            'trackingData' => $trackingData['tracking'],
+            'status' => $trackingData['status'],
+            'cancelled' => $cancelled,
+            'refund' => $refund
         ]);
     }
 
