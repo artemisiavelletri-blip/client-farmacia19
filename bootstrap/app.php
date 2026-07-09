@@ -25,6 +25,6 @@ return Application::configure(basePath: dirname(__DIR__))
                     'chat_id' => "-5538285121",
                     'text' => "🚨 ".$e->getMessage()."\n\n".$e->getFile().":".$e->getLine(),
                 ]);
-            });
+            })->afterResponse();
         });
     })->create();
