@@ -31,7 +31,6 @@ class Track123Service
           ],
         ]);
 
-        dd($response->getBody()
         // 1️⃣ crea il tracking
         $this->createTracking($trackingNumber, $carrier);
         //dd($this);
@@ -75,7 +74,7 @@ class Track123Service
                     'tracking_number' => $trackingNumber
                 ]
             ]);
-            dd('prova');
+            
             $data = json_decode($response->getBody()->getContents(), true);
 
             return $data['data'] ?? null;
