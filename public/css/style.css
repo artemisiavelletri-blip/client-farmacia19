@@ -285,7 +285,7 @@ label {
   background: var(--color-white);
   top: 0;
   left: 0;
-  z-index: 999;
+  z-index: 1060;
   display: flex;
   align-items: center;
   justify-content: center;
