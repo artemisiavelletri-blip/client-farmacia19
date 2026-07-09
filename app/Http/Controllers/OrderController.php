@@ -20,6 +20,7 @@ use App\Mail\RefundMail;
 use App\Mail\OrderCancelledMail;
 
 use App\Services\Google\GmailService;
+use App\Services\Track123Service;
 
 class OrderController extends Controller
 {
@@ -273,9 +274,20 @@ class OrderController extends Controller
         })->firstOrFail();
 
         $refund = $order->returns->first();
+
+        $oldTracking = $refund->tracking_refund;
+
         $refund->tracking_refund = $request->tracking;
         $refund->save();
+
+        if (!empty($request->tracking) && $request->tracking !== $oldTracking) {
+
+            $service = new Track123Service();
+
+            $trackingData = $service->track($request->tracking);
+        }
+
         return redirect()->route('orderDetail', $order->order_number)
-        ->with('success', 'Tracking aggiornato con successo.');
+            ->with('success', 'Tracking aggiornato con successo.');
     }
 }
