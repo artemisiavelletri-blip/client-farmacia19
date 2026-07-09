@@ -77,7 +77,7 @@ class Track123Service
     /**
      * Crea tracking su Track123
      */
-    protected function createTracking(string $trackingNumber, ?string $carrier = null): void
+    protected function createTracking(string $trackingNumber, ?string $carrier = null)
     {
         try {
 
