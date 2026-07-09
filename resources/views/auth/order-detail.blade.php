@@ -294,7 +294,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
 
-                    <form action="{{ asset('/refund-request/tracking/'.$order->returns->first()->token) }}" method="POST">
+                    <form action="{{ asset('/refund-request/tracking/' . optional($order->returns->first())->token) }}" method="POST">
                         @csrf
 
                         <div class="modal-header">
