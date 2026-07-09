@@ -19,17 +19,11 @@ class Track123Service
     /**
      * Metodo principale: crea tracking se non esiste e restituisce dati
      */
-    public function track(string $trackingNumber = null, ?string $carrier = null): ?array
+    public function track(string $trackingNumber, ?string $carrier = null): ?array
     {
 
-        if(!$trackingNumber){
-            return null;
-        }
-        
-        $client = new \GuzzleHttp\Client();
-
         $response = $client->request('POST', $this->baseUrl . '/track/query', [
-          'body' => '{"trackNoInfos":[{"trackNo":"' . $trackingNumber . '"}]}',
+          'body' => '{"trackNoInfos":[{"trackNo": "' . $trackingNumber . '"}]}',
           'headers' => [
             'Track123-Api-Secret' => $this->apiKey,
             'accept' => 'application/json',
@@ -37,43 +31,33 @@ class Track123Service
           ],
         ]);
 
-        $data = json_decode($response->getBody(), true); // true = array
-        if(empty($data['data']['rejected'])){
-            if (isset($data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'])) {
-                return ['tracking' => $data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'],'status' => $data['data']['accepted']['content'][0]['transitStatus']];
-            } else {
-                return ['tracking' => null,'status' => $data['data']['accepted']['content'][0]['transitStatus']];
-            }
-        } else {
-            return $this->createTracking($trackingNumber,$carrier);
-        }
+        dd($response->getBody()
+        // 1️⃣ crea il tracking
+        $this->createTracking($trackingNumber, $carrier);
+        //dd($this);
+
+        // 2️⃣ recupera i dati aggiornati
+        return $this->getTracking($trackingNumber);
     }
 
     /**
      * Crea tracking su Track123
      */
-    protected function createTracking(string $trackingNumber, ?string $carrier = null): ?array
+    protected function createTracking(string $trackingNumber, ?string $carrier = null): void
     {
         try {
 
-            $client = new \GuzzleHttp\Client();
+            $payload = [
+                'tracking_number' => $trackingNumber,
+            ];
 
-            $response = $client->request('POST', $this->baseUrl . '/track/import', [
-              'body' => '[{"trackNo":"' . $trackingNumber . '"}]',
-              'headers' => [
-                'Track123-Api-Secret' => $this->apiKey,
-                'accept' => 'application/json',
-                'content-type' => 'application/json',
-              ],
-            ]);
-
-            $data = json_decode($response->getBody(), true); // true = array
-
-            if (isset($data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'])) {
-                return ['tracking' => $data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'],'status' => $data['data']['accepted']['content'][0]['transitStatus']];
-            } else {
-                return ['tracking' => null,'status' => $data['data']['accepted']['content'][0]['transitStatus']];
+            if ($carrier) {
+                $payload['carrier_code'] = $carrier;
             }
+
+            $this->client->post('trackings', [
+                'json' => $payload
+            ]);
 
         } catch (\Exception $e) {
             Log::warning("Track123 create tracking failed for {$trackingNumber}: " . $e->getMessage());
@@ -86,7 +70,15 @@ class Track123Service
     protected function getTracking(string $trackingNumber): ?array
     {
         try {
-            
+            $response = $this->client->post('track', [
+                'json' => [
+                    'tracking_number' => $trackingNumber
+                ]
+            ]);
+            dd('prova');
+            $data = json_decode($response->getBody()->getContents(), true);
+
+            return $data['data'] ?? null;
 
         } catch (\Exception $e) {
             Log::error("Track123 get tracking failed for {$trackingNumber}: " . $e->getMessage());
