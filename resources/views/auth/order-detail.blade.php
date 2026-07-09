@@ -294,7 +294,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
 
-                    <form action="{{ asset('/refund-request/tracking/' . optional($order->returns->first())->token) }}" method="POST">
+                    <form action="{{ asset('/refund-request/tracking/' . optional($order->returns->first())->token) }}" id="myForm" method="POST">
                         @csrf
 
                         <div class="modal-header">
@@ -316,7 +316,7 @@
                                 Chiudi
                             </button>
 
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" id="confirmSubmit">
                                 Salva
                             </button>
                         </div>
@@ -347,6 +347,24 @@
             document.querySelectorAll(".dropdown-menu-custom").forEach(menu => {
                 menu.classList.remove("show");
             });
+
+        });
+
+        let formDaInviare = document.getElementById('myForm');
+        let modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+
+        document.getElementById('confirmSubmit').addEventListener('click', function () {
+
+            // chiudo la modal
+            modal.hide();
+
+        });
+
+
+        document.getElementById('confirmModal').addEventListener('hidden.bs.modal', function () {
+
+            // dopo la chiusura completa invio la form
+            formDaInviare.submit();
 
         });
     </script>
