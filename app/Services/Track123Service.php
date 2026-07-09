@@ -24,7 +24,7 @@ class Track123Service
         if(!$trackingNumber){
             return ['tracking' => null,'status' => null];
         }
-        
+
         $client = new \GuzzleHttp\Client();
 
         $response = $client->request('POST', $this->baseUrl . '/track/query', [
@@ -36,8 +36,23 @@ class Track123Service
           ],
         ]);
 
-        $data = json_decode($response->getBody(), true); // true = array
-        if(empty($data['data']['rejected'])){
+        $data = json_decode($response->getBody()->getContents(), true);
+        // Controllo tracking non registrato
+        if (!empty($data['data']['rejected'])) {
+
+            $error = $data['data']['rejected'][0]['error'] ?? null;
+            $newTrack = $this->createTracking($trackingNumber);
+            $data = json_decode($newTrack->getContents(), true);
+
+            if (empty($data['data']['rejected'])) {
+                if (isset($data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'])) {
+                    return ['tracking' => $data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'],'status' => $data['data']['accepted']['content'][0]['transitStatus']];
+                } else {
+                    return ['tracking' => null,'status' => $data['data']['accepted']['content'][0]['transitStatus']];
+                }
+            }
+            
+        } else {
             if (isset($data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'])) {
                 return ['tracking' => $data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'],'status' => $data['data']['accepted']['content'][0]['transitStatus']];
             } else {
@@ -46,6 +61,17 @@ class Track123Service
         }
 
         return null;
+
+        /*$data = json_decode($response->getBody(), true); // true = array
+        if(empty($data['data']['rejected'])){
+            if (isset($data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'])) {
+                return ['tracking' => $data['data']['accepted']['content'][0]['localLogisticsInfo']['trackingDetails'],'status' => $data['data']['accepted']['content'][0]['transitStatus']];
+            } else {
+                return ['tracking' => null,'status' => $data['data']['accepted']['content'][0]['transitStatus']];
+            }
+        }
+
+        return null;*/
     }
 
     /**
@@ -54,6 +80,19 @@ class Track123Service
     protected function createTracking(string $trackingNumber, ?string $carrier = null): void
     {
         try {
+
+            $client = new \GuzzleHttp\Client();
+
+            $response = $client->request('POST', 'https://api.track123.com/gateway/open-api/tk/v2.1/track/import', [
+              'body' => '{"trackNoInfos":[{"trackNo":"' . $trackingNumber . '"}]}',
+              'headers' => [
+                'Track123-Api-Secret' => '45426f8ea43542ce9094303445b12160',
+                'accept' => 'application/json',
+                'content-type' => 'application/json',
+              ],
+            ]);
+
+            return $response->getBody();
 
             $payload = [
                 'tracking_number' => $trackingNumber,
