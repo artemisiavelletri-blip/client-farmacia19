@@ -16,15 +16,12 @@ class Track123Service
         $this->apiKey = env('TRACK123_API_KEY', '45426f8ea43542ce9094303445b12160');
         $this->baseUrl = 'https://api.track123.com/gateway/open-api/tk/v2.1';
 
-        $this->client = new Client([
+        $this->client = new \GuzzleHttp\Client([
             'timeout' => 10,
         ]);
     }
 
 
-    /**
-     * Metodo principale
-     */
     public function track(?string $trackingNumber, ?string $carrier = null): ?array
     {
         if (empty($trackingNumber)) {
@@ -35,11 +32,11 @@ class Track123Service
         }
 
 
-        // 1) Prima provo a recuperare il tracking
+        // Prima provo a cercare il tracking
         $data = $this->queryTracking($trackingNumber);
 
 
-        // 2) Se trovato restituisco subito
+        // Se già presente ritorno i dati
         $result = $this->parseTracking($data);
 
         if ($result) {
@@ -47,21 +44,19 @@ class Track123Service
         }
 
 
-        // 3) Se non registrato lo creo
+        // Se non registrato provo ad importarlo
         if ($this->isNotRegistered($data)) {
 
-            $created = $this->createTracking($trackingNumber, $carrier);
-
-            if (!$created) {
+            if (!$this->createTracking($trackingNumber, $carrier)) {
                 return null;
             }
 
 
-            // Track123 impiega tempo ad indicizzarlo
-            sleep(3);
+            // Tempo necessario a Track123 per elaborare
+            sleep(5);
 
 
-            // 4) Riprovare la lettura
+            // Riprovo fino a 3 volte
             for ($i = 0; $i < 3; $i++) {
 
                 $data = $this->queryTracking($trackingNumber);
@@ -72,7 +67,7 @@ class Track123Service
                     return $result;
                 }
 
-                sleep(2);
+                sleep(3);
             }
         }
 
@@ -81,16 +76,15 @@ class Track123Service
     }
 
 
-
     /**
-     * Query tracking
+     * Recupera tracking da Track123
      */
     protected function queryTracking(string $trackingNumber): array
     {
         try {
 
             $response = $this->client->post(
-                $this->baseUrl.'/track/query',
+                $this->baseUrl . '/track/query',
                 [
                     'json' => [
                         'trackNoInfos' => [
@@ -116,16 +110,15 @@ class Track123Service
 
         } catch (\Throwable $e) {
 
-            Log::error('Track123 query error: '.$e->getMessage());
+            \Log::error('Track123 query error: '.$e->getMessage());
 
             return [];
         }
     }
 
 
-
     /**
-     * Import tracking su Track123
+     * Registra tracking su Track123
      */
     protected function createTracking(string $trackingNumber, ?string $carrier = null): bool
     {
@@ -142,12 +135,10 @@ class Track123Service
 
 
             $response = $this->client->post(
-                $this->baseUrl.'/track/import',
+                'https://api.track123.com/gateway/open-api/tk/v2/track/import',
                 [
                     'json' => [
-                        'trackNoInfos' => [
-                            $trackInfo
-                        ]
+                        $trackInfo
                     ],
                     'headers' => [
                         'Track123-Api-Secret' => $this->apiKey,
@@ -164,21 +155,23 @@ class Track123Service
             );
 
 
+            \Log::info('Track123 import response', $data);
+
+
             return empty($data['data']['rejected']);
 
 
         } catch (\Throwable $e) {
 
-            Log::error('Track123 import error: '.$e->getMessage());
+            \Log::error('Track123 import error: '.$e->getMessage());
 
             return false;
         }
     }
 
 
-
     /**
-     * Controllo tracking non registrato
+     * Controlla se Track123 dice "non registrato"
      */
     protected function isNotRegistered(array $data): bool
     {
@@ -187,9 +180,8 @@ class Track123Service
     }
 
 
-
     /**
-     * Estrazione dati tracking
+     * Estrae dati tracking
      */
     protected function parseTracking(array $data): ?array
     {
@@ -203,7 +195,7 @@ class Track123Service
 
         return [
             'tracking' => $content['localLogisticsInfo']['trackingDetails'] ?? null,
-            'status' => $content['transitStatus'] ?? null,
+            'status' => $content['transitStatus'] ?? null
         ];
     }
 
