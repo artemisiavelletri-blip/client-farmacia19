@@ -149,6 +149,13 @@
             updateProducts();
         });
 
+        $('#searchMobile').on('keypress', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('.search-btn').click();
+            }
+        });
+
         // Click su sotto-categorie
         $('.shop-category-list a').on('click', function (e) {
             e.preventDefault();   
