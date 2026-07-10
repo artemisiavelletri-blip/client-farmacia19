@@ -20,7 +20,7 @@
                                         <input type="text" class="form-control mobile-hidden" id="search" placeholder="Cerca" value="{{ $search ?? '' }}">
                                         <div class="search-content">
                                             <input type="text" class="form-control mobile-show" id="searchMobile" name="search" placeholder="Cerca">
-                                            <button class="search-btn"><i class="far fa-search" style="margin-top: 5px;"></i></button>
+                                            <button class="search-btn" id="search-btn-mobile"><i class="far fa-search" style="margin-top: 5px;"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -145,14 +145,14 @@
             updateProducts();
         });
 
-        $('.search-btn').on('click', function () {
+        $('#search-btn-mobile').on('click', function () {
             updateProducts();
         });
 
         $('#searchMobile').on('keypress', function(e) {
             if (e.which === 13) {
                 e.preventDefault();
-                $('.search-btn').click();
+                $('#search-btn-mobile').click();
             }
         });
 
@@ -191,7 +191,7 @@
             });
         });
 
-        $('.mobile-show').on('click',function(){
+        $('#show-filters').on('click',function(){
             if($('.filters').hasClass('mobile-hidden')){
                 $('.filters').removeClass('mobile-hidden');
                 $('#show-filters').text('Nascondi Filtri');
