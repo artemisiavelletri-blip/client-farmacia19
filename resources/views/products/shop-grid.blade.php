@@ -177,10 +177,10 @@
         $('.mobile-show').on('click',function(){
             if($('.filters').hasClass('mobile-hidden')){
                 $('.filters').removeClass('mobile-hidden');
-                $('.mobile-show').text('Nascondi Filtri');
+                $('#show-filters').text('Nascondi Filtri');
             } else {
                 $('.filters').addClass('mobile-hidden');
-                $('.mobile-show').text('Mostra Filtri');
+                $('#show-filters').text('Mostra Filtri');
             }
         })
     </script>
