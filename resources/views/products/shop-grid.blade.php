@@ -58,7 +58,7 @@
                             <button id="show-filters" class="btn btn-md btn-outline-secondary mb-15 mobile-show" style="width:100%">Mostra Filtri</button>
                             <button id="reset-filters" class="btn btn-md btn-outline-secondary" style="width:100%">Azzera filtri</button>
 
-                            <div class="shop-widget-banner mt-30 mb-50">
+                            <div class="shop-widget-banner mt-30 mb-50 mobile-hidden">
                                 <div class="banner-img" style="background-image:url({{asset('img/product/free_shipping.png')}})"></div>
                                 <div class="banner-content">
                                     <h6>SPEDIZIONI <span>VELOCI</span></h6>
@@ -75,6 +75,17 @@
                                 <div id="products-wrapper">
                                     @include('products.partials', ['products' => $products])
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mobile-show">
+                        <div class="shop-widget-banner mt-30 mb-50">
+                            <div class="banner-img" style="background-image:url({{asset('img/product/free_shipping.png')}})"></div>
+                            <div class="banner-content">
+                                <h6>SPEDIZIONI <span>VELOCI</span></h6>
+                                <h4>1-2 Giorni</h4>
+                                <h6>SPEDIZIONI <span>GRATUITE</span></h6>
+                                <h4>Per ordini superiori ai €49,90</h4>
                             </div>
                         </div>
                     </div>
@@ -116,8 +127,9 @@
             // Richiesta AJAX
             $.get(window.location.pathname, params.toString(), function (data) {
                 $('#products-wrapper').html($(data).find('#products-wrapper').html());
+
                 $('html, body').animate({
-                    scrollTop: 0
+                    scrollTop: $('#products-wrapper').offset().top
                 }, 300);
             });
         }
