@@ -17,7 +17,11 @@
                                 <div class="shop-search-form">
                                     <h4 class="shop-widget-title">Cerca Prodotto</h4>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="search" placeholder="Cerca" value="{{ $search ?? '' }}">
+                                        <input type="text" class="form-control mobile-hidden" id="search" placeholder="Cerca" value="{{ $search ?? '' }}">
+                                        <div class="search-content">
+                                            <input type="text" class="form-control mobile-show" id="searchMobile" name="search" placeholder="Cerca">
+                                            <button class="search-btn"><i class="far fa-search" style="margin-top: 5px;"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>                            
@@ -104,6 +108,7 @@
        function updateProducts() {
             // Prendi valori filtri
             let search = $('#search').val();
+            let searchMobile = $('#searchMobile').val();
 
             let subCategory = $('.shop-category-list a.active').data('id');
 
@@ -117,6 +122,7 @@
             // Costruisci query string
             let params = new URLSearchParams();
             if (search) params.set('search', search);
+            if (searchMobile) params.set('search', searchMobile);
             if (subCategory) params.set('sub_category', subCategory);
             if (brands.length > 0) brands.forEach(b => params.append('brands[]', b));
 
@@ -136,6 +142,10 @@
 
         // Ricerca al keyup
         $('#search').on('keyup', function () {
+            updateProducts();
+        });
+
+        $('.search-btn').on('click', function () {
             updateProducts();
         });
 
