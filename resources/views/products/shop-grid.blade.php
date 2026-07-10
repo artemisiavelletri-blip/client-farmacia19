@@ -129,7 +129,7 @@
                 $('#products-wrapper').html($(data).find('#products-wrapper').html());
 
                 $('html, body').animate({
-                    scrollTop: $('#products-wrapper').offset().top  - 100
+                    scrollTop: $('#products-wrapper').offset().top  - 200
                 }, 300);
             });
         }
