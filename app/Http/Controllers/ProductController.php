@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use Carbon\Carbon;
+
 use App\Models\Tag;
 use App\Models\Brand;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\Promotion;
+use App\Models\CartItem;
+use App\Models\Order;
 
 class ProductController extends Controller
 {
@@ -185,6 +190,60 @@ class ProductController extends Controller
             'category' => $category,
             'tag' => $tag,
             'type_message' => $type_message
+        ]);
+    }
+
+    public function addCoupon(Request $request)
+    {
+        if(!$request->coupon){
+            return;
+        }
+
+        $code = strtolower($request->coupon);
+        $today = Carbon::today();
+        $user = auth()->user();
+
+        $promotion = Promotion::where('name', strtolower($request->coupon))
+            ->where('active', 1)
+            ->where(function ($query) use ($today) {
+                $query->whereNull('start_date')
+                      ->orWhere('start_date', '<=', $today);
+            })
+            ->where(function ($query) use ($today) {
+                $query->whereNull('end_date')
+                      ->orWhere('end_date', '>=', $today);
+            })
+            ->first();
+
+        if (!$promotion) {
+            return;
+        }
+
+        if (
+            $promotion->max_use &&
+            Order::where('user_id', $user->id)
+                ->where('coupon_id', $promotion->id)
+                ->count() >= $promotion->max_use
+        ) {
+            return;
+        }
+
+        foreach ($user->cartItems as $cartItem) {
+            $cartItem->discounts()->sync([$promotion->id]);
+        }
+    }
+
+    public function removeCoupon(Request $request)
+    {
+        $user = auth()->user();
+
+        foreach ($user->cartItems as $cartItem) {
+            $cartItem->discounts()->detach();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon rimosso.'
         ]);
     }
 }

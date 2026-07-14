@@ -45,9 +45,7 @@ class CheckoutController extends Controller
         }
 
         // Calcola totale
-        $total = $cartItems->sum(function($item){
-            return $item->subtotal;
-        });
+        $total = auth()->user()->cart_total;
 
         switch ($paymentMethod) {
             case 'stripe':
@@ -346,11 +344,7 @@ class CheckoutController extends Controller
 
         $shipping_cost = 0.00;
         if($method == 'cod'){
-            $total = $user->cartItems()->with('product')->get()->sum->subtotal + 2.00;
-        }
-        if(number_format((float)$user->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '') <= 49.90){
-            $shipping_cost = 5.90;
-            $total += $shipping_cost;
+            $total = auth()->user()->cart_total + 2.00;
         }
 
         switch ($method) {
@@ -370,6 +364,22 @@ class CheckoutController extends Controller
                 $payment_method = 'cash_on_delivery';
                 $payment_status = 'pending';
                 break;
+        }
+
+        $cartItems = $user->cartItems()->with('discounts')->get();
+
+        $coupon = $cartItems
+            ->pluck('discounts')
+            ->flatten()
+            ->first();
+
+        $couponDiscount = (float)$user->cart_discount;
+
+        if ($couponDiscount <= 0) {
+            $coupon = null;
+            $couponDiscount = null;
+        } else {
+            $coupon = $coupon->id;
         }
 
 
@@ -392,7 +402,9 @@ class CheckoutController extends Controller
             'city_id' => $user->shippingAddresses()->first()->city_id,
             'phone' => $user->shippingAddresses()->first()->phone,
             'recipient_name' => $user->shippingAddresses()->first()->recipient_name,
-            'note' => $user->shippingAddresses()->first()->note
+            'note' => $user->shippingAddresses()->first()->note,
+            'coupon_id' => $coupon,
+            'couponDiscount' => $couponDiscount,
         ]);
 
         // Aggiungi items

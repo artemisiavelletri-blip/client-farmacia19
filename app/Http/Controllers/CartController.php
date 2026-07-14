@@ -41,7 +41,7 @@ class CartController extends Controller
             $cartItem->quantity += $quantity;
             $cartItem->save();
         } else {
-            $user->cartItems()->create([
+            $cartItem = $user->cartItems()->create([
                 'product_id' => $product->id,
                 'quantity' => $quantity
             ]);
@@ -50,6 +50,19 @@ class CartController extends Controller
         // Aggiorna lo stock
         $product->stock -= $quantity;
         $product->save();
+        // recupero gli sconti già utilizzati nel carrello
+        $discountIds = $user->cartItems()
+            ->where('id', '!=', $cartItem->id)
+            ->with('discounts')
+            ->get()
+            ->pluck('discounts')
+            ->flatten()
+            ->pluck('id')
+            ->unique();
+
+        if ($discountIds->isNotEmpty()) {
+            $cartItem->discounts()->syncWithoutDetaching($discountIds);
+        }
 
         return response()->json([
             'message' => 'Prodotto aggiunto al carrello',

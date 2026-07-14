@@ -62,7 +62,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="shop-cart-subtotal">
-                                                                <span class="subtotalPrice" data-id="{{ $item->id }}">€{{number_format((float)auth()->user()->cartItems()->with('product')->find($item->id)->subtotal, 2, '.', '')}}</span>
+                                                                <span class="subtotalPrice" data-id="{{ $item->id }}">€{{number_format((float)auth()->user()->cartItems()->with('product')->find($item->id)->subtotalnodiscount, 2, '.', '')}}</span>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -91,7 +91,7 @@
                                                 <div class="cart-item-details">
                                                     <h5>{{ $product->name }}</h5>
                                                     <div class="subtotal mt-30">
-                                                        <b class="subtotalPrice-mobile" data-id="{{ $item->id }}">€{{ number_format((float)$item->subtotal, 2, '.', '') }}</b>
+                                                        <b class="subtotalPrice-mobile" data-id="{{ $item->id }}">€{{ number_format((float)$item->subtotalnodiscount, 2, '.', '') }}</b>
                                                     </div>
                                                     <div class="cart-item-qty mt-30 shop-cart-qty">
                                                         <button type="button" class="minus-btn" data-id="{{ $item->id }}"><i class="fal fa-minus"></i></button>
@@ -105,18 +105,20 @@
                                     @endif
                                 </div>
                             </div>
-                            <!-- <div class="shop-cart-footer">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="shop-cart-coupon">
-                                            <div class="form-group">
-                                                <input type="text" class="form-control" placeholder="Coupon">
-                                                <button class="theme-btn coupon" type="submit">Applica Coupon</button>
+                            @if(auth()->user()->cartItems()->exists())
+                                <div class="shop-cart-footer">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="shop-cart-coupon">
+                                                <div class="form-group">
+                                                    <input type="text" id="coupon-code" class="form-control" placeholder="Coupon">
+                                                    <button class="theme-btn coupon">Applica Coupon</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>  -->
+                            @endif
                         </div>
                         @if(!auth()->user()->cartItems()->exists())
                             <div class="col-lg-12">
@@ -134,19 +136,26 @@
                                         <li><strong>Sub Totale:</strong> <span>€{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotalnoiva, 2, '.', '')}}</span></li>
                                         <!-- <li><strong>Discount:</strong> <span>$5.00</span></li> -->
                                         <li><strong>Spese di Spedizione:</strong> <span>
-                                            @if(number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '') > 49.90)
+                                            @if(auth()->user()->cart_total > 49.90)
                                                 Gratuite
                                             @else
                                                 €5.90
                                             @endif
                                         </span></li>
                                         <li><strong>IVA:</strong> <span>€{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->totalvat, 2, '.', '')}}</span></li>
+                                        @if(auth()->user()->cartItems()->whereHas('discounts')->exists() && auth()->user()->cart_discount > 0)
+                                            <li>
+                                                <strong>Coupon applicato:</strong>
+                                                <span>
+                                                    - €{{ number_format(auth()->user()->cart_discount, 2, ',', '.') }}
+                                                </span>                                                
+                                            </li>
+                                            <button class="btn btn-sm theme-btn removeCoupon w-100 mb-15" title="Rimuovi coupon">
+                                                Rimuovi coupon
+                                            </button>
+                                        @endif
                                         <li class="shop-cart-total"><strong>Totale:</strong> <span>
-                                            @if(number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '') > 49.90)
-                                                €{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '')}}
-                                            @else
-                                                €{{number_format((float)(auth()->user()->cartItems()->with('product')->get()->sum->subtotal + 5.90), 2, '.', '')}}
-                                            @endif
+                                            €{{ number_format(auth()->user()->cart_total, 2, ',', '.') }}
                                         </span></li>
                                     </ul>
                                     <div class="text-end mt-40">
@@ -272,6 +281,43 @@
         $('.shop-cart-qty').each(function() {
             updateButtons($(this));
         });
+
+        $('.coupon').on('click',function(){
+            $.ajax({
+                url: '/add-coupon',
+                type: 'POST',
+                data: {
+                    coupon: $('#coupon-code').val(),
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+
+                    $('#cart-wrapper').load(location.href + ' #cart-wrapper > *');
+                    $('#shop-cart-summary').load(location.href + ' #shop-cart-summary > *');
+                    $('#shop-cart-id').load(location.href + ' #shop-cart-id > *');
+                    $('#cart-mobile-counter').load(location.href + ' #cart-mobile-counter > *');
+                    
+                }
+            });
+        })
+
+        $('.removeCoupon').on('click',function(){
+            $.ajax({
+                url: '/remove-coupon',
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+
+                    $('#cart-wrapper').load(location.href + ' #cart-wrapper > *');
+                    $('#shop-cart-summary').load(location.href + ' #shop-cart-summary > *');
+                    $('#shop-cart-id').load(location.href + ' #shop-cart-id > *');
+                    $('#cart-mobile-counter').load(location.href + ' #cart-mobile-counter > *');
+                    
+                }
+            });
+        })
     </script>
 
 @endsection

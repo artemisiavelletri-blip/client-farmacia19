@@ -168,6 +168,9 @@ Route::middleware('doctor')->group(function () {
         Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
         Route::post('/payment/order', [CheckoutController::class, 'checkout'])->name('checkout');
+        
+        Route::post('/add-coupon', [ProductController::class, 'addCoupon'])->name('addCoupon');
+        Route::post('/remove-coupon', [ProductController::class, 'removeCoupon'])->name('removeCoupon');
 
         Route::get('/refund-request/{id}',[OrderController::class, 'refundRequest'])->name('refund-request');
         Route::post('/refund-request/{id}',[OrderController::class, 'refundRequestPost'])->name('refund-request-post');

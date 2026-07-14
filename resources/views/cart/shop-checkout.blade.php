@@ -185,16 +185,6 @@
                                                                 <span>Paga con Carta</span>
                                                             </a>
                                                         </li>
-                                                        <!-- <li class="nav-item" role="presentation" data-id="paypal" style="width:100%!important">
-                                                            <a class="nav-link" id="pills-tab-2" data-bs-toggle="pill"
-                                                                data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2"
-                                                                aria-selected="false" style="text-align: left!important;">
-                                                                <div class="checkout-payment-img" style="display: inline;">
-                                                                    <img src="{{ asset('/img/payment/paypal.png') }}" alt="" style="width: 80px!important;">
-                                                                </div>
-                                                                <span>Paga con PayPal</span>
-                                                            </a>
-                                                        </li> -->
                                                         <li class="nav-item" role="presentation" data-id="bank_transfer" style="width:100%!important">
                                                             <a class="nav-link" id="pills-tab-3" data-bs-toggle="pill"
                                                                 data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3"
@@ -314,7 +304,7 @@
                                         <li><strong>Sub Totale:</strong> <span>€{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotalnoiva, 2, '.', '')}}</span></li>
                                         <!-- <li><strong>Discount:</strong> <span>$5.00</span></li> -->
                                         <li><strong>Spese di Spedizione:</strong> <span>
-                                            @if(number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '') > 49.90)
+                                            @if(auth()->user()->cart_total > 49.90)
                                                 Gratuite
                                             @else
                                                 €5.90
@@ -322,19 +312,22 @@
                                         </span></li>
                                         <li class="contrassegno hidden"><strong>Contrassegno:</strong> <span>€2.00</span></li>
                                         <li><strong>IVA:</strong> <span>€{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->totalvat, 2, '.', '')}}</span></li>
+                                        @if(auth()->user()->cartItems()->whereHas('discounts')->exists() && auth()->user()->cart_discount > 0)
+                                            <li>
+                                                <strong>Coupon applicato:</strong>
+                                                <span>
+                                                    - €{{ number_format(auth()->user()->cart_discount, 2, ',', '.') }}
+                                                </span>                                                
+                                            </li>
+                                            <button class="btn btn-sm theme-btn removeCoupon w-100 mb-15" title="Rimuovi coupon">
+                                                Rimuovi coupon
+                                            </button>
+                                        @endif
                                         <li class="shop-cart-total shop-cart-total-no-contr"><strong>Totale:</strong> <span>
-                                            @if(number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '') > 49.90)
-                                                €{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '')}}
-                                            @else
-                                                €{{number_format((float)(auth()->user()->cartItems()->with('product')->get()->sum->subtotal + 5.90), 2, '.', '')}}
-                                            @endif
+                                            €{{ number_format(auth()->user()->cart_total, 2, ',', '.') }}
                                         </span></li>
                                         <li class="shop-cart-total shop-cart-total-contr hidden"><strong>Totale:</strong> <span>
-                                            @if(number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '') > 49.90)
-                                                €{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal + 2.00, 2, '.', '')}}
-                                            @else
-                                                €{{number_format((float)(auth()->user()->cartItems()->with('product')->get()->sum->subtotal + 5.90 + 2.00), 2, '.', '')}}
-                                            @endif
+                                            €{{ number_format(auth()->user()->cart_total + 2.00, 2, ',', '.') }}
                                         </span></li>
                                     </ul>
                                     <div class="text-end mt-40">
@@ -354,7 +347,7 @@
 @endsection
 
 @section('js')
-    
+    <script src="https://www.paypal.com/sdk/js?client-id=Aa1SWEv2p4a-N6KZVeBNzGdwsueD_JNKfBSFj-SCsuJwgOIqLv428IiSZbcPm3MPtkXyOPQn43goUqGU&currency=EUR"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
             // Seleziona tutti i tab
@@ -426,6 +419,39 @@
         $('.addCard').on('click',function(){
             $('#addCardForm').submit();
         });
+
+        paypal.Buttons({
+
+            createOrder() {
+                return fetch('/paypal/order/create', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document
+                            .querySelector('meta[name="csrf-token"]')
+                            .content
+                    }
+                })
+                .then(res => res.json())
+                .then(data => data.id);
+            },
+
+            onApprove(data) {
+
+                return fetch(`/paypal/order/${data.orderID}/capture`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document
+                            .querySelector('meta[name="csrf-token"]')
+                            .content
+                    }
+                })
+                .then(res => res.json())
+                .then(orderData => {
+                    console.log(orderData);
+                });
+            }
+
+        }).render('#paypal-button-container');
     </script>
 
 @endsection

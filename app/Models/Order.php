@@ -31,7 +31,9 @@ class Order extends Model
         'city_id',
         'phone',
         'note',
-        'recipient_name'
+        'recipient_name',
+        'coupon_id',
+        'couponDiscount'
     ];
 
     protected $casts = [

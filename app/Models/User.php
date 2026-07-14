@@ -88,4 +88,41 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function getCartTotalAttribute()
+    {
+        $cartItems = $this->cartItems()->with(['product', 'discounts'])->get();
+
+        $total = $cartItems->sum->subtotal;
+
+        $coupon = $cartItems->pluck('discounts')->flatten()->first();
+
+        if ($coupon && $coupon->fixDiscount) {
+            $total -= $coupon->fixDiscount;
+        }
+
+        $total = max(0, $total);
+
+        if ($total < 49.90) {
+            $total += 5.90;
+        }
+
+        return $total;
+    }
+
+    public function getCartDiscountAttribute()
+    {
+        $cartItems = $this->cartItems()->with(['product', 'discounts'])->get();
+
+        $discount = $cartItems->sum->discount;
+
+        $coupon = $cartItems->pluck('discounts')->flatten()->first();
+
+        // Se il coupon è a importo fisso, usa quello invece della somma dei singoli prodotti
+        if ($coupon && $coupon->fixDiscount) {
+            $discount = $coupon->fixDiscount;
+        }
+
+        return $discount;
+    }
+
 }

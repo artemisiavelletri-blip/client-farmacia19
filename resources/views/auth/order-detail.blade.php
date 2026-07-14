@@ -138,7 +138,7 @@
                                                                 </div>
                                                             </td>
                                                             <td>{{$item->quantity}}</td>
-                                                            <td>€{{$item->price}}</td>
+                                                            <td>€{{  number_format($item->price*$item->quantity, 2, ',', '.') }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -153,7 +153,7 @@
                                                             <h5>{{$item->product_name}}</h5>
                                                         </a>
                                                         <div class="info">Quantità: {{$item->quantity}}</div>
-                                                        <div class="info">Prezzo: €{{$item->price}}</div>
+                                                        <div class="info">Prezzo: €{{  number_format($item->price*$item->quantity, 2, ',', '.') }}</div>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -180,6 +180,9 @@
                                                             <li>Contrassegno<span>€2.00</span></li>
                                                         @endif
                                                         <li>IVA<span>€{{$order->total_vat}}</span></li>
+                                                        @if($order->couponDiscount && $order->coupon_id)
+                                                            <li>Coupon<span>- €{{$order->couponDiscount}}</span></li>
+                                                        @endif
                                                         <li>Totale<span>€{{$order->total}}</span></li>
                                                     </ul>
                                                     <p class="mt-4">
