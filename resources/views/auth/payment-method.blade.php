@@ -86,7 +86,7 @@
                                                     @foreach($payment_method as $card)
                                                         <tr>
                                                             <td>
-                                                                <div class="table-list-img w-25">
+                                                                <div class="table-list-img w-25" style="height: auto!important;">
                                                                     @if($card->brand == 'visa' || $card->brand == 'VISA')
                                                                         <img class="rounded-3" src="{{ asset('/img/payment/visa.svg') }}" alt="">
                                                                     @elseif($card->brand == 'mastercard')
