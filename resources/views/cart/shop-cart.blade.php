@@ -284,7 +284,9 @@
             updateButtons($(this));
         });
 
-        $('.coupon').on('click',function(){
+        $(document).on('click', '.coupon', function (e) {
+            e.preventDefault();
+
             $.ajax({
                 url: '/add-coupon',
                 type: 'POST',
@@ -298,12 +300,14 @@
                     $('#shop-cart-summary').load(location.href + ' #shop-cart-summary > *');
                     $('#shop-cart-id').load(location.href + ' #shop-cart-id > *');
                     $('#cart-mobile-counter').load(location.href + ' #cart-mobile-counter > *');
-                    
+
                 }
             });
-        })
+        });
 
-        $('.removeCoupon').on('click',function(){
+        $(document).on('click', '.removeCoupon', function (e) {
+            e.preventDefault();
+
             $.ajax({
                 url: '/remove-coupon',
                 type: 'POST',
@@ -316,10 +320,10 @@
                     $('#shop-cart-summary').load(location.href + ' #shop-cart-summary > *');
                     $('#shop-cart-id').load(location.href + ' #shop-cart-id > *');
                     $('#cart-mobile-counter').load(location.href + ' #cart-mobile-counter > *');
-                    
+
                 }
             });
-        })
+        });
     </script>
 
 @endsection

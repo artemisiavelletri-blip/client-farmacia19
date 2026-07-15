@@ -167,12 +167,7 @@ class User extends Authenticatable
 
         // Sconto fisso
         if ($coupon->fixDiscount) {
-            $applicableTotal = $applicableItems->sum->subtotalnodiscount;
-
-            return min(
-                $coupon->fixDiscount,
-                $applicableTotal
-            );
+            return $coupon->fixDiscount;
         }
 
         // Sconto percentuale
