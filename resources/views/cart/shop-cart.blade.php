@@ -136,10 +136,10 @@
                                         <li><strong>Sub Totale:</strong> <span>€{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotalnoiva, 2, '.', '')}}</span></li>
                                         <!-- <li><strong>Discount:</strong> <span>$5.00</span></li> -->
                                         <li><strong>Spese di Spedizione:</strong> <span>
-                                            @if(auth()->user()->cart_total > 49.90)
-                                                Gratuite
+                                            @if(auth()->user()->cart_shipping_cost > 0)
+                                                €{{ number_format(auth()->user()->cart_shipping_cost, 2, ',', '.') }}
                                             @else
-                                                €5.90
+                                                Gratuite
                                             @endif
                                         </span></li>
                                         <li><strong>IVA:</strong> <span>€{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->totalvat, 2, '.', '')}}</span></li>

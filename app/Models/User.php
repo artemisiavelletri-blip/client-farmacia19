@@ -88,6 +88,45 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function getCartShippingCostAttribute()
+    {
+        $cartItems = $this->cartItems()
+            ->with(['product', 'discounts'])
+            ->get();
+
+        $total = $cartItems->sum->subtotal;
+
+        $coupon = $cartItems
+            ->pluck('discounts')
+            ->flatten()
+            ->first();
+
+        if ($coupon && $coupon->isValid()) {
+
+            $canApplyDiscount = true;
+
+            if ($coupon->minimum_purchase !== null) {
+                $canApplyDiscount =
+                    $cartItems->sum->subtotalnodiscount >= $coupon->minimum_purchase;
+            }
+
+            if ($canApplyDiscount && $coupon->fixDiscount) {
+
+                $hasApplicableProduct = $cartItems->contains(function ($cartItem) use ($coupon) {
+                    return $coupon->appliesToProduct($cartItem->product);
+                });
+
+                if ($hasApplicableProduct) {
+                    $total -= $coupon->fixDiscount;
+                }
+            }
+        }
+
+        $total = max(0, $total);
+
+        return $total < 49.90 ? 5.90 : 0.00;
+    }
+
     public function getCartTotalAttribute()
     {
         $cartItems = $this->cartItems()

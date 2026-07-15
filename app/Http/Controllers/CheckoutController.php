@@ -342,7 +342,7 @@ class CheckoutController extends Controller
     {
         $prescriberId = session('prescriber_id') ?? $user->prescriber_id ?? null;
 
-        $shipping_cost = 0.00;
+        $shipping_cost = auth()->user()->cart_shipping_cost;
         if($method == 'cod'){
             $total = auth()->user()->cart_total + 2.00;
         }
