@@ -106,7 +106,7 @@ class CheckoutController extends Controller
 
         // Pagamento OneClik - Pagamenti successivi - Tramite redirezione - Avvio pagamento
 
-        $requestUrl = "https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet";
+        $requestUrl = env('NEXI_BASE_URL');
         $merchantServerUrl = "http://" . $_SERVER['HTTP_HOST'] . "/cart/pagamento";
         $merchantServerUrlBack = "http://" . $_SERVER['HTTP_HOST'] . "/shop-checkout";
 

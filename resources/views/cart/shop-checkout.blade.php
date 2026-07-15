@@ -8,7 +8,7 @@
     $ALIAS = env('XPAY_ALIAS'); // Sostituire con il valore fornito da Nexi
     $CHIAVESEGRETA = env('XPAY_SECRET'); // Sostituire con il valore fornito da Nexi
 
-    $requestUrl = "https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet";
+    $requestUrl = env('NEXI_BASE_URL');
     //$merchantServerUrl = "http://" . $_SERVER['HTTP_HOST'] . "/cards/";
     $merchantServerUrl = "https://" . $_SERVER['HTTP_HOST'];
 
