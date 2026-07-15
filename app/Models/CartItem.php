@@ -52,6 +52,26 @@ class CartItem extends Model
                         if($discount->percentage){
                             $final_price -= $final_price * ($discount->percentage / 100);
                         }
+                    } else if (
+                        $discount->category_id &&
+                        $discount->subcategory_id &&
+                        $this->product->category_id == $discount->category_id &&
+                        $this->product->subcategory_id == $discount->subcategory_id
+                    ) {
+
+                        if ($discount->percentage) {
+                            $final_price -= $final_price * ($discount->percentage / 100);
+                        }
+
+                    } else if (
+                        $discount->category_id &&
+                        !$discount->subcategory_id &&
+                        $this->product->category_id == $discount->category_id
+                    ) {
+
+                        if ($discount->percentage) {
+                            $final_price -= $final_price * ($discount->percentage / 100);
+                        }
                     }
                 }
             }

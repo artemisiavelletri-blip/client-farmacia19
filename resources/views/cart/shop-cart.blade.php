@@ -143,14 +143,16 @@
                                             @endif
                                         </span></li>
                                         <li><strong>IVA:</strong> <span>€{{number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->totalvat, 2, '.', '')}}</span></li>
-                                        @if(auth()->user()->cartItems()->whereHas('discounts')->exists() && auth()->user()->cart_discount > 0)
+                                        @if(auth()->user()->cart_discount > 0)
                                             <li>
                                                 <strong>Coupon applicato:</strong>
                                                 <span>
                                                     - €{{ number_format(auth()->user()->cart_discount, 2, ',', '.') }}
-                                                </span>                                                
+                                                </span>
                                             </li>
-                                            <button class="btn btn-sm theme-btn removeCoupon w-100 mb-15" title="Rimuovi coupon">
+
+                                            <button class="btn btn-sm theme-btn removeCoupon w-100 mb-15"
+                                                    title="Rimuovi coupon">
                                                 Rimuovi coupon
                                             </button>
                                         @endif

@@ -90,14 +90,36 @@ class User extends Authenticatable
 
     public function getCartTotalAttribute()
     {
-        $cartItems = $this->cartItems()->with(['product', 'discounts'])->get();
+        $cartItems = $this->cartItems()
+            ->with(['product', 'discounts'])
+            ->get();
 
         $total = $cartItems->sum->subtotal;
 
-        $coupon = $cartItems->pluck('discounts')->flatten()->first();
+        $coupon = $cartItems
+            ->pluck('discounts')
+            ->flatten()
+            ->first();
 
-        if ($coupon && $coupon->fixDiscount) {
-            $total -= $coupon->fixDiscount;
+        if ($coupon && $coupon->isValid()) {
+
+            $canApplyDiscount = true;
+
+            if ($coupon->minimum_purchase !== null) {
+                $canApplyDiscount =
+                    $cartItems->sum->subtotalnodiscount >= $coupon->minimum_purchase;
+            }
+
+            if ($canApplyDiscount && $coupon->fixDiscount) {
+
+                $hasApplicableProduct = $cartItems->contains(function ($cartItem) use ($coupon) {
+                    return $coupon->appliesToProduct($cartItem->product);
+                });
+
+                if ($hasApplicableProduct) {
+                    $total -= $coupon->fixDiscount;
+                }
+            }
         }
 
         $total = max(0, $total);
@@ -111,18 +133,54 @@ class User extends Authenticatable
 
     public function getCartDiscountAttribute()
     {
-        $cartItems = $this->cartItems()->with(['product', 'discounts'])->get();
+        $cartItems = $this->cartItems()
+            ->with(['product', 'discounts'])
+            ->get();
 
-        $discount = $cartItems->sum->discount;
+        $coupon = $cartItems
+            ->pluck('discounts')
+            ->flatten()
+            ->first();
 
-        $coupon = $cartItems->pluck('discounts')->flatten()->first();
-
-        // Se il coupon è a importo fisso, usa quello invece della somma dei singoli prodotti
-        if ($coupon && $coupon->fixDiscount) {
-            $discount = $coupon->fixDiscount;
+        if (!$coupon || !$coupon->isValid()) {
+            return 0;
         }
 
-        return $discount;
+        $subtotalNoDiscount = $cartItems->sum->subtotalnodiscount;
+
+        if (
+            $coupon->minimum_purchase !== null &&
+            $subtotalNoDiscount < $coupon->minimum_purchase
+        ) {
+            return 0;
+        }
+
+        // Prodotti ai quali il coupon si applica
+        $applicableItems = $cartItems->filter(function ($cartItem) use ($coupon) {
+            return $coupon->appliesToProduct($cartItem->product);
+        });
+
+        // Nessun prodotto compatibile
+        if ($applicableItems->isEmpty()) {
+            return 0;
+        }
+
+        // Sconto fisso
+        if ($coupon->fixDiscount) {
+            $applicableTotal = $applicableItems->sum->subtotalnodiscount;
+
+            return min(
+                $coupon->fixDiscount,
+                $applicableTotal
+            );
+        }
+
+        // Sconto percentuale
+        return $applicableItems->sum(function ($cartItem) use ($coupon) {
+            return $cartItem->product->final_price
+                * ($coupon->percentage / 100)
+                * $cartItem->quantity;
+        });
     }
 
 }

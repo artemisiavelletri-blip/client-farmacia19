@@ -49,4 +49,12 @@ class Promotion extends Model
 
         return true;
     }
+
+    public function appliesToProduct(Product $product): bool
+    {
+        return $this->all_products
+            || ($this->product_id && $this->product_id == $product->id)
+            || ($this->brand_id && $this->brand_id == $product->brand_id)
+            || ($this->category_id && $this->category_id == $product->category_id);
+    }
 }
