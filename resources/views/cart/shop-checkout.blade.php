@@ -50,6 +50,111 @@
         <?php } ?>
     </form>
 
+@section('css')
+
+    <style type="text/css">
+         /* Modern Vertical List */
+        .vertical-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .vertical-list-item {
+            background: #f8fafc;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .vertical-list-item:hover {
+            background: #f1f5f9;
+        }
+        
+        .vertical-list-item input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--gray);
+            border-radius: 50%;
+            margin-right: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .vertical-list-item input[type="radio"]:checked {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .vertical-list-item input[type="radio"]:checked::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+
+        .vertical-list-item label {
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+            transition: var(--transition);
+        }
+        
+        .vertical-list-item input[type="radio"]:checked + label {
+            color: var(--theme-color);
+        }
+        
+        .vertical-list-item input[type="radio"]:checked ~ .vertical-list-item {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .section-radio {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        
+        .section-radio:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
+        .card-brand {
+            width: 60px;
+            height: 40px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card-brand img {
+            max-width: 55px;
+            max-height: 35px;
+            object-fit: contain;
+        }
+
+        .card-brand span {
+            font-size: 12px;
+            font-weight: 700;
+        }
+    </style>
+
+@endsection
+
 @section('content')
 
     <main class="main">
@@ -80,11 +185,11 @@
                                     <div class="accordion" id="shopCheckout">
                                         <div class="accordion-item">
                                           <h2 class="accordion-header">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep1" aria-expanded="true" aria-controls="checkoutStep1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep1" aria-expanded="false" aria-controls="checkoutStep1">
                                                 Indirizzo di Fatturazione
                                             </button>
                                           </h2>
-                                          <div id="checkoutStep1" class="accordion-collapse collapse show" data-bs-parent="#shopCheckout">
+                                          <div id="checkoutStep1" class="accordion-collapse collapse" data-bs-parent="#shopCheckout">
                                             <div class="accordion-body">
                                                 <div class="row shop-checkout-form">
                                                     <div class="col-8">
@@ -116,11 +221,11 @@
                                         </div>
                                         <div class="accordion-item">
                                           <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep2" aria-expanded="false" aria-controls="checkoutStep2">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep2" aria-expanded="true" aria-controls="checkoutStep2">
                                                 Indirizzo di Spedizione
                                             </button>
                                           </h2>
-                                          <div id="checkoutStep2" class="accordion-collapse collapse" data-bs-parent="#shopCheckout">
+                                          <div id="checkoutStep2" class="accordion-collapse collapse show" data-bs-parent="#shopCheckout">
                                             <div class="accordion-body">
                                                 <div class="row shop-checkout-form">
                                                     <div class="col-8"> 
@@ -159,7 +264,27 @@
                                                     </div>
                                                     <div class="col-4 align-right">
                                                         <a href="/settings/shipping-address"><i class="fas fa-edit"></i></a>
-                                                    </div>
+                                                    </div> 
+                                                    <!-- <div class="section-radio">
+                                                        <div class="vertical-list">
+                                                            <div class="vertical-list-item">
+                                                                <input type="radio" id="vl1" name="vertical-list" checked>
+                                                                <label for="vl1">First List Item</label>
+                                                            </div>
+                                                            <div class="vertical-list-item">
+                                                                <input type="radio" id="vl2" name="vertical-list">
+                                                                <label for="vl2">Second List Item</label>
+                                                            </div>
+                                                            <div class="vertical-list-item">
+                                                                <input type="radio" id="vl3" name="vertical-list">
+                                                                <label for="vl3">Third List Item</label>
+                                                            </div>
+                                                            <div class="vertical-list-item">
+                                                                <input type="radio" id="vl4" name="vertical-list">
+                                                                <label for="vl4">Fourth List Item</label>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
                                                 </div> 
                                             </div>
                                           </div>
@@ -210,7 +335,35 @@
                                                         <div class="tab-pane fade show" id="pills-1" role="tabpanel"
                                                             aria-labelledby="pills-tab-1" tabindex="0">
                                                             <div class="shop-checkout-form">
-                                                                <div class="table-responsive">
+                                                                <div class="section-radio">
+                                                                    <div class="vertical-list">
+                                                                        @foreach($user->paymentMethods()->get() as $card)
+                                                                            @php
+                                                                                $brand = strtolower($card->brand);
+                                                                            @endphp
+                                                                            <div class="vertical-list-item">
+                                                                                <input type="radio" id="vl1" name="selected_card_id" value="{{ $card->id }}" checked>
+                                                                                <div class="card-brand">
+                                                                                    @if($brand === 'visa')
+                                                                                        <img src="{{ asset('/img/payment/visa.svg') }}" alt="Visa">
+                                                                                    @elseif($brand === 'mastercard')
+                                                                                        <img src="{{ asset('/img/payment/mastercard.png') }}" alt="Mastercard">
+                                                                                    @else
+                                                                                        <span>{{ strtoupper($card->brand) }}</span>
+                                                                                    @endif
+                                                                                </div>
+                                                                                <label for="vl1">
+                                                                                    {{$card->brand}}<br>
+                                                                                    {{$card->holder_name}} : {{$card->exp_month}}/{{$card->exp_year}}
+                                                                                </label>
+                                                                            </div>
+                                                                        @endforeach
+                                                                    </div>
+                                                                    <div class="text-center">
+                                                                        <button class="theme-btn addCard" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- <div class="table-responsive">
                                                                     <table class="table table-borderless text-nowrap">
                                                                         <thead>
                                                                             <tr>
@@ -270,7 +423,7 @@
                                                                     <div class="text-center">
                                                                         <button class="theme-btn addCard" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
                                                                     </div>
-                                                                </div>
+                                                                </div> -->
                                                             </div>
                                                         </div>
                                                         <div class="tab-pane fade" id="pills-2" role="tabpanel"
