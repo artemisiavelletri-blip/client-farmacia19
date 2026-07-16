@@ -324,6 +324,9 @@
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
+                beforeSend: function () {
+                    $('.preloader').show();
+                },
                 success: function (response) {
 
                     $('#cart-wrapper').load(location.href + ' #cart-wrapper > *');
@@ -331,6 +334,9 @@
                     $('#shop-cart-id').load(location.href + ' #shop-cart-id > *');
                     $('#cart-mobile-counter').load(location.href + ' #cart-mobile-counter > *');
 
+                },
+                complete: function () {
+                    $('.preloader').hide();
                 }
             });
         });

@@ -72,6 +72,9 @@
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
+                beforeSend: function () {
+                    $('.preloader').show();
+                },
                 success: function (response) {
 
                     // Rimuove la riga dalla tabella
@@ -83,6 +86,9 @@
                     $('#prod-info').load(window.location.href + ' #prod-info > *');
                     $('#shop-cart-id').load(window.location.href + ' #shop-cart-id > *');
                     $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');
+                },
+                complete: function () {
+                    $('.preloader').hide();
                 }
             });
         });
