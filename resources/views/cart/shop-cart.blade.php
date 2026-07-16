@@ -239,8 +239,12 @@
                     quantity: currentQty,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
+                beforeSend: function () {
+                    $('.preloader').show();
+                },
                 complete: function () {
                     $button.data('loading', false);
+                    $('.preloader').hide();
                 },
                 success: function (response) {
 
@@ -306,7 +310,7 @@
 
                 },
                 complete: function () {
-                    $('#preloader').hide();
+                    $('.preloader').hide();
                 }
             });
         });
