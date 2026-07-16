@@ -299,7 +299,7 @@
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend: function () {
-                    $('#preloader').show();
+                    $('.preloader').show();
                 },
                 success: function (response) {
 
