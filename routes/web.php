@@ -156,6 +156,9 @@ Route::middleware('doctor')->group(function () {
             Route::post('/edit-address/shipping', [UserController::class, 'edit_shipping_address_post'])->name('edit_shipping_address_post');
             Route::post('/create-address/shipping', [UserController::class, 'create_shipping_address_post'])->name('create_shipping_address_post');
 
+            Route::delete('/delete-address/delete/{id}', [UserController::class, 'destroy'])->name('delete-address.destroy');
+
+
             Route::get('/payment-method', [UserController::class, 'payment_method'])->name('payment_method');
 
             Route::get('/add-payment', function () {
