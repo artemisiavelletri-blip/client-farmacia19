@@ -277,10 +277,13 @@
                                                                         @if($address->note)
                                                                             <br>Note: {{$address->note}}
                                                                         @endif <br>  
-                                                                        <button type="button" class="edit-address btn btn-sm theme-btn w-100 @if(!$address->default) hidden @endif" onclick="window.location.href='/settings/edit-address/shipping/{{$address->id}}'">Modifica Indirizzo</button>
+                                                                        <button type="button" class="edit-address btn btn-sm btn-secondary w-100 @if(!$address->default) hidden @endif" onclick="window.location.href='/settings/edit-address/shipping/{{$address->id}}'">Modifica Indirizzo</button>
                                                                     </label>
                                                                 </div>
                                                             @endforeach
+                                                        </div>
+                                                        <div class="text-center">
+                                                            <button class="theme-btn w-100 btn-sm" type="button" onclick="window.location.href='/settings/create-address/shipping'"><span class="far fa-plus-circle"></span>Aggiungi Indirizzo</button>
                                                         </div>
                                                     </div>
                                                 </div> 
@@ -358,7 +361,7 @@
                                                                         @endforeach
                                                                     </div>
                                                                     <div class="text-center">
-                                                                        <button class="theme-btn addCard" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
+                                                                        <button class="theme-btn addCard w-100 btn-sm" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
                                                                     </div>
                                                                 </div>
                                                                 <!-- <div class="table-responsive">
