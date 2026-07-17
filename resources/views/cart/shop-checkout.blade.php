@@ -501,7 +501,7 @@
 @endsection
 
 @section('js')
-    <script src="https://www.paypal.com/sdk/js?client-id=Aa1SWEv2p4a-N6KZVeBNzGdwsueD_JNKfBSFj-SCsuJwgOIqLv428IiSZbcPm3MPtkXyOPQn43goUqGU&currency=EUR"></script>
+    <!-- <script src="https://www.paypal.com/sdk/js?client-id=Aa1SWEv2p4a-N6KZVeBNzGdwsueD_JNKfBSFj-SCsuJwgOIqLv428IiSZbcPm3MPtkXyOPQn43goUqGU&currency=EUR"></script> -->
     <script type="text/javascript">
         $( document ).ready(function() {
             // Seleziona tutti i tab
@@ -583,7 +583,7 @@
             $('#addCardForm').submit();
         });
 
-        paypal.Buttons({
+        /*paypal.Buttons({
 
             createOrder() {
                 return fetch('/paypal/order/create', {
@@ -614,7 +614,7 @@
                 });
             }
 
-        }).render('#paypal-button-container');
+        }).render('#paypal-button-container');*/
 
     </script>
 
