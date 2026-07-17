@@ -343,7 +343,6 @@ class CheckoutController extends Controller
     {
         // Segna ordine come in attesa di pagamento
         $order_number = $this->createOrder($user, $total, 'bank_transfer');
-        dd($order_number);
         return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'bank_transfer']);
     }
 
@@ -397,7 +396,6 @@ class CheckoutController extends Controller
         } else {
             $coupon = $coupon->id;
         }
-
 
         // Crea l'ordine
         $order = Order::create([
