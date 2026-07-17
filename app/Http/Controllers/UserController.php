@@ -139,6 +139,7 @@ class UserController extends Controller
                 $addressShipping->recipient_name = $request->private_delivery;
                 $addressShipping->phone = $request->private_second_phone;
                 $addressShipping->note = !empty($request->private_second_note) ? $request->private_second_note : null;
+                $addressShipping->default = 1;
                 $addressShipping->save();
             } else {
                 $newItem = $addressBilling->replicate();
@@ -166,6 +167,7 @@ class UserController extends Controller
                 $addressShipping->recipient_name = $request->company_second_society ? $request->company_second_society : ($user->name . ' '. $user->surname);
                 $addressShipping->phone = $request->company_second_phone;
                 $addressShipping->note = !empty($request->company_second_note) ? $request->company_second_note : null;
+                $addressShipping->default = 1;
                 $addressShipping->save();
             } else {
                 $newItem = $addressBilling->replicate();
@@ -412,33 +414,40 @@ class UserController extends Controller
 
     public function shipping_address()
     {
-        $shipping_address = Auth::user()->shippingAddresses()->first();
+        $shipping_address = Auth::user()->shippingAddresses()->get();
         return view('auth.shipping-address', [
             'shipping_address' => $shipping_address
         ]);
     }
 
-    public function edit_shipping_address()
+    public function edit_shipping_address(Request $request,$id)
     {
-        $shipping_address = Auth::user()->shippingAddresses()->first();
+        $shipping_address = Address::where('id',$id)->where('user_id',Auth::user()->id)->where('type','shipping')->firstOrFail();
         return view('auth.edit-shipping-address', [
             'shipping_address' => $shipping_address
         ]);
     }
 
-    public function edit_shipping_address_post(Request $request)
+    public function create_shipping_address()
     {
-        if (Auth::user()->user_id == 0) {
-            $rules = [
-                'recipient_name'       => 'required|string|max:255',
-                'address'    => 'required|string|max:255',
-                'city_id'    => 'required|integer',
-                'cap'        => 'required|digits:5',
-                'phone'      => 'required|string|max:20',
-            ];
-        }
+        return view('auth.create-shipping-address');
+    }
 
-        $validator = Validator::make($request->all(), $rules);
+    public function create_shipping_address_post(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'recipient_name'       => 'required|string|max:255',
+            'address'    => 'required|string|max:255',
+            'city_id'    => 'required|integer',
+            'cap'        => 'required|digits:5',
+            'phone'      => 'required|string|max:20',
+        ], [
+            'recipient_name.required' => 'Il campo destinatario è obbligatorio.',
+            'address.required' => 'Il campo indirizzo è obbligatorio.',
+            'city_id.required' => 'Il campo città è obbligatorio.',
+            'cap.required' => 'Il campo cap è obbligatorio.',
+            'phone.required' => 'Il campo telefono è obbligatorio.'
+        ]);
 
         if ($validator->fails()) {
             return redirect()
@@ -447,12 +456,57 @@ class UserController extends Controller
                 ->withInput();
         }
 
-        $updateShipping = Address::findOrFail(Auth::user()->shippingAddresses()->first()->id);
+        $shipping = new Address();
+        $shipping->address = $request->address;
+        $shipping->city_id = $request->city_id;
+        $shipping->cap = $request->cap;
+        $shipping->phone = $request->phone;
+        $shipping->note = $request->note;
+        $shipping->user_id = Auth::user()->id;
+        $shipping->type = 'shipping';
+        $shipping->recipient_name = $request->recipient_name;
+
+        $shipping->save();
+
+        return redirect()->route('settingsshipping_address')->with('success', 'Indirizzo aggiunto con successo!');
+    }
+
+    public function edit_shipping_address_post(Request $request)
+    {
+        if (Auth::user()->user_id == 0) {
+            $validator = Validator::make($request->all(), [
+                'recipient_name'       => 'required|string|max:255',
+                'address'    => 'required|string|max:255',
+                'city_id'    => 'required|integer',
+                'cap'        => 'required|digits:5',
+                'phone'      => 'required|string|max:20',
+            ], [
+                'recipient_name.required' => 'Il campo destinatario è obbligatorio.',
+                'address.required' => 'Il campo indirizzo è obbligatorio.',
+                'city_id.required' => 'Il campo città è obbligatorio.',
+                'cap.required' => 'Il campo cap è obbligatorio.',
+                'phone.required' => 'Il campo telefono è obbligatorio.'
+            ]);
+        }
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $updateShipping = Address::where('id',$request->shipping_id)->where('user_id',Auth::user()->id)->where('type','shipping')->firstOrFail();
         $updateShipping->address = $request->address;
         $updateShipping->city_id = $request->city_id;
         $updateShipping->cap = $request->cap;
         $updateShipping->phone = $request->phone;
         $updateShipping->note = $request->note;
+
+        if($request->default){
+            Address::where('user_id',Auth::user()->id)->where('type','shipping')->update(['default' => null]);
+            $updateShipping->default = 1;
+        }
 
         $updateShipping->save();
 

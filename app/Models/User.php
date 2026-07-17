@@ -59,7 +59,7 @@ class User extends Authenticatable
     // Solo indirizzi di spedizione
     public function shippingAddresses()
     {
-        return $this->hasOne(Address::class)->where('type', 'shipping');
+        return $this->hasMany(Address::class)->where('type', 'shipping');
     }
 
     // Solo indirizzi di fatturazione

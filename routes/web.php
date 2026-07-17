@@ -149,10 +149,12 @@ Route::middleware('doctor')->group(function () {
             Route::get('/order-delete/{id}', [OrderController::class, 'orderDelete'])->name('orderDelete');
 
             Route::get('/edit-address/billing', [UserController::class, 'edit_billing_address'])->name('edit_billing_address');
-            Route::get('/edit-address/shipping', [UserController::class, 'edit_shipping_address'])->name('edit_shipping_address');
+            Route::get('/edit-address/shipping/{id}', [UserController::class, 'edit_shipping_address'])->name('edit_shipping_address');
+            Route::get('/create-address/shipping', [UserController::class, 'create_shipping_address'])->name('create_shipping_address');
 
             Route::post('/edit-address/billing', [UserController::class, 'edit_billing_address_private'])->name('edit_billing_address_private');
             Route::post('/edit-address/shipping', [UserController::class, 'edit_shipping_address_post'])->name('edit_shipping_address_post');
+            Route::post('/create-address/shipping', [UserController::class, 'create_shipping_address_post'])->name('create_shipping_address_post');
 
             Route::get('/payment-method', [UserController::class, 'payment_method'])->name('payment_method');
 

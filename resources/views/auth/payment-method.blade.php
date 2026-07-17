@@ -59,7 +59,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="user-card">
-                                        <div class="user-card-header">
+                                        <div class="user-card-header mobile-card-header">
                                             <h4 class="user-card-title">Metodo di Pagamento</h4>
                                             <div class="user-card-header-right">
                                                 <form method='POST' action='<?php echo $requestUrl ?>'>
@@ -71,7 +71,7 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        <div class="table-responsive">
+                                        <div class="mobile-table-custom">
                                             <table class="table table-borderless text-nowrap">
                                                 <thead>
                                                     <tr>
@@ -96,10 +96,10 @@
                                                                     @endif
                                                                 </div>
                                                             </td>
-                                                            <td><span class="table-list-code">{{$card->holder_name}}</span></td>
-                                                            <td>***********{{$card->last4}}</td>
-                                                            <td>{{$card->exp_month}}/{{$card->exp_year}}</td>
-                                                            <td>
+                                                            <td data-label="Nome Carta"><span class="table-list-code">{{$card->holder_name}}</span></td>
+                                                            <td data-label="Numero Carta">***********{{$card->last4}}</td>
+                                                            <td data-label="Data Scadenza">{{$card->exp_month}}/{{$card->exp_year}}</td>
+                                                            <td data-label="Azione">
                                                                 <a href="#" class="btn btn-outline-danger btn-sm rounded-2 delete-card" data-tooltip="tooltip" title="Delete" data-id="{{$card->stripe_payment_method_id}}"><i class="far fa-trash-can"></i></a>
                                                             </td>
                                                         </tr>

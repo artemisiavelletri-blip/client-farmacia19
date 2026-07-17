@@ -17,10 +17,10 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="user-card">
-                                        <div class="user-card-header">
+                                        <div class="user-card-header mobile-card-header">
                                             <h4 class="user-card-title">Indirizzo di Fatturazione</h4>
                                         </div>
-                                        <div class="table-responsive">
+                                        <div class="mobile-table-custom">
                                             <table class="table table-borderless text-nowrap">
                                                 <thead>
                                                     <tr>
@@ -38,14 +38,14 @@
                                                 <tbody>
                                                     <tr>
                                                         @if(!Auth::user()->user_type)
-                                                            <td><span class="table-list-code">{{Auth::user()->name . ' ' . Auth::user()->surname}}</span></td>
+                                                            <td data-label="Nome e Cognome"><span class="table-list-code">{{Auth::user()->name . ' ' . Auth::user()->surname}}</span></td>
                                                         @else
-                                                            <td><span class="table-list-code">{{Auth::user()->company_society}}</span></td>
+                                                            <td data-label="Ragione Sociale"><span class="table-list-code">{{Auth::user()->company_society}}</span></td>
                                                         @endif
-                                                        <td>{{$billing_address->address}}</td>
-                                                        <td>{{Auth::user()->billingAddressesCity()->name}}</td>
-                                                        <td>{{$billing_address->cap}}</td>
-                                                        <td>
+                                                        <td data-label="Indirizzo">{{$billing_address->address}}</td>
+                                                        <td data-label="Città">{{Auth::user()->billingAddressesCity()->name}}</td>
+                                                        <td data-label="CAP">{{$billing_address->cap}}</td>
+                                                        <td data-label="Azione">
                                                             <a href="/settings/edit-address/billing" class="btn btn-outline-secondary btn-sm rounded-2" data-tooltip="tooltip" title="Edit"><i class="far fa-pen"></i></a>
                                                         </td>
                                                     </tr>                                                    

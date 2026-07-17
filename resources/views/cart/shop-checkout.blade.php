@@ -228,7 +228,7 @@
                                           <div id="checkoutStep2" class="accordion-collapse collapse show" data-bs-parent="#shopCheckout">
                                             <div class="accordion-body">
                                                 <div class="row shop-checkout-form">
-                                                    <div class="col-8"> 
+                                                    <!-- <div class="col-8"> 
                                                         @if($user->shippingAddresses())
                                                             <b>Nome: </b>{{$user->shippingAddresses()->first()->recipient_name}}<br>
                                                             <b>Indirizzo: </b>{{$user->shippingAddresses()->first()->address}}<br>
@@ -264,27 +264,25 @@
                                                     </div>
                                                     <div class="col-4 align-right">
                                                         <a href="/settings/shipping-address"><i class="fas fa-edit"></i></a>
-                                                    </div> 
-                                                    <!-- <div class="section-radio">
+                                                    </div> --> 
+                                                    <div class="section-radio">
                                                         <div class="vertical-list">
-                                                            <div class="vertical-list-item">
-                                                                <input type="radio" id="vl1" name="vertical-list" checked>
-                                                                <label for="vl1">First List Item</label>
-                                                            </div>
-                                                            <div class="vertical-list-item">
-                                                                <input type="radio" id="vl2" name="vertical-list">
-                                                                <label for="vl2">Second List Item</label>
-                                                            </div>
-                                                            <div class="vertical-list-item">
-                                                                <input type="radio" id="vl3" name="vertical-list">
-                                                                <label for="vl3">Third List Item</label>
-                                                            </div>
-                                                            <div class="vertical-list-item">
-                                                                <input type="radio" id="vl4" name="vertical-list">
-                                                                <label for="vl4">Fourth List Item</label>
-                                                            </div>
+                                                            @foreach(Auth::user()->shippingAddresses as $address)
+                                                                <div class="vertical-list-item">
+                                                                    <input type="radio" id="vl1" name="shipping_address" value="{{$address->id}}" @if($address->default) checked @endif>
+                                                                    <label for="vl1">
+                                                                        {{$address->recipient_name}}<br>
+                                                                        {{$address->address . ',' . $address->city->name . ',' . $address->city->province . ',' . $address->cap}}<br>
+                                                                        Numero di telefono: {{$address->phone}}
+                                                                        @if($address->note)
+                                                                            <br>Note: {{$address->note}}
+                                                                        @endif <br>  
+                                                                        <button type="button" class="edit-address btn btn-sm theme-btn w-100 @if(!$address->default) hidden @endif" onclick="window.location.href='/settings/edit-address/shipping/{{$address->id}}'">Modifica Indirizzo</button>
+                                                                    </label>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    </div> -->
+                                                    </div>
                                                 </div> 
                                             </div>
                                           </div>
@@ -342,7 +340,7 @@
                                                                                 $brand = strtolower($card->brand);
                                                                             @endphp
                                                                             <div class="vertical-list-item">
-                                                                                <input type="radio" id="vl1" name="selected_card_id" value="{{ $card->id }}" checked>
+                                                                                <input type="radio" id="vl1" name="selected_card_id" value="{{ $card->id }}" @if($card->default) checked @endif>
                                                                                 <div class="card-brand">
                                                                                     @if($brand === 'visa')
                                                                                         <img src="{{ asset('/img/payment/visa.svg') }}" alt="Visa">
@@ -547,6 +545,15 @@
 
         });
 
+        $(document).on('change', 'input[name="shipping_address"]', function () {
+            $('.edit-address').addClass('hidden');
+
+            $(this)
+                .closest('.vertical-list-item')
+                .find('.edit-address')
+                .removeClass('hidden');
+        });
+
         $('.card-box').on('click', function() {
             $('.card-box input[type="radio"]').prop('checked', false);
             $('.card-box').removeClass('card-box-active');
@@ -605,6 +612,7 @@
             }
 
         }).render('#paypal-button-container');
+
     </script>
 
 @endsection

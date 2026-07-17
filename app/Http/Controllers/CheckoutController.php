@@ -13,6 +13,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 use App\Models\Order;
+use App\Models\Address;
 use App\Models\OrderItem;
 use App\Models\PaymentMethod;
 
@@ -46,6 +47,16 @@ class CheckoutController extends Controller
 
         // Calcola totale
         $total = auth()->user()->cart_total;
+
+
+        Address::where('user_id', Auth::id())
+            ->where('type', 'shipping')
+            ->update(['default' => null]);
+
+        Address::where('user_id', Auth::id())
+            ->where('type', 'shipping')
+            ->whereKey($request->shipping_address)
+            ->update(['default' => 1]);
 
         switch ($paymentMethod) {
             case 'stripe':
@@ -101,6 +112,10 @@ class CheckoutController extends Controller
         if ($paymentMethod->user_id !== $user->id) {
             abort(403);
         }
+
+        PaymentMethod::where('user_id',$user->id)->update(['default' => null]);
+        $paymentMethod->default = 1;
+        $paymentMethod->save();
 
         $importo = intval($total * 100);
 
@@ -328,6 +343,7 @@ class CheckoutController extends Controller
     {
         // Segna ordine come in attesa di pagamento
         $order_number = $this->createOrder($user, $total, 'bank_transfer');
+        dd($order_number);
         return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'bank_transfer']);
     }
 

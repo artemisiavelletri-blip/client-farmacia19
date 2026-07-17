@@ -1,5 +1,13 @@
 @extends('master')
 
+@section('css')
+
+    <style type="text/css">
+        
+    </style>
+
+@endsection
+
 @section('content')
 
     <main class="main">
@@ -17,10 +25,15 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="user-card">
-                                        <div class="user-card-header">
+                                        <div class="user-card-header mobile-card-header">
                                             <h4 class="user-card-title">Indirizzo di Spedizione</h4>
+                                            <div class="user-card-header-right">
+                                                <a href="/settings/create-address/shipping" class="theme-btn">
+                                                    <span class="far fa-plus-circle"></span> Aggiungi Indirizzo
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div class="table-responsive">
+                                        <div class="mobile-table-custom">
                                             <table class="table table-borderless text-nowrap">
                                                 <thead>
                                                     <tr>
@@ -32,15 +45,17 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td><span class="table-list-code">{{$shipping_address->recipient_name}}</span></td>
-                                                        <td>{{$shipping_address->address}}</td>
-                                                        <td>{{Auth::user()->shippingAddressesCity()->name}}</td>
-                                                        <td>{{$shipping_address->cap}}</td>
-                                                        <td>
-                                                            <a href="/settings/edit-address/shipping" class="btn btn-outline-secondary btn-sm rounded-2" data-tooltip="tooltip" title="Edit"><i class="far fa-pen"></i></a>
-                                                        </td>
-                                                    </tr>                                                    
+                                                    @foreach($shipping_address as $address)
+                                                        <tr>
+                                                            <td data-label="Destinatario"><span class="table-list-code">{{$address->recipient_name}}</span></td>
+                                                            <td data-label="Indirizzo">{{$address->address}}</td>
+                                                            <td data-label="Città">{{$address->city->name}}</td>
+                                                            <td data-label="Cap">{{$address->cap}}</td>
+                                                            <td data-label="Azione">
+                                                                <a href="/settings/edit-address/shipping/{{$address->id}}" class="btn btn-outline-secondary btn-sm rounded-2" data-tooltip="tooltip" title="Edit"><i class="far fa-pen"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach                                                    
                                                 </tbody>
                                             </table>
                                         </div>

@@ -87,6 +87,8 @@ class PaymentMethodController extends Controller
             $anno = substr($request->scadenza_pan, 0, 4);
             $mese = substr($request->scadenza_pan, 4, 2);
 
+            PaymentMethod::where('user_id', $user->id)->update(['default' => null]);
+
 
             /** 4️⃣ SALVA NEL DB */
             PaymentMethod::create([
@@ -98,6 +100,7 @@ class PaymentMethodController extends Controller
                 'exp_month' => $mese ?? null,
                 'exp_year' => $anno ?? null,
                 'is_default' => 1,
+                'default' => 1
             ]);
 
             return redirect()->route('settingspayment_method');
@@ -175,8 +178,18 @@ class PaymentMethodController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }*/
-        try {
-            $paymentMethod->delete();
+        try {            
+            if($paymentMethod->default){
+                $previous = PaymentMethod::where('user_id', $user->id)
+                    ->where('id','!=',$paymentMethod->id)
+                    ->orderByDesc('id')
+                    ->first();
+                if ($previous) {
+                    $previous->default = 1;
+                    $previous->save();
+                }
+            }
+            //$paymentMethod->delete();
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json([

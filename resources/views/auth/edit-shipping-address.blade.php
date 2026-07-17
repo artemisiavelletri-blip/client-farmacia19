@@ -35,6 +35,7 @@
                                             @endif
                                             <form action="/settings/edit-address/shipping" method="POST">
                                                 @csrf
+                                                <input type="hidden" name="shipping_id" value="{{$shipping_address->id}}">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
@@ -45,35 +46,41 @@
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label>Indirizzo</label>
-                                                            <input type="text" name="address" class="form-control" placeholder="Indirizzo" value="{{Auth::user()->shippingAddresses()->first()->address}}">
+                                                            <input type="text" name="address" class="form-control" placeholder="Indirizzo" value="{{$shipping_address->address}}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Note</label>
-                                                            <input type="text" name="note" class="form-control" placeholder="Note" value="{{Auth::user()->shippingAddresses()->first()->note}}">
+                                                            <input type="text" name="note" class="form-control" placeholder="Note" value="{{$shipping_address->note}}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>CAP</label>
-                                                            <input type="text" name="cap" class="form-control" placeholder="CAP" value="{{Auth::user()->shippingAddresses()->first()->cap}}">
+                                                            <input type="text" name="cap" class="form-control" placeholder="CAP" value="{{$shipping_address->cap}}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Città</label>
-                                                            <input type="text" id="cityInput2" class="form-control city-autocomplete" placeholder="Scrivi la città..." value="{{Auth::user()->shippingAddressesCity()->name}}">
-                                                            <input type="hidden" name="city_id" class="required-private" id="residenceCityId" value="{{Auth::user()->shippingAddresses()->first()->city_id}}">
+                                                            <input type="text" id="cityInput2" class="form-control city-autocomplete" placeholder="Scrivi la città..." value="{{$shipping_address->city->name}}">
+                                                            <input type="hidden" name="city_id" class="required-private" id="residenceCityId" value="{{$shipping_address->city_id}}">
                                                             <ul class="dropdown-menu"></ul>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Telefono</label>
-                                                            <input type="text" class="form-control" name="phone" placeholder="Telefono"value="{{Auth::user()->shippingAddresses()->first()->phone}}">
+                                                            <input type="text" class="form-control" name="phone" placeholder="Telefono"value="{{$shipping_address->phone}}">
                                                         </div>
-                                                    </div>                                                    
+                                                    </div> 
+                                                    <div class="col-md-12 mt-15">
+                                                        <div class="form-group">
+                                                            <input class="form-check-input" type="checkbox" name="default" value="1" id="flexCheckDefault" @if($shipping_address->default) checked @endif>
+                                                            <label>Indirizzo Predefinito</label>
+                                                        </div>
+                                                    </div>                                                   
                                                 </div>
                                                 <button type="submit" class="theme-btn"><span class="far fa-save"></span> Salva Indirizzo</button>
                                             </form>

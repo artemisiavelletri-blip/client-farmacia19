@@ -331,6 +331,9 @@
 
 /* Nascondi tabella su mobile */
 @media (max-width: 768px) {
+    .mobile-card-header{
+        flex-direction: column!important;
+    }
     .table-responsive {
         display: none;
     }
@@ -559,4 +562,80 @@
 
 .mobile-show {
     display: none;
+}
+
+@media (max-width: 767px) {
+    .mobile-table-custom {
+        overflow: visible;
+    }
+
+    .mobile-table-custom table,
+    .mobile-table-custom tbody,
+    .mobile-table-custom tr,
+    .mobile-table-custom td {
+        display: block;
+        width: 100%;
+    }
+
+    .mobile-table-custom thead {
+        display: none;
+    }
+
+    .mobile-table-custom tr {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .mobile-table-custom td {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 8px 0;
+        white-space: normal;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .mobile-table-custom td:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+        margin-top: 8px;
+    }
+
+    .mobile-table-custom td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #6b7280;
+        min-width: 120px;
+    }
+
+    .mobile-table-custom td:first-child {
+        padding-top: 0;
+    }
+
+    .mobile-table-custom td:first-child::before {
+        color: var(--theme-color);
+    }
+
+    .mobile-table-custom .table-list-code {
+        font-weight: 600;
+        color: var(--theme-color);
+    }
+
+    .mobile-table-custom td:last-child {
+        justify-content: flex-end;
+    }
+
+    .mobile-table-custom td:last-child::before {
+        display: none;
+    }
+
+    .mobile-edit-text {
+        display: inline;
+        margin-left: 5px;
+    }
 }
