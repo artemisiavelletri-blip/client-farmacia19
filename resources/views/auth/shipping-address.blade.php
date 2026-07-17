@@ -53,6 +53,7 @@
                                                             <td data-label="Cap">{{$address->cap}}</td>
                                                             <td data-label="Azione">
                                                                 <a href="/settings/edit-address/shipping/{{$address->id}}" class="btn btn-outline-secondary btn-sm rounded-2" data-tooltip="tooltip" title="Edit"><i class="far fa-pen"></i></a>
+                                                                <a href="#" class="btn btn-outline-danger btn-sm rounded-2 delete-address" data-tooltip="tooltip" title="Delete" data-id="{{$address->id}}"><i class="far fa-trash-can"></i></a>
                                                             </td>
                                                         </tr>
                                                     @endforeach                                                    
@@ -70,5 +71,44 @@
         <!-- user dashboard end -->
 
     </main>
+
+@endsection
+
+@section('js')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.querySelectorAll('.delete-address').forEach(btn => {
+            btn.addEventListener('click', async () => {
+
+                Swal.fire({
+                    title: "Sei sicuro di voler eliminare questo metodo di pagamento?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Elimina"
+                }).then(async (result) => {   // 👈 async qui
+                    if (result.isConfirmed) {
+                        const id = btn.dataset.id;
+
+                        const res = await fetch(`/settings/delete-address/delete/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        const data = await res.json();
+
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 
 @endsection

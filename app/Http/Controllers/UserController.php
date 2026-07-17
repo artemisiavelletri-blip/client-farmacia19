@@ -624,4 +624,31 @@ class UserController extends Controller
 
         return redirect('/login')->with('success', 'Account eliminato con successo');
     }
+
+    public function destroy(Request $request,$id)
+    {
+        $shipping_address = Address::where('id',$id)->where('user_id',Auth::user()->id)->where('type','shipping')->firstOrFail();
+        $user = Auth::user();
+        try{
+            if($shipping_address->default){
+                $previous = Address::where('user_id', $user->id)
+                    ->where('id','!=',$shipping_address->id)
+                    ->orderByDesc('id')
+                    ->first();
+                if ($previous) {
+                    $previous->default = 1;
+                    $previous->save();
+                }
+                $shipping_address->delete();
+            }
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            dd($e);
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+    }
 }
