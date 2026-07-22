@@ -158,6 +158,23 @@
                                                     </td>
                                                 </tr>
                                             @endif
+                                            @if($order->couponDiscount && $order->coupon_id)
+                                                <tr style="border-bottom: 1px solid #eee;">
+                                                    <td style="padding: 8px;">
+                                                        <img src="{{ asset('/storage-admin/discount.png') }}" width="50" 
+                                                             style="border-radius: 5px; display: block;">
+                                                    </td>
+                                                    <td style="padding: 8px; vertical-align: middle; width: 200px;">
+                                                        Coupon
+                                                    </td>
+                                                    <td style="padding: 8px; vertical-align: middle; text-align: center; width: 80px;">
+                                                        
+                                                    </td>
+                                                    <td style="padding: 8px; vertical-align: middle; text-align: right; width: 80px;">
+                                                        - €{{ number_format($order->couponDiscount, 2, ',', '.') }}
+                                                    </td>
+                                                </tr>
+                                            @endif
                                             <tr style="border-bottom: 1px solid #eee;background-color: #f5f5f5;">
                                                 <td style="padding: 8px;">
                                                 </td>
