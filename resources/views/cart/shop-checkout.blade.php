@@ -603,7 +603,7 @@
                     purchase_units:[
                         {
                             amount: {
-                                value:0.01
+                                value:"{{ number_format(auth()->user()->cart_total, 2, '.', '') }}"
                             }
                         }
                     ]
@@ -611,11 +611,9 @@
             },
             onApprove: function(data, actions){
                 // TODO send order to server
-                console.log(data.orderID);
-                console.log(data);
+                $('.preloader').show();
                 $('#paypal-order').val(data.orderID);
                 $('#pay').click();
-                //axios.post('paypal-process-order/'+data.orderID);
             }
         }).render("#paypalButtons");
 
