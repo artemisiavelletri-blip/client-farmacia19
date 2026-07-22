@@ -179,6 +179,7 @@
                     @endif
                     <form action="/payment/order" id="payForm" method="POST">
                         @csrf
+                        <input type="hidden" name="paypal" id="paypal-order">
                         <div class="row">
                             <div class="col-lg-8">
                                 <div class="shop-checkout-step">
@@ -311,6 +312,8 @@
                                                                 <span>Paga con Carta</span>
                                                             </a>
                                                         </li>
+
+                                                        
                                                         <li class="nav-item" role="presentation" data-id="bank_transfer" style="width:100%!important">
                                                             <a class="nav-link" id="pills-tab-3" data-bs-toggle="pill"
                                                                 data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3"
@@ -332,6 +335,8 @@
                                                             </a>
                                                         </li>
                                                     </ul>
+                                                    <div class="mb-15" id="paypalButtons">
+                                                    </div>
                                                     <div class="tab-content" id="pills-tabContent">
                                                         <div class="tab-pane fade show" id="pills-1" role="tabpanel"
                                                             aria-labelledby="pills-tab-1" tabindex="0">
@@ -501,7 +506,8 @@
 @endsection
 
 @section('js')
-    <!-- <script src="https://www.paypal.com/sdk/js?client-id=Aa1SWEv2p4a-N6KZVeBNzGdwsueD_JNKfBSFj-SCsuJwgOIqLv428IiSZbcPm3MPtkXyOPQn43goUqGU&currency=EUR"></script> -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AdLiHCQZdcgZtNRYGnSfulxjw5X1cxJrb3SwXkZudYjuNCa2h104dWSJNLLFl8HmO2Gm8VIU478vX6d-&currency=EUR"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
             // Seleziona tutti i tab
@@ -583,38 +589,35 @@
             $('#addCardForm').submit();
         });
 
-        /*paypal.Buttons({
-
-            createOrder() {
-                return fetch('/paypal/order/create', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document
-                            .querySelector('meta[name="csrf-token"]')
-                            .content
-                    }
-                })
-                .then(res => res.json())
-                .then(data => data.id);
+        paypal.Buttons({
+            style: {
+                layout: 'horizontal',
+                color: 'gold',
+                shape: 'rect',
+                height: 45
             },
 
-            onApprove(data) {
-
-                return fetch(`/paypal/order/${data.orderID}/capture`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document
-                            .querySelector('meta[name="csrf-token"]')
-                            .content
-                    }
+            // Call your server to set up the transaction
+            createOrder: function(data, actions){
+                return actions.order.create({
+                    purchase_units:[
+                        {
+                            amount: {
+                                value:0.01
+                            }
+                        }
+                    ]
                 })
-                .then(res => res.json())
-                .then(orderData => {
-                    console.log(orderData);
-                });
+            },
+            onApprove: function(data, actions){
+                // TODO send order to server
+                console.log(data.orderID);
+                console.log(data);
+                $('#paypal-order').val(data.orderID);
+                $('#pay').click();
+                //axios.post('paypal-process-order/'+data.orderID);
             }
-
-        }).render('#paypal-button-container');*/
+        }).render("#paypalButtons");
 
     </script>
 

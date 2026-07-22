@@ -27,18 +27,22 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
-            'payment_method' => 'required|in:stripe,paypal,bank_transfer,cod',
-            'selected_card_id' => 'nullable|exists:payment_methods,id',
-            'new_card_token' => 'nullable|string',
-        ],
-        [
-            'payment_method.required' => 'Devi selezionare un metodo di pagamento.',
-            'payment_method.in' => 'Il metodo di pagamento scelto non è valido.',
-            'selected_card_id.exists' => 'La carta selezionata non esiste.'
-        ]);
+        if(!$request->paypal){
+            $request->validate([
+                'payment_method' => 'required|in:stripe,paypal,bank_transfer,cod',
+                'selected_card_id' => 'nullable|exists:payment_methods,id',
+                'new_card_token' => 'nullable|string',
+            ],
+            [
+                'payment_method.required' => 'Devi selezionare un metodo di pagamento.',
+                'payment_method.in' => 'Il metodo di pagamento scelto non è valido.',
+                'selected_card_id.exists' => 'La carta selezionata non esiste.'
+            ]);
 
-        $paymentMethod = $request->payment_method;
+            $paymentMethod = $request->payment_method;
+        } else {
+            $paymentMethod = 'paypal';
+        }
         $cartItems = $user->cartItems()->with('product')->get();
 
         if ($cartItems->isEmpty()) {
@@ -62,7 +66,7 @@ class CheckoutController extends Controller
             case 'stripe':
                 return $this->processStripe($user, $total, $request);
             case 'paypal':
-                return $this->processPaypal($user, $total);
+                return $this->processPaypal($user, $total,$request->paypal);
             case 'bank_transfer':
                 return $this->processBankTransfer($user, $total);
             case 'cod':
@@ -283,38 +287,42 @@ class CheckoutController extends Controller
 
     }
 
-    protected function processPaypal($user, $total)
+    protected function processPaypal($user, $total,$transactionId)
     {
-        $provider = new PayPalClient;
-       $provider->setApiCredentials(config('paypal'));
-       $paypalToken = $provider->getAccessToken();
+       //  $provider = new PayPalClient;
+       // $provider->setApiCredentials(config('paypal'));
+       // $paypalToken = $provider->getAccessToken();
 
-       $response = $provider->createOrder([
-           "intent" => "CAPTURE",
-           "purchase_units" => [
-               [
-                   "amount" => [
-                       "currency_code" => "USD",
-                       "value" => "100.00"
-                   ]
-               ]
-           ],
-           "application_context" => [
-               "cancel_url" => route('paypal.cancel'),
-               "return_url" => route('paypal.success'),
-           ]
-       ]);
+       // $response = $provider->createOrder([
+       //     "intent" => "CAPTURE",
+       //     "purchase_units" => [
+       //         [
+       //             "amount" => [
+       //                 "currency_code" => "USD",
+       //                 "value" => "100.00"
+       //             ]
+       //         ]
+       //     ],
+       //     "application_context" => [
+       //         "cancel_url" => route('paypal.cancel'),
+       //         "return_url" => route('paypal.success'),
+       //     ]
+       // ]);
 
-       if (isset($response['id']) && $response['id'] != null) {
-           foreach ($response['links'] as $link) {
-               if ($link['rel'] === 'approve') {
-                   return redirect()->away($link['href']);
-               }
-           }
-       }
+       // if (isset($response['id']) && $response['id'] != null) {
+       //     foreach ($response['links'] as $link) {
+       //         if ($link['rel'] === 'approve') {
+       //             return redirect()->away($link['href']);
+       //         }
+       //     }
+       // }
 
 
-       return redirect()->route('paypal.cancel');
+       // return redirect()->route('paypal.cancel');
+        $order_number = $this->createOrder($user, $total, 'paypal', $transactionId);
+        return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'paypal']);
+
+
     }
 
     public function success(Request $request, $orderId)

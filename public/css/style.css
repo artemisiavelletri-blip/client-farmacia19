@@ -1272,7 +1272,7 @@ label {
   background: var(--color-white);
   box-shadow: var(--box-shadow2);
   animation: slide-down 0.7s;
-  z-index: 4;
+  z-index: 999;
 }
 
 @keyframes slide-down {
