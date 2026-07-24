@@ -30,19 +30,21 @@ class CheckoutController extends Controller
         if(!$request->paypal){
             $request->validate([
                 'payment_method' => 'required|in:stripe,paypal,bank_transfer,cod',
-                'selected_card_id' => 'nullable|exists:payment_methods,id',
+                'selected_card_id' => 'required_if:payment_method,stripe|nullable|exists:payment_methods,id',
                 'new_card_token' => 'nullable|string',
             ],
             [
                 'payment_method.required' => 'Devi selezionare un metodo di pagamento.',
                 'payment_method.in' => 'Il metodo di pagamento scelto non è valido.',
-                'selected_card_id.exists' => 'La carta selezionata non esiste.'
+                'selected_card_id.exists' => 'La carta selezionata non esiste.',
+                'selected_card_id.required_if' => 'Seleziona una carta.'
             ]);
 
             $paymentMethod = $request->payment_method;
         } else {
             $paymentMethod = 'paypal';
         }
+
         $cartItems = $user->cartItems()->with('product')->get();
 
         if ($cartItems->isEmpty()) {
