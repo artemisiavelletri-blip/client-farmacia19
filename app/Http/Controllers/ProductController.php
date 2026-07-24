@@ -223,6 +223,7 @@ class ProductController extends Controller
             $promotion->max_use &&
             Order::where('user_id', $user->id)
                 ->where('coupon_id', $promotion->id)
+                ->where('status', '!=', 'cancelled')
                 ->count() >= $promotion->max_use
         ) {
             return;
