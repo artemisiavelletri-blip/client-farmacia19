@@ -65,8 +65,8 @@
                                 <div class="form-group row">
                                     <div class="col-8">
                                         <div class="form-group position-relative width-100">
-                                            <input type="text" id="cityInput1" class="form-control city-autocomplete" placeholder="Scrivi la città...">
-                                            <input type="hidden" name="private_city_id" class="required-private" id="birthCityId">
+                                            <input type="text" id="cityInput1" name="cityInput1" class="form-control city-autocomplete" placeholder="Scrivi la città..." value="{{ old('cityInput1') }}">
+                                            <input type="hidden" name="private_city_id" class="required-private" id="birthCityId" value="{{ old('private_city_id') }}">
                                             <ul class="dropdown-menu"></ul>
                                         </div>
                                     </div>
@@ -98,8 +98,8 @@
                                     <div class="form-group row">
                                         <div class="col-8">
                                             <div class="form-group position-relative width-100">
-                                                <input type="text" id="cityInput2" class="form-control city-autocomplete" placeholder="Scrivi la città...">
-                                                <input type="hidden" name="private_second_city_id" class="required-private" id="residenceCityId">
+                                                <input type="text" id="cityInput2" name="cityInput2" class="form-control city-autocomplete" placeholder="Scrivi la città..." value="{{ old('cityInput2') }}">
+                                                <input type="hidden" name="private_second_city_id" class="required-private" id="residenceCityId" value="{{ old('private_second_city_id') }}">
                                                 <ul class="dropdown-menu"></ul>
                                             </div>
                                         </div>
@@ -144,8 +144,8 @@
                                 <div class="form-group row">
                                     <div class="col-8">
                                         <div class="form-group position-relative width-100">
-                                            <input type="text" id="cityInput1" class="form-control city-autocomplete required-company" placeholder="Scrivi la città...">
-                                            <input type="hidden" name="company_city_id" id="birthCityId">
+                                            <input type="text" id="cityInput1" name="cityInput3" class="form-control city-autocomplete required-company" placeholder="Scrivi la città..." value="{{ old('cityInput3') }}">
+                                            <input type="hidden" name="company_city_id" id="birthCityId" value="{{ old('company_city_id') }}">
                                             <ul class="dropdown-menu"></ul>
                                         </div>
                                     </div>
@@ -177,8 +177,8 @@
                                     <div class="form-group row">
                                         <div class="col-8">
                                             <div class="form-group position-relative width-100">
-                                                <input type="text" id="cityInput2" class="form-control city-autocomplete required-company" placeholder="Scrivi la città...">
-                                                <input type="hidden" name="company_second_city_id" id="residenceCityId">
+                                                <input type="text" id="cityInput2" name="cityInput4" class="form-control city-autocomplete required-company" placeholder="Scrivi la città..." value="{{ old('cityInput4') }}">
+                                                <input type="hidden" name="company_second_city_id" id="residenceCityId" value="{{ old('company_second_city_id') }}">
                                                 <ul class="dropdown-menu"></ul>
                                             </div>
                                         </div>
