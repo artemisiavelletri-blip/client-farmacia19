@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="feature-content">
                                     <h4>Resi</h4>
-                                    <p>Resi entro 30 giorni</p>
+                                    <p>Resi entro 14 giorni</p>
                                 </div>
                             </div>
                         </div>
