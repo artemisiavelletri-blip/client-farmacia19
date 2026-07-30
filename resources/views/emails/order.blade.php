@@ -91,7 +91,8 @@
 
                                         Restiamo in attesa del bonifico bancario di € {{number_format($order->total, 2, ',', ' ')}} su:<br>
 
-                                        BANCA DI CREDITO COOPERATIVO DI ROMA SOCIETA' COOPERATIVA - IBAN: IT28Z0832739520000000002474, indicando come causale "Farmacia19 {{$order->order_number}}"</p>
+                                        REVOLUT BANK - IBAN: LT693250045565056926, indicando come causale "Farmacia19 {{$order_number}}",
+                                        INTESTATO A: FARMACIA ARTEMISIA DI MONTECUOLLO DOTT. ANGELO - SOCIETA' IN NOME COLLETTIVO"</p>
                                     @endif
 
                                     Di seguito il riepilogo dell'ordine. Se hai domande, il nostro team è sempre a tua disposizione per aiutarti.</p><br>
