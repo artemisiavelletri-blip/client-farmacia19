@@ -589,7 +589,7 @@
             $('#addCardForm').submit();
         });
 
-        paypal.Buttons({
+        /*paypal.Buttons({
             style: {
                 layout: 'horizontal',
                 color: 'gold',
@@ -615,6 +615,48 @@
                 $('#paypal-order').val(data.orderID);
                 $('#pay').click();
             }
+        }).render("#paypalButtons");*/
+
+        paypal.Buttons({
+            style: {
+                layout: 'horizontal',
+                color: 'gold',
+                shape: 'rect',
+                height: 45
+            },
+
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [
+                        {
+                            amount: {
+                                value: '0.01'
+                            }
+                        }
+                    ]
+                });
+            },
+
+            onApprove: function(data, actions) {
+                $('.preloader').show();
+
+                $('#paypal-order').val(data.orderID);
+
+                $('#pay').click();
+            },
+
+            onCancel: function(data) {
+                $('.preloader').hide();
+
+                console.log('Pagamento PayPal annullato', data);
+            },
+
+            onError: function(err) {
+                $('.preloader').hide();
+
+                alert('Si è verificato un errore con PayPal.');
+            }
+
         }).render("#paypalButtons");
 
     </script>

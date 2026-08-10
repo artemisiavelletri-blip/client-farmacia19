@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Order;
 use App\Models\Address;
@@ -289,7 +291,7 @@ class CheckoutController extends Controller
 
     }
 
-    protected function processPaypal($user, $total,$transactionId)
+    protected function processPaypal($user, $total,$paypalOrderId)
     {
        //  $provider = new PayPalClient;
        // $provider->setApiCredentials(config('paypal'));
@@ -321,8 +323,86 @@ class CheckoutController extends Controller
 
 
        // return redirect()->route('paypal.cancel');
-        $order_number = $this->createOrder($user, $total, 'paypal', $transactionId);
-        return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'paypal']);
+
+        try {
+
+            // 1. Access Token
+            $authResponse = Http::asForm()
+                ->withBasicAuth(
+                    env('PAYPAL_SANDBOX_CLIENT_ID'),
+                    env('PAYPAL_SANDBOX_CLIENT_SECRET')
+                )
+                ->post('https://api-m.paypal.com/v1/oauth2/token', [
+                    'grant_type' => 'client_credentials',
+                ]);
+
+            if (!$authResponse->successful()) {
+                Log::error('PayPal Auth Error', [
+                    'response' => $authResponse->json()
+                ]);
+
+                return back()->with('error', 'Errore di autenticazione PayPal.');
+            }
+
+            $accessToken = $authResponse->json('access_token');
+
+
+            // 2. Capture
+            $captureUrl = "https://api-m.paypal.com/v2/checkout/orders/{$paypalOrderId}/capture";
+
+            $captureResponse = Http::withToken($accessToken)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])
+                ->withBody('{}', 'application/json')
+                ->post($captureUrl);
+
+            $captureData = $captureResponse->json();
+
+
+            // 3. Controllo pagamento
+            if (
+                $captureResponse->successful() &&
+                ($captureData['status'] ?? null) === 'COMPLETED'
+            ) {
+
+                // PAGAMENTO OK
+
+                Log::info('PayPal pagamento completato', [
+                    'paypal_order_id' => $paypalOrderId,
+                ]);
+
+                $order_number = $this->createOrder($user, $total, 'paypal', $paypalOrderId);
+                return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'paypal']);
+            }
+
+
+            // Pagamento non completato
+
+            Log::error('PayPal Capture Error', [
+                'paypal_order_id' => $paypalOrderId,
+                'response' => $captureData,
+            ]);
+
+            return back()->with(
+                'error',
+                'Il pagamento PayPal non è stato completato.'
+            );
+
+        } catch (\Throwable $e) {
+
+            Log::error('PayPal Exception', [
+                'paypal_order_id' => $paypalOrderId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->with(
+                'error',
+                'Errore durante il pagamento PayPal.'
+            );
+        }
+        
 
 
     }
