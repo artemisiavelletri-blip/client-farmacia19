@@ -630,7 +630,7 @@
                     purchase_units: [
                         {
                             amount: {
-                                value: '0.01'
+                                value:"{{ number_format(auth()->user()->cart_total, 2, '.', '') }}"
                             }
                         }
                     ]
