@@ -515,8 +515,8 @@ class CheckoutController extends Controller
 
         if(!$order_number) {
             do {
-                $orderNumber = strtoupper(Str::random(10));
-            } while (Order::where('order_number', $orderNumber)->exists());
+                $order_number = strtoupper(Str::random(10));
+            } while (Order::where('order_number', $order_number)->exists());
         }
 
         // Crea l'ordine
