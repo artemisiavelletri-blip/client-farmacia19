@@ -346,6 +346,40 @@ class CheckoutController extends Controller
 
             $accessToken = $authResponse->json('access_token');
 
+            do {
+                $orderNumber = strtoupper(Str::random(10));
+            } while (Order::where('order_number', $orderNumber)->exists());
+
+            // Aggiorna l'ordine PayPal
+            $patchUrl = "https://api-m.paypal.com/v2/checkout/orders/{$paypalOrderId}";
+
+            $patchResponse = Http::withToken($accessToken)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])
+                ->patch($patchUrl, [
+                    [
+                        'op' => 'add',
+                        'path' => '/purchase_units/@reference_id==\'default\'/description',
+                        'value' => 'Ordine Farmacia19 #' . $orderNumber,
+                    ],
+                ]);
+
+            if (!$patchResponse->successful()) {
+
+                Log::error('PayPal PATCH Error', [
+                    'paypal_order_id' => $paypalOrderId,
+                    'status' => $patchResponse->status(),
+                    'response' => $patchResponse->json(),
+                ]);
+
+                return back()->with(
+                    'error',
+                    'Impossibile aggiornare i dati della transazione PayPal.'
+                );
+            }
+
 
             // 2. Capture
             $captureUrl = "https://api-m.paypal.com/v2/checkout/orders/{$paypalOrderId}/capture";
@@ -367,13 +401,7 @@ class CheckoutController extends Controller
                 ($captureData['status'] ?? null) === 'COMPLETED'
             ) {
 
-                // PAGAMENTO OK
-
-                Log::info('PayPal pagamento completato', [
-                    'paypal_order_id' => $paypalOrderId,
-                ]);
-
-                $order_number = $this->createOrder($user, $total, 'paypal', $paypalOrderId);
+                $order_number = $this->createOrder($user, $total, 'paypal', $paypalOrderId, $orderNumber);
                 return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'paypal']);
             }
 
@@ -402,8 +430,6 @@ class CheckoutController extends Controller
                 'Errore durante il pagamento PayPal.'
             );
         }
-        
-
 
     }
 
@@ -443,7 +469,7 @@ class CheckoutController extends Controller
         return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'cash_on_delivery']);
     }
 
-    protected function createOrder($user, $total, $method, $transactionId = null, $paymentGateway = null)
+    protected function createOrder($user, $total, $method, $transactionId = null,$order_number = null, $paymentGateway = null)
     {
         $prescriberId = session('prescriber_id') ?? $user->prescriber_id ?? null;
 
@@ -487,11 +513,17 @@ class CheckoutController extends Controller
             $coupon = $coupon->id;
         }
 
+        if(!$order_number) {
+            do {
+                $orderNumber = strtoupper(Str::random(10));
+            } while (Order::where('order_number', $orderNumber)->exists());
+        }
+
         // Crea l'ordine
         $order = Order::create([
             'user_id' => $user->id,
             'prescriber_id' => $prescriberId,
-            'order_number' => strtoupper(Str::random(10)),
+            'order_number' => $order_number,
             'subtotal' => $user->cartItems()->with('product')->get()->sum->subtotalnoiva,
             'total_vat' => $user->cartItems()->with('product')->get()->sum->totalvat,
             'shipping_cost' => $shipping_cost,
