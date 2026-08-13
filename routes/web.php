@@ -199,7 +199,17 @@ Route::middleware('doctor')->group(function () {
             ->name('paypal.capture');
 
         Route::get('/coupon', function () {
-            $promotion = Promotion::where('active',1)->where('user',1)->paginate(10);
+            $promotion = Promotion::where('active', 1)
+            ->where('user', 1)
+            ->where(function ($query) {
+                $query->whereNull('start_date')
+                      ->orWhere('start_date', '<=', now());
+            })
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                      ->orWhere('end_date', '>=', now());
+            })
+            ->paginate(10);
             return view('coupon.list',['promotion' => $promotion]);
         });
 
