@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\PaymentMethod;
+use App\Models\Promotion;
 
 use App\Mail\ResetPasswordMail;
 use App\Mail\RegistrazioneMail;
@@ -650,5 +651,34 @@ class UserController extends Controller
             ], 500);
         }
 
+    }
+
+    public function getCoupon(Request $request)
+    {
+        $request->validate([
+            'token' => ['required', 'string'],
+        ]);
+
+        $coupon = Promotion::where('token', $request->token)
+            ->where('active', 1)
+            ->first();
+
+        if (!$coupon) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Coupon non trovato.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'coupon' => [
+                'token' => $coupon->token,
+                'name' => $coupon->name,
+                'percentage' => $coupon->percentage,
+                'fixDiscount' => $coupon->fixDiscount,
+                'description' => $coupon->description,
+            ]
+        ]);
     }
 }

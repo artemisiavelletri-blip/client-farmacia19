@@ -110,7 +110,24 @@
             </div>
         </div>
         <!-- feature area end -->
-
+        @if(Auth::user())
+            <div class="big-banner pb-100" style="cursor: pointer;">
+                <div class="container wow fadeInUp" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: fadeInUp;">
+                    <div class="banner-wrap" style="background-image: url({{ asset('img/coupon.png') }});">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto">
+                                <div class="banner-content">
+                                    <div class="banner-info mb-50">
+                                        <h6>COUPON ESCLUSIVI</h6>
+                                        <h2>Scopri tutti i coupon a te riservati!</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <!-- small banner -->
         <div class="small-banner pb-100">

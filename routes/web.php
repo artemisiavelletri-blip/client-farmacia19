@@ -18,6 +18,7 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Promotion;
 
 use Google\Client;
 
@@ -196,6 +197,14 @@ Route::middleware('doctor')->group(function () {
 
         Route::post('/paypal/order/{orderId}/capture', [PaypalController::class, 'captureOrder'])
             ->name('paypal.capture');
+
+        Route::get('/coupon', function () {
+            $promotion = Promotion::where('active',1)->where('user',1)->paginate(10);
+            return view('coupon.list',['promotion' => $promotion]);
+        });
+
+        Route::post('/coupon/get', [UserController::class, 'getCoupon'])
+        ->name('coupon.get');
     });
 
 
