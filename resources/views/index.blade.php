@@ -111,7 +111,7 @@
         </div>
         <!-- feature area end -->
         @if(Auth::user())
-            <div class="big-banner pb-100" style="cursor: pointer;">
+            <div class="big-banner pb-100" style="cursor: pointer;" onclick="window.location.href='/coupon'">
                 <div class="container wow fadeInUp" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: fadeInUp;">
                     <div class="banner-wrap" style="background-image: url({{ asset('img/coupon.png') }});">
                         <div class="row">
