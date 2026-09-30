@@ -46,14 +46,14 @@
 
             @php
                 if(!$product->discountPrice){
-                    $price = {{ number_format($product->price, 2, '.', '') }};
+                    $price = number_format($product->price, 2, '.', '');
                 }
                 else{
-                    $price = {{ number_format($product->discountPrice, 2, '.', '') }};
+                    $price = number_format($product->discountPrice, 2, '.', '');
                 }
             @endphp
 
-            <g:price>{{$price}}</g:price>
+            <g:price>{{$price}} EUR</g:price>
 
             <g:condition>new</g:condition>
 
