@@ -20,7 +20,7 @@
 
             <g:description><![CDATA[{{ $product->merchant_description }}]]></g:description>
 
-            <g:link>{{ url('/shop-single/' . !empty($product->minsan) ? $product->minsan : $product->ean ) }}</g:link>
+            <g:link>{{ url('/shop-single/' . (!empty($product->minsan) ? $product->minsan : $product->ean)) }}</g:link>
 
             <g:image_link>{{ asset('/storage-admin/' . $product->image) }}</g:image_link>
 
