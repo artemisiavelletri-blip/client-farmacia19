@@ -82,5 +82,29 @@ class Product extends Model
         });
     }
 
+    public function getMerchantDescriptionAttribute(): string
+    {
+        $description = $this->description ?? '';
+
+        // Decodifica &nbsp; &#039; &amp; ecc.
+        $description = html_entity_decode(
+            $description,
+            ENT_QUOTES | ENT_HTML5,
+            'UTF-8'
+        );
+
+        // Rimuove eventuali tag HTML
+        $description = strip_tags($description);
+
+        // Converte NBSP Unicode in spazio normale
+        $description = str_replace("\xC2\xA0", ' ', $description);
+
+        // Normalizza spazi, tab e a capo multipli
+        $description = preg_replace('/\s+/u', ' ', $description);
+
+        // Rimuove spazi iniziali/finali
+        return trim($description);
+    }
+
 }
 

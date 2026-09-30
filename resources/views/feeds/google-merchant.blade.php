@@ -18,9 +18,7 @@
                 {{ $product->name }}
             ]]></g:title>
 
-            <g:description><![CDATA[
-                {{ strip_tags($product->description ?? '') }}
-            ]]></g:description>
+            <g:description><![CDATA[{{ $product->merchant_description }}]]></g:description>
 
             <g:link>{{ url('/shop-single/' . !empty($product->minsan) ? $product->minsan : $product->ean ) }}</g:link>
 
