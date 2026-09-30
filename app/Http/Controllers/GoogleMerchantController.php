@@ -9,6 +9,7 @@ class GoogleMerchantController extends Controller
     public function feed()
     {
         $products = Product::query()
+            ->with('brandRelation')
             ->where('hidden', 0)
             ->where('sop_otc',0)
             ->where('vet',0)

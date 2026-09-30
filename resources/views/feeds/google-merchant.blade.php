@@ -34,10 +34,8 @@
 
             <g:condition>new</g:condition>
 
-            @if($product->brand_id)
-                <g:brand><![CDATA[
-                    {{ $product->brand()->id }}
-                ]]></g:brand>
+            @if($product->brandRelation)
+                <g:brand><![CDATA[{{ $product->brandRelation->name }}]]></g:brand>
             @endif
 
             {{-- GTIN solo quando abbiamo realmente un EAN --}}
