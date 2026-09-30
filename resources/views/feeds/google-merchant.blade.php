@@ -34,9 +34,9 @@
 
             <g:condition>new</g:condition>
 
-            @if($product->brand)
+            @if($product->brand_id)
                 <g:brand><![CDATA[
-                    {{ $product->brand->name }}
+                    {{ $product->brand()->id }}
                 ]]></g:brand>
             @endif
 
