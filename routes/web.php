@@ -12,6 +12,8 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PaypalController;
 use App\Services\Track123Service;
 
+use App\Http\Controllers\GoogleMerchantController;
+
 
 use App\Models\Product;
 use App\Models\Category;
@@ -61,6 +63,10 @@ Route::middleware('doctor')->group(function () {
 
         dd($token);
     });
+
+
+    Route::get('/google-merchant.xml', [GoogleMerchantController::class, 'feed'])
+        ->name('google.merchant.feed');
 
 //Route::middleware('auth')->group(function () {
     
