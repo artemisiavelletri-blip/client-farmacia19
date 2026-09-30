@@ -11,7 +11,6 @@ class GoogleMerchantController extends Controller
         $products = Product::query()
             ->with('brandRelation')
             ->where('hidden', 0)
-            ->where('sop_otc',0)
             ->where('vet',0)
             ->get();
 
