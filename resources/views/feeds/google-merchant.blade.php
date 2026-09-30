@@ -26,12 +26,16 @@
                 $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
                 $image = $product->image;
-
                 $extension = $image
                     ? strtolower(pathinfo($image, PATHINFO_EXTENSION))
                     : null;
 
-                $imageUrl = $image && in_array($extension, $allowedExtensions)
+                $validImage =
+                    !empty($image) &&
+                    in_array($extension, $allowedExtensions) &&
+                    file_exists(public_path('storage-admin/' . $image));
+
+                $imageUrl = $validImage
                     ? asset('/storage-admin/' . $image)
                     : asset('/storage-admin/products/file-non-disponibile.jpg');
             @endphp
