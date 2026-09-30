@@ -22,7 +22,21 @@
 
             <g:link>{{ url('/shop-single/' . (!empty($product->minsan) ? $product->minsan : $product->ean)) }}</g:link>
 
-            <g:image_link>{{ asset('/storage-admin/' . $product->image) }}</g:image_link>
+            @php
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+                $image = $product->image;
+
+                $extension = $image
+                    ? strtolower(pathinfo($image, PATHINFO_EXTENSION))
+                    : null;
+
+                $imageUrl = $image && in_array($extension, $allowedExtensions)
+                    ? asset('/storage-admin/' . $image)
+                    : asset('/storage-admin/products/file-non-disponibile.jpg');
+            @endphp
+
+            <g:image_link>{{ $imageUrl }}</g:image_link>
 
             <g:availability>
                 {{ $product->stock > 0 ? 'in_stock' : 'out_of_stock' }}
