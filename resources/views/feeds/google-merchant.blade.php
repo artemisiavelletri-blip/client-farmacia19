@@ -14,9 +14,7 @@
             {{-- MINSAN come identificativo del prodotto --}}
             <g:id>{{ $product->minsan }}</g:id>
 
-            <g:title><![CDATA[
-                {{ $product->name }}
-            ]]></g:title>
+            <g:title><![CDATA[{{ $product->merchant_title }}]]></g:title>
 
             <g:description><![CDATA[{{ $product->merchant_description }}]]></g:description>
 

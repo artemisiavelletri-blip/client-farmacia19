@@ -106,5 +106,25 @@ class Product extends Model
         return trim($description);
     }
 
+    public function getMerchantTitleAttribute(): string
+    {
+        $title = trim($this->name ?? '');
+
+        // Normalizza spazi
+        $title = preg_replace('/\s+/u', ' ', $title);
+
+        // Se il titolo è completamente in maiuscolo,
+        // lo converte in "Title case"
+        if ($title === mb_strtoupper($title, 'UTF-8')) {
+            $title = mb_convert_case(
+                mb_strtolower($title, 'UTF-8'),
+                MB_CASE_TITLE,
+                'UTF-8'
+            );
+        }
+
+        return $title;
+    }
+
 }
 
