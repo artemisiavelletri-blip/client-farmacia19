@@ -199,6 +199,14 @@
                                 <img alt="DHL" loading="lazy" decoding="async" data-nimg="1" class="size-full object-contain dhl" src="{{ asset('/img/payment/dhl.svg') }}">
                             </div>
                         </div>
+                        <div class="footer-widget-box list">
+                            <h4 class="footer-widget-title">Farmacia19 è una farmacia Online Italiana autorizzata dal Ministero della Salute</h4>
+                            <div class="footer-carrier mt-20">
+                                <a href="https://www.salute.gov.it/portale/temi/ecommerce_farmaci_integrazione.jsp?VOLID=F9941" target= "_blank">
+                                    <img alt="Farmaci" loading="lazy" decoding="async" data-nimg="1" class="size-full object-contain" src="{{ asset('/img/farmaco.jpg') }}" style="height: auto!important;">
+                                </a>
+                            </div>
+                        </div> 
                     </div>
                 </div>
             </div>
