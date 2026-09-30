@@ -44,7 +44,16 @@
                 {{ $product->stock > 0 ? 'in_stock' : 'out_of_stock' }}
             </g:availability>
 
-            <g:price>{{ number_format($product->price, 2, '.', '') }} EUR</g:price>
+            @php
+                if(!$product->discountPrice){
+                    $price = {{ number_format($product->price, 2, '.', '') }};
+                }
+                else{
+                    $price = {{ number_format($product->discountPrice, 2, '.', '') }};
+                }
+            @endphp
+
+            <g:price>{{$price}}</g:price>
 
             <g:condition>new</g:condition>
 
