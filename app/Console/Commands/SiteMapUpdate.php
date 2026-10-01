@@ -12,51 +12,65 @@ use Spatie\Sitemap\Tags\Url;
 class SiteMapUpdate extends Command
 {
     /**
-     * Nome del comando Artisan
+     * Nome del comando Artisan.
      */
     protected $signature = 'app:site-map-update';
 
     /**
-     * Descrizione del comando
+     * Descrizione del comando.
      */
-    protected $description = 'Aggiorna la sitemap del sito Farmacia19';
+    protected $description = 'Genera la sitemap XML di Farmacia19';
+
+    /**
+     * Dominio principale.
+     */
+    private string $baseUrl = 'https://farmacia19.it';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $this->info('Generazione sitemap Farmacia19...');
+        $this->newLine();
 
         $sitemap = Sitemap::create();
 
-        $baseUrl = 'https://farmacia19.it';
+        /*
+        |--------------------------------------------------------------------------
+        | CONTATORI
+        |--------------------------------------------------------------------------
+        */
+
+        $categoryCount = 0;
+        $subCategoryCount = 0;
+        $productCount = 0;
 
         /*
         |--------------------------------------------------------------------------
-        | HOMEPAGE
+        | 1. HOMEPAGE
         |--------------------------------------------------------------------------
         */
 
         $sitemap->add(
-            Url::create($baseUrl.'/')
-                ->setPriority(1.0)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+            Url::create($this->baseUrl.'/')
         );
 
         /*
         |--------------------------------------------------------------------------
-        | CATEGORIE
+        | 2. CATEGORIE
         |--------------------------------------------------------------------------
         |
-        | Category ha già il Global Scope:
+        | Category possiede già il Global Scope:
+        |
         | hidden = 0
         |
-        | quindi le categorie nascoste vengono automaticamente escluse.
+        | quindi Category::query() esclude automaticamente
+        | le categorie nascoste.
         |
         */
 
-        $categoryCount = 0;
+        $this->info('Aggiungo le categorie...');
 
         Category::query()
             ->select([
@@ -64,37 +78,39 @@ class SiteMapUpdate extends Command
                 'token',
                 'updated_at',
             ])
+            ->whereNotNull('token')
+            ->where('token', '!=', '')
             ->orderBy('id')
-            ->chunkById(500, function ($categories) use (
-                $sitemap,
-                $baseUrl,
-                &$categoryCount
-            ) {
-                foreach ($categories as $category) {
+            ->chunkById(
+                500,
+                function ($categories) use (
+                    $sitemap,
+                    &$categoryCount
+                ) {
+                    foreach ($categories as $category) {
 
-                    if (empty($category->token)) {
-                        continue;
-                    }
-
-                    $url = Url::create(
-                        $baseUrl.'/shop-grid/'.$category->token
-                    )
-                        ->setPriority(0.9)
-                        ->setChangeFrequency(
-                            Url::CHANGE_FREQUENCY_DAILY
+                        $url = Url::create(
+                            $this->baseUrl
+                            .'/shop-grid/'
+                            .$category->token
                         );
 
-                    if ($category->updated_at) {
-                        $url->setLastModificationDate(
-                            $category->updated_at
-                        );
+                        /*
+                         * Inseriamo lastmod solamente
+                         * quando updated_at è disponibile.
+                         */
+                        if ($category->updated_at) {
+                            $url->setLastModificationDate(
+                                $category->updated_at
+                            );
+                        }
+
+                        $sitemap->add($url);
+
+                        $categoryCount++;
                     }
-
-                    $sitemap->add($url);
-
-                    $categoryCount++;
                 }
-            });
+            );
 
         $this->info(
             "Categorie aggiunte: {$categoryCount}"
@@ -102,59 +118,90 @@ class SiteMapUpdate extends Command
 
         /*
         |--------------------------------------------------------------------------
-        | SOTTOCATEGORIE
+        | 3. SOTTOCATEGORIE
         |--------------------------------------------------------------------------
         |
-        | SubCategory NON ha hidden.
+        | SubCategory NON possiede hidden.
         |
-        | Usiamo whereHas('category') così vengono incluse solamente
-        | sottocategorie appartenenti a categorie visibili.
+        | whereHas('category') assicura che la categoria padre
+        | sia visibile, perché Category applica il proprio
+        | Global Scope hidden = 0.
         |
-        | Il Global Scope di Category esclude automaticamente hidden = 1.
+        | Controlliamo inoltre che esista almeno un prodotto
+        | visibile associato alla sottocategoria.
         |
         */
 
-        $subCategoryCount = 0;
+        $this->info('Aggiungo le sottocategorie...');
 
         SubCategory::query()
+
+            // Deve appartenere a una categoria visibile
             ->whereHas('category')
+
+            // Deve avere almeno un prodotto indicizzabile
+            ->whereExists(function ($query) {
+
+                $query->selectRaw('1')
+                    ->from('products')
+                    ->join(
+                        'category',
+                        'category.id',
+                        '=',
+                        'products.category_id'
+                    )
+                    ->whereColumn(
+                        'products.subcategory_id',
+                        'subcategory.id'
+                    )
+                    ->where(
+                        'products.hidden',
+                        0
+                    )
+                    ->where(
+                        'category.hidden',
+                        0
+                    );
+            })
+
             ->select([
                 'id',
                 'category_id',
                 'token',
                 'updated_at',
             ])
+
+            ->whereNotNull('token')
+            ->where('token', '!=', '')
+
             ->orderBy('id')
-            ->chunkById(500, function ($subCategories) use (
-                $sitemap,
-                $baseUrl,
-                &$subCategoryCount
-            ) {
-                foreach ($subCategories as $subCategory) {
 
-                    if (empty($subCategory->token)) {
-                        continue;
-                    }
+            ->chunkById(
+                500,
+                function ($subCategories) use (
+                    $sitemap,
+                    &$subCategoryCount
+                ) {
+                    foreach ($subCategories as $subCategory) {
 
-                    $url = Url::create(
-                        $baseUrl.'/shop-grid/'.$subCategory->token
-                    )
-                        ->setPriority(0.8)
-                        ->setChangeFrequency(
-                            Url::CHANGE_FREQUENCY_DAILY
+                        $url = Url::create(
+                            $this->baseUrl
+                            .'/shop-grid/'
+                            .$subCategory->token
                         );
 
-                    if ($subCategory->updated_at) {
-                        $url->setLastModificationDate(
-                            $subCategory->updated_at
-                        );
+                        if ($subCategory->updated_at) {
+                            $url->setLastModificationDate(
+                                $subCategory->updated_at
+                            );
+                        }
+
+                        $sitemap->add($url);
+
+                        $subCategoryCount++;
                     }
-
-                    $sitemap->add($url);
-
-                    $subCategoryCount++;
                 }
-            });
+            );
 
         $this->info(
             "Sottocategorie aggiunte: {$subCategoryCount}"
@@ -162,54 +209,72 @@ class SiteMapUpdate extends Command
 
         /*
         |--------------------------------------------------------------------------
-        | PRODOTTI
+        | 4. PRODOTTI
         |--------------------------------------------------------------------------
         |
-        | Product ha già un Global Scope che esclude:
+        | Product possiede già questo Global Scope:
         |
-        | - prodotti hidden = 1
-        | - prodotti appartenenti a Category hidden = 1
+        | hidden = 0
+        |
+        | + categoria hidden = 0
+        |
+        | quindi Product::query() restituisce solamente
+        | prodotti indicizzabili secondo queste regole.
         |
         */
 
-        $productCount = 0;
+        $this->info('Aggiungo i prodotti...');
 
         Product::query()
+
             ->select([
                 'id',
                 'minsan',
                 'category_id',
                 'updated_at',
             ])
+
+            /*
+             * Non possiamo creare una URL prodotto
+             * senza MINSAN.
+             */
             ->whereNotNull('minsan')
             ->where('minsan', '!=', '')
+
             ->orderBy('id')
-            ->chunkById(1000, function ($products) use (
-                $sitemap,
-                $baseUrl,
-                &$productCount
-            ) {
-                foreach ($products as $product) {
 
-                    $url = Url::create(
-                        $baseUrl.'/shop-single/'.$product->minsan
-                    )
-                        ->setPriority(0.7)
-                        ->setChangeFrequency(
-                            Url::CHANGE_FREQUENCY_WEEKLY
+            ->chunkById(
+                1000,
+                function ($products) use (
+                    $sitemap,
+                    &$productCount
+                ) {
+                    foreach ($products as $product) {
+
+                        /*
+                         * URL reale utilizzata da Farmacia19:
+                         *
+                         * /shop-single/{minsan}
+                         */
+
+                        $url = Url::create(
+                            $this->baseUrl
+                            .'/shop-single/'
+                            .$product->minsan
                         );
 
-                    if ($product->updated_at) {
-                        $url->setLastModificationDate(
-                            $product->updated_at
-                        );
+                        if ($product->updated_at) {
+                            $url->setLastModificationDate(
+                                $product->updated_at
+                            );
+                        }
+
+                        $sitemap->add($url);
+
+                        $productCount++;
                     }
-
-                    $sitemap->add($url);
-
-                    $productCount++;
                 }
-            });
+            );
 
         $this->info(
             "Prodotti aggiunti: {$productCount}"
@@ -217,45 +282,76 @@ class SiteMapUpdate extends Command
 
         /*
         |--------------------------------------------------------------------------
-        | SCRITTURA SITEMAP
+        | 5. GENERAZIONE FILE
         |--------------------------------------------------------------------------
         */
 
         $path = public_path('sitemap.xml');
 
+        $this->newLine();
+        $this->info('Scrittura sitemap.xml...');
+
         $sitemap->writeToFile($path);
 
         /*
         |--------------------------------------------------------------------------
-        | RISULTATO
+        | 6. RIEPILOGO
         |--------------------------------------------------------------------------
         */
 
-        $total = 1
+        $total =
+            1
             + $categoryCount
             + $subCategoryCount
             + $productCount;
 
         $this->newLine();
 
-        $this->info('Sitemap generata con successo!');
+        $this->info(
+            'Sitemap generata con successo!'
+        );
+
+        $this->newLine();
 
         $this->table(
-            ['Tipo', 'URL'],
             [
-                ['Homepage', 1],
-                ['Categorie', $categoryCount],
-                ['Sottocategorie', $subCategoryCount],
-                ['Prodotti', $productCount],
-                ['TOTALE', $total],
+                'Tipo',
+                'URL inseriti',
+            ],
+            [
+                [
+                    'Homepage',
+                    1,
+                ],
+                [
+                    'Categorie',
+                    $categoryCount,
+                ],
+                [
+                    'Sottocategorie',
+                    $subCategoryCount,
+                ],
+                [
+                    'Prodotti',
+                    $productCount,
+                ],
+                [
+                    'TOTALE',
+                    $total,
+                ],
             ]
         );
 
         $this->newLine();
 
-        $this->info("File: {$path}");
         $this->info(
-            'URL: https://farmacia19.it/sitemap.xml'
+            "File generato: {$path}"
+        );
+
+        $this->info(
+            'Sitemap pubblica: '
+            .$this->baseUrl
+            .'/sitemap.xml'
         );
 
         return self::SUCCESS;
