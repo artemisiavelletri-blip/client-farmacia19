@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use Illuminate\Support\Facades\File;
 
 class GoogleMerchantController extends Controller
 {
     public function feed()
     {
-        $products = Product::query()
-            ->with('brandRelation')
-            ->where('hidden', 0)
-            ->where('vet',0)
-            ->get();
+        $path = storage_path('app/feeds/google-merchant.xml');
 
-        return response()
-            ->view('feeds.google-merchant', [
-                'products' => $products,
-            ])
-            ->header('Content-Type', 'application/xml; charset=UTF-8');
+        abort_unless(File::exists($path), 404);
+
+        return response()->file($path, [
+            'Content-Type' => 'application/xml; charset=UTF-8',
+        ]);
     }
 }
