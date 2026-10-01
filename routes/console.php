@@ -17,3 +17,8 @@ Schedule::command('app:update-tracking')
 Schedule::command('cart:clear-old')
     ->dailyAt('00:00')
     ->withoutOverlapping();
+
+Schedule::command('app:site-map-update')
+    ->dailyAt('03:00')
+    ->withoutOverlapping()
+    ->onOneServer();
