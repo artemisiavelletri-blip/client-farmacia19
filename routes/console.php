@@ -24,5 +24,5 @@ Schedule::command('app:site-map-update')
     ->onOneServer();
 
 Schedule::command('merchant:generate-feed')
-    ->dailyAt('03:30')
+    ->dailyAt('23:00')
     ->withoutOverlapping();
