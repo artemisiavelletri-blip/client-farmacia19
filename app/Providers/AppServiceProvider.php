@@ -33,17 +33,5 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('navbarCategories', $categories);
         });
-
-        $schedule = app(Schedule::class);
-
-        $schedule->call(function () {
-            Artisan::call('cart:clear-old');
-            Log::info('Cart items vecchi eliminati tramite scheduler.');
-        })->daily();
-
-        /*$schedule->call(function () {
-            Artisan::call('app:site-map-update');
-            Log::info('SiteMap aggiornato tramite scheduler.');
-        })->daily();*/
     }
 }
