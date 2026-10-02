@@ -15,7 +15,7 @@
                         <span class="type discount">-{{ $discount }}%</span>
                     @endif
                     <a href="/shop-single/{{ !empty($product->minsan) ? $product->minsan : $product->ean }}">
-                        <img src="{{asset('/storage-admin/' . $product->image) }}" alt="" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';">
+                        <img src="{{asset('/storage-admin/' . $product->image) }}" alt="{{ $product->name }}" onerror="this.onerror=null;this.src='{{ addslashes(asset('/storage-admin/products/file-non-disponibile.jpg')) }}';">
                     </a>
                 </div>
 
