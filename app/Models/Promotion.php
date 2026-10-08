@@ -487,8 +487,7 @@ class Promotion extends Model
          *
          * /shop-single/{minsan}
          *
-         * Se minsan non esiste:
-         * /shop-single/{ean}
+         * Se minsan non esiste usa EAN.
          */
         if ($this->product_id && $this->product) {
 
@@ -501,6 +500,22 @@ class Promotion extends Model
             }
 
             return null;
+        }
+
+
+        /*
+         * =====================================================
+         * BRAND
+         * =====================================================
+         *
+         * Esempio:
+         * /shop-search?brand=4
+         */
+        if ($this->brand_id) {
+
+            return url(
+                '/shop-search?brand=' . $this->brand_id
+            );
         }
 
 
@@ -560,7 +575,9 @@ class Promotion extends Model
 
 
         /*
-         * Nessuna destinazione disponibile
+         * =====================================================
+         * NESSUNA DESTINAZIONE
+         * =====================================================
          */
         return null;
     }
