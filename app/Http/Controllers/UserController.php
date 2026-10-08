@@ -659,6 +659,8 @@ class UserController extends Controller
             'token' => ['required', 'string'],
         ]);
 
+        $today = now()->toDateString();
+
         $coupon = Promotion::with([
             'product',
             'brand',
@@ -668,43 +670,106 @@ class UserController extends Controller
         ->where('token', $request->token)
         ->where('active', 1)
         ->where('user', 1)
-        ->where(function ($query) {
+
+        /*
+         * Data fine validità
+         */
+        ->where(function ($query) use ($today) {
+
             $query->whereNull('end_date')
-                  ->orWhere('end_date', '>=', now());
+                  ->orWhereDate('end_date', '>=', $today);
+
         })
+
         ->first();
 
+
         if (!$coupon) {
+
             return response()->json([
                 'success' => false,
                 'message' => 'Coupon non trovato o non più valido.'
             ], 404);
+
         }
 
+
         return response()->json([
+
             'success' => true,
 
             'coupon' => [
+
                 'token' => $coupon->token,
+
                 'name' => $coupon->name,
 
                 'percentage' => $coupon->percentage,
+
                 'fixDiscount' => $coupon->fixDiscount,
 
                 'description' => $coupon->description,
 
                 'start_date' => $coupon->start_date,
+
                 'end_date' => $coupon->end_date,
 
                 'minimum_purchase' => $coupon->minimum_purchase,
+
                 'max_use' => $coupon->max_use,
 
+
                 /*
-                 * IMPORTANTI
+                 * Dove è applicabile il coupon
+                 *
+                 * Esempi:
+                 *
+                 * product
+                 * brand
+                 * category
+                 * all_products
                  */
-                'application_type' => $coupon->application_type,
-                'application_label' => $coupon->application_label,
+
+                'application_type' =>
+                    $coupon->application_type,
+
+
+                /*
+                 * Testo visualizzato.
+                 *
+                 * Esempi:
+                 *
+                 * ACQUA SIRMIONE...
+                 *
+                 * Igiene
+                 *
+                 * Igiene / Idratazione
+                 *
+                 * Tutti i prodotti
+                 */
+
+                'application_label' =>
+                    $coupon->application_label,
+
+
+                /*
+                 * Link destinazione.
+                 *
+                 * Prodotto:
+                 * URL prodotto
+                 *
+                 * Categoria:
+                 * /shop-grid/TOKEN_CATEGORIA
+                 *
+                 * Categoria + sottocategoria:
+                 * /shop-grid/TOKEN_CATEGORIA?sub_category=23
+                 */
+
+                'application_url' =>
+                    $coupon->application_url,
+
             ]
+
         ]);
     }
 }

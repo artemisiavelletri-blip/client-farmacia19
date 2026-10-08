@@ -69,7 +69,7 @@
 
 
     /* =========================================================
-       TEMI
+       TEMI CARD
     ========================================================= */
 
     .coupon-card.theme-pink {
@@ -323,7 +323,7 @@
 
 
     /* =========================================================
-       BUTTON
+       BOTTONE CARD
     ========================================================= */
 
     .coupon-button {
@@ -379,7 +379,7 @@
 
 
     /* =========================================================
-       MODAL THEMES
+       MODAL TEMI
     ========================================================= */
 
     .coupon-modal {
@@ -409,11 +409,11 @@
 
 
     /* =========================================================
-       MODAL
+       MODAL PIÙ COMPATTA
     ========================================================= */
 
     .coupon-modal .modal-dialog {
-        max-width: 510px;
+        max-width: 460px;
     }
 
     .coupon-modal .modal-content {
@@ -428,7 +428,7 @@
 
 
     /* =========================================================
-       MODAL HEADER
+       HEADER MODAL
     ========================================================= */
 
     .coupon-modal .modal-header {
@@ -437,7 +437,7 @@
         display: flex;
         align-items: center;
 
-        padding: 20px 25px;
+        padding: 17px 22px;
 
         background: #fff;
 
@@ -449,14 +449,14 @@
 
         color: #003b5c;
 
-        font-size: 19px;
+        font-size: 18px;
         font-weight: 800;
     }
 
     .coupon-modal-close {
         position: absolute;
 
-        right: 15px;
+        right: 13px;
         top: 50%;
 
         transform: translateY(-50%);
@@ -469,7 +469,7 @@
 
         color: #536273;
 
-        font-size: 30px;
+        font-size: 28px;
         line-height: 1;
 
         cursor: pointer;
@@ -477,7 +477,7 @@
 
 
     /* =========================================================
-       MODAL BODY
+       BODY MODAL
     ========================================================= */
 
     .coupon-modal-body {
@@ -492,20 +492,20 @@
 
 
     /* =========================================================
-       MODAL HERO
+       AREA COLORATA MODAL
     ========================================================= */
 
     .modal-theme-area {
         position: relative;
 
-        padding: 32px 30px 25px;
+        padding: 22px 25px 20px;
 
         background:
             radial-gradient(
                 circle at 90% 15%,
                 rgba(255,255,255,.65) 0,
-                rgba(255,255,255,.65) 45px,
-                transparent 46px
+                rgba(255,255,255,.65) 38px,
+                transparent 39px
             ),
             var(--modal-soft);
 
@@ -517,13 +517,13 @@
 
         position: absolute;
 
-        width: 150px;
-        height: 150px;
+        width: 125px;
+        height: 125px;
 
         border-radius: 50%;
 
-        right: -60px;
-        top: -60px;
+        right: -50px;
+        top: -50px;
 
         background: var(--modal-color);
 
@@ -536,9 +536,9 @@
         position: absolute;
 
         right: 5px;
-        bottom: -45px;
+        bottom: -38px;
 
-        font-size: 160px;
+        font-size: 135px;
         font-weight: 900;
         line-height: 1;
 
@@ -560,14 +560,14 @@
 
 
     /* =========================================================
-       MODAL DISCOUNT
+       ICONA MODAL
     ========================================================= */
 
     .modal-coupon-icon {
-        width: 65px;
-        height: 65px;
+        width: 52px;
+        height: 52px;
 
-        margin: 0 auto 12px;
+        margin: 0 auto 8px;
 
         display: flex;
         align-items: center;
@@ -579,14 +579,19 @@
 
         color: var(--modal-color);
 
-        font-size: 28px;
+        font-size: 22px;
         font-weight: 800;
     }
+
+
+    /* =========================================================
+       SCONTO MODAL
+    ========================================================= */
 
     .modal-discount {
         color: var(--modal-color);
 
-        font-size: 60px;
+        font-size: 48px;
         line-height: 1;
 
         font-weight: 900;
@@ -595,56 +600,56 @@
     }
 
     .modal-discount-label {
-        margin-top: 5px;
+        margin-top: 3px;
 
         color: var(--modal-color);
 
-        font-size: 18px;
+        font-size: 15px;
         font-weight: 800;
 
         text-transform: uppercase;
     }
 
     .modal-coupon-title {
-        margin-top: 25px;
+        margin-top: 17px;
 
         color: #003b5c;
 
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 800;
     }
 
     .modal-description {
-        max-width: 410px;
+        max-width: 390px;
 
-        margin: 10px auto 0;
+        margin: 7px auto 0;
 
         color: #617386;
 
-        font-size: 14px;
-        line-height: 1.6;
+        font-size: 13px;
+        line-height: 1.5;
     }
 
 
     /* =========================================================
-       MODAL WHITE AREA
+       AREA BIANCA MODAL
     ========================================================= */
 
     .modal-white-area {
-        padding: 22px 30px 30px;
+        padding: 18px 25px 24px;
 
         background: #fff;
     }
 
 
     /* =========================================================
-       COUPON CODE
+       CODICE
     ========================================================= */
 
     .coupon-code-box {
         position: relative;
 
-        padding: 17px 50px 17px 20px;
+        padding: 14px 48px 14px 18px;
 
         background: var(--modal-soft);
 
@@ -658,7 +663,7 @@
 
         color: #003b5c;
 
-        font-size: 21px;
+        font-size: 19px;
         font-weight: 900;
 
         letter-spacing: .8px;
@@ -669,27 +674,27 @@
     .coupon-code-copy-icon {
         position: absolute;
 
-        right: 18px;
+        right: 17px;
         top: 50%;
 
         transform: translateY(-50%);
 
         color: var(--modal-color);
 
-        font-size: 20px;
+        font-size: 19px;
     }
 
 
     /* =========================================================
-       COPY BUTTON
+       COPIA CODICE
     ========================================================= */
 
     #copyCoupon {
         width: 100%;
 
-        margin-top: 13px;
+        margin-top: 11px;
 
-        padding: 13px 15px;
+        padding: 11px 15px;
 
         border: 0;
 
@@ -701,6 +706,7 @@
 
         cursor: pointer;
 
+        font-size: 13px;
         font-weight: 700;
 
         transition: .2s ease;
@@ -713,9 +719,9 @@
     #copySuccess {
         display: none;
 
-        margin-top: 12px;
+        margin-top: 10px;
 
-        padding: 11px;
+        padding: 9px;
 
         background: var(--modal-soft);
 
@@ -723,7 +729,7 @@
 
         color: var(--modal-color);
 
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
     }
 
@@ -733,9 +739,9 @@
     ========================================================= */
 
     .modal-coupon-info {
-        margin-top: 23px;
+        margin-top: 18px;
 
-        padding-top: 18px;
+        padding-top: 15px;
 
         border-top: 1px solid #edf1f4;
 
@@ -746,16 +752,16 @@
         display: flex;
         align-items: center;
 
-        gap: 11px;
+        gap: 10px;
 
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     .modal-info-icon {
-        width: 36px;
-        height: 36px;
+        width: 34px;
+        height: 34px;
 
-        flex: 0 0 36px;
+        flex: 0 0 34px;
 
         display: flex;
         align-items: center;
@@ -767,7 +773,7 @@
 
         color: var(--modal-color);
 
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 700;
     }
 
@@ -800,7 +806,58 @@
 
 
     /* =========================================================
-       PAGINATION
+       LINK PRODOTTO / CATEGORIA / SOTTOCATEGORIA
+    ========================================================= */
+
+    .coupon-application-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        width: 100%;
+
+        margin: 4px 0 14px;
+
+        padding: 11px 14px;
+
+        border: 1px solid transparent;
+        border-radius: 10px;
+
+        background: var(--modal-soft);
+
+        color: var(--modal-color);
+
+        font-size: 13px;
+        font-weight: 800;
+
+        text-decoration: none !important;
+
+        transition:
+            background .2s ease,
+            color .2s ease,
+            transform .2s ease;
+    }
+
+    .coupon-application-link:hover {
+        background: var(--modal-color);
+
+        color: #fff;
+
+        text-decoration: none !important;
+
+        transform: translateY(-1px);
+    }
+
+    .coupon-application-link-arrow {
+        margin-left: 15px;
+
+        font-size: 17px;
+        line-height: 1;
+    }
+
+
+    /* =========================================================
+       PAGINAZIONE
     ========================================================= */
 
     .coupon-pagination {
@@ -838,16 +895,22 @@
             font-size: 48px;
         }
 
+        .coupon-modal .modal-dialog {
+            max-width: calc(100% - 24px);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .modal-theme-area {
-            padding: 27px 20px 22px;
+            padding: 20px 18px 18px;
         }
 
         .modal-white-area {
-            padding: 20px;
+            padding: 17px 18px 21px;
         }
 
         .modal-discount {
-            font-size: 50px;
+            font-size: 44px;
         }
 
     }
@@ -861,7 +924,10 @@
 
         <div class="container">
 
-            {{-- HEADER --}}
+
+            {{-- =====================================================
+                 HEADER
+            ====================================================== --}}
 
             <div class="coupon-page-header">
 
@@ -877,7 +943,7 @@
 
 
             {{-- =====================================================
-                 COUPON
+                 LISTA COUPON
             ====================================================== --}}
 
             <div class="row g-4">
@@ -887,9 +953,8 @@
                     @php
 
                         /*
-                         * TEMI
+                         * Colori alternati
                          */
-
                         $themes = [
                             'theme-pink',
                             'theme-blue',
@@ -897,17 +962,14 @@
                             'theme-orange'
                         ];
 
-
                         /*
-                         * Mantiene alternanza colori
-                         * anche tra le pagine.
+                         * Mantiene l'alternanza anche
+                         * tra le pagine della paginazione.
                          */
-
                         $globalIndex =
                             (($promotion->currentPage() - 1)
                             * $promotion->perPage())
                             + $loop->index;
-
 
                         $theme =
                             $themes[
@@ -916,9 +978,8 @@
 
 
                         /*
-                         * TIPO SCONTO
+                         * Tipo sconto
                          */
-
                         $isFixed =
                             !is_null($coupon->fixDiscount)
                             &&
@@ -926,22 +987,16 @@
 
 
                         /*
-                         * DATE
+                         * Date validità
                          */
-
                         $startDate =
                             $coupon->start_date
-                                ? \Carbon\Carbon::parse(
-                                    $coupon->start_date
-                                )
+                                ? \Carbon\Carbon::parse($coupon->start_date)
                                 : null;
-
 
                         $endDate =
                             $coupon->end_date
-                                ? \Carbon\Carbon::parse(
-                                    $coupon->end_date
-                                )
+                                ? \Carbon\Carbon::parse($coupon->end_date)
                                 : null;
 
                     @endphp
@@ -962,18 +1017,16 @@
                         >
 
 
-                            {{-- =================================================
+                            {{-- =====================================
                                  HERO
-                            ================================================== --}}
+                            ====================================== --}}
 
                             <div class="coupon-hero">
 
 
                                 <div class="coupon-badge">
 
-                                    <span>
-                                        🏷
-                                    </span>
+                                    <span>🏷</span>
 
                                     Codice sconto
 
@@ -981,7 +1034,6 @@
 
 
                                 <div class="coupon-discount">
-
 
                                     @if($isFixed)
 
@@ -991,7 +1043,6 @@
                                             ',',
                                             '.'
                                         ) }}€
-
 
                                     @elseif(
                                         !is_null($coupon->percentage)
@@ -1008,7 +1059,6 @@
 
                                     @endif
 
-
                                 </div>
 
 
@@ -1022,9 +1072,9 @@
                             </div>
 
 
-                            {{-- =================================================
+                            {{-- =====================================
                                  BODY
-                            ================================================== --}}
+                            ====================================== --}}
 
                             <div class="coupon-body">
 
@@ -1043,16 +1093,16 @@
                                 </div>
 
 
-                                {{-- =================================================
+                                {{-- =================================
                                      INFO
-                                ================================================== --}}
+                                ================================== --}}
 
                                 <div class="coupon-info">
 
 
-                                    {{-- =============================================
-                                         DOVE SI APPLICA
-                                    ============================================== --}}
+                                    {{-- =============================
+                                         APPLICAZIONE COUPON
+                                    ============================== --}}
 
                                     @if(
                                         !empty($coupon->application_type)
@@ -1065,55 +1115,32 @@
 
                                             <div class="coupon-info-icon">
 
-
                                                 @switch($coupon->application_type)
 
-
                                                     @case('product')
-
                                                         📦
-
                                                         @break
-
 
                                                     @case('brand')
-
                                                         🏷
-
                                                         @break
-
 
                                                     @case('category')
-
                                                         ▦
-
                                                         @break
-
 
                                                     @case('subcategory')
-
-                                                        {{-- Compatibilità con eventuale
-                                                             vecchio application_type --}}
-
                                                         ▦
-
                                                         @break
-
 
                                                     @case('all_products')
-
                                                         🛒
-
                                                         @break
 
-
                                                     @default
-
                                                         🛒
 
-
                                                 @endswitch
-
 
                                             </div>
 
@@ -1123,56 +1150,32 @@
 
                                                 <span>
 
-
                                                     @switch($coupon->application_type)
 
-
                                                         @case('product')
-
                                                             Prodotto
-
                                                             @break
-
 
                                                         @case('brand')
-
                                                             Brand
-
                                                             @break
-
 
                                                         @case('category')
-
                                                             Categoria
-
                                                             @break
-
 
                                                         @case('subcategory')
-
-                                                            {{-- Anche se arriva ancora
-                                                                 "subcategory" dal backend,
-                                                                 visualizziamo Categoria --}}
-
                                                             Categoria
-
                                                             @break
-
 
                                                         @case('all_products')
-
                                                             Valido su
-
                                                             @break
 
-
                                                         @default
-
                                                             Valido su
 
-
                                                     @endswitch
-
 
                                                 </span>
 
@@ -1192,9 +1195,9 @@
                                     @endif
 
 
-                                    {{-- =============================================
+                                    {{-- =============================
                                          ACQUISTO MINIMO
-                                    ============================================== --}}
+                                    ============================== --}}
 
                                     @if(
                                         !is_null($coupon->minimum_purchase)
@@ -1206,9 +1209,7 @@
 
 
                                             <div class="coupon-info-icon">
-
                                                 €
-
                                             </div>
 
 
@@ -1237,9 +1238,9 @@
                                     @endif
 
 
-                                    {{-- =============================================
+                                    {{-- =============================
                                          VALIDITÀ
-                                    ============================================== --}}
+                                    ============================== --}}
 
                                     @if($startDate || $endDate)
 
@@ -1247,14 +1248,11 @@
 
 
                                             <div class="coupon-info-icon">
-
                                                 📅
-
                                             </div>
 
 
                                             <div class="coupon-info-text">
-
 
                                                 <span>
                                                     Validità
@@ -1263,39 +1261,24 @@
 
                                                 <strong>
 
-
-                                                    {{-- STESSO GIORNO --}}
-
                                                     @if(
                                                         $startDate
                                                         &&
                                                         $endDate
                                                         &&
-                                                        $startDate->isSameDay(
-                                                            $endDate
-                                                        )
+                                                        $startDate->isSameDay($endDate)
                                                     )
 
                                                         Valido il
                                                         {{ $startDate->format('d/m/Y') }}
 
 
-                                                    {{-- INTERVALLO --}}
-
-                                                    @elseif(
-                                                        $startDate
-                                                        &&
-                                                        $endDate
-                                                    )
+                                                    @elseif($startDate && $endDate)
 
                                                         {{ $startDate->format('d/m/Y') }}
-
                                                         —
-
                                                         {{ $endDate->format('d/m/Y') }}
 
-
-                                                    {{-- SOLO INIZIO --}}
 
                                                     @elseif($startDate)
 
@@ -1303,16 +1286,12 @@
                                                         {{ $startDate->format('d/m/Y') }}
 
 
-                                                    {{-- SOLO FINE --}}
-
                                                     @elseif($endDate)
 
                                                         Fino al
                                                         {{ $endDate->format('d/m/Y') }}
 
-
                                                     @endif
-
 
                                                 </strong>
 
@@ -1328,9 +1307,9 @@
                                 </div>
 
 
-                                {{-- =================================================
-                                     BUTTON
-                                ================================================== --}}
+                                {{-- =================================
+                                     BOTTONE
+                                ================================== --}}
 
                                 <button
                                     type="button"
@@ -1340,9 +1319,7 @@
                                     Scopri il codice
 
                                     <span class="coupon-button-arrow">
-
                                         →
-
                                     </span>
 
                                 </button>
@@ -1369,9 +1346,7 @@
                             </h5>
 
                             <p class="mb-0">
-
                                 Al momento non ci sono promozioni attive.
-
                             </p>
 
                         </div>
@@ -1407,9 +1382,8 @@
 </main>
 
 
-
 {{-- =============================================================
-     MODAL
+     MODAL COUPON
 ============================================================= --}}
 
 <div
@@ -1435,9 +1409,7 @@
             <div class="modal-header">
 
                 <h5 class="modal-title">
-
                     Il tuo coupon
-
                 </h5>
 
 
@@ -1447,9 +1419,7 @@
                     class="coupon-modal-close"
                     aria-label="Chiudi"
                 >
-
                     &times;
-
                 </button>
 
             </div>
@@ -1463,7 +1433,7 @@
 
 
                 {{-- =================================================
-                     HERO
+                     AREA COLORATA
                 ================================================== --}}
 
                 <div class="modal-theme-area text-center">
@@ -1485,16 +1455,12 @@
 
 
                     <div class="modal-discount-label">
-
                         di sconto
-
                     </div>
 
 
                     <div class="modal-coupon-title">
-
                         Un vantaggio pensato per te
-
                     </div>
 
 
@@ -1509,59 +1475,49 @@
 
 
                 {{-- =================================================
-                     WHITE AREA
+                     AREA BIANCA
                 ================================================== --}}
 
                 <div class="modal-white-area text-center">
 
 
-                    {{-- =================================================
-                         CODICE
-                    ================================================== --}}
+                    {{-- CODICE --}}
 
                     <div class="coupon-code-box">
 
-
-                        <h6 id="couponCode">
-                        </h6>
-
+                        <h6 id="couponCode"></h6>
 
                         <span class="coupon-code-copy-icon">
-
                             ⧉
-
                         </span>
-
 
                     </div>
 
+
+                    {{-- COPIA --}}
 
                     <button
                         type="button"
                         id="copyCoupon"
                     >
-
                         Copia codice
-
                     </button>
 
 
                     <div id="copySuccess">
-
                         ✓ Codice copiato!
-
                     </div>
 
 
                     {{-- =================================================
-                         INFO
+                         INFO MODAL
                     ================================================== --}}
 
                     <div class="modal-coupon-info">
 
 
                         {{-- =============================================
-                             DOVE SI APPLICA
+                             APPLICAZIONE
                         ============================================== --}}
 
                         <div
@@ -1575,28 +1531,49 @@
                                 class="modal-info-icon"
                                 id="modalApplicationIcon"
                             >
-
                                 🛒
-
                             </div>
 
 
                             <div class="modal-info-text">
 
-
                                 <span id="modalApplicationType">
-
                                     Valido su
-
                                 </span>
-
 
                                 <strong id="modalApplicationLabel">
                                 </strong>
 
-
                             </div>
 
+
+                        </div>
+
+
+                        {{-- =============================================
+                             LINK PRODOTTO / CATEGORIA
+                        ============================================== --}}
+
+                        <div
+                            id="modalApplicationLinkRow"
+                            style="display:none;"
+                        >
+
+                            <a
+                                href="#"
+                                id="modalApplicationLink"
+                                class="coupon-application-link"
+                            >
+
+                                <span id="modalApplicationLinkText">
+                                    Scopri i prodotti
+                                </span>
+
+                                <span class="coupon-application-link-arrow">
+                                    →
+                                </span>
+
+                            </a>
 
                         </div>
 
@@ -1613,25 +1590,18 @@
 
 
                             <div class="modal-info-icon">
-
                                 €
-
                             </div>
 
 
                             <div class="modal-info-text">
 
-
                                 <span>
-
                                     Acquisto minimo
-
                                 </span>
-
 
                                 <strong id="modalMinimum">
                                 </strong>
-
 
                             </div>
 
@@ -1651,25 +1621,18 @@
 
 
                             <div class="modal-info-icon">
-
                                 📅
-
                             </div>
 
 
                             <div class="modal-info-text">
 
-
                                 <span>
-
                                     Validità
-
                                 </span>
-
 
                                 <strong id="modalValidity">
                                 </strong>
-
 
                             </div>
 
@@ -1678,35 +1641,26 @@
 
 
                         {{-- =============================================
-                             UTILIZZO
+                             COME UTILIZZARLO
                         ============================================== --}}
 
                         <div class="modal-info-row">
 
 
                             <div class="modal-info-icon">
-
                                 🛒
-
                             </div>
 
 
                             <div class="modal-info-text">
 
-
                                 <span>
-
                                     Come utilizzarlo
-
                                 </span>
 
-
                                 <strong>
-
                                     Inserisci il codice al checkout
-
                                 </strong>
-
 
                             </div>
 
@@ -1734,7 +1688,6 @@
 @endsection
 
 
-
 @section('js')
 
 <script>
@@ -1748,47 +1701,34 @@ $(document).ready(function () {
 
     function formatCouponDate(date) {
 
-
         if (!date) {
             return null;
         }
-
 
         const cleanDate =
             date
                 .toString()
                 .substring(0, 10);
 
-
         const parts =
             cleanDate.split('-');
 
-
         if (parts.length !== 3) {
-
             return cleanDate;
-
         }
-
 
         return (
             parts[2]
-            +
-            '/'
-            +
-            parts[1]
-            +
-            '/'
-            +
-            parts[0]
+            + '/'
+            + parts[1]
+            + '/'
+            + parts[0]
         );
-
     }
 
 
-
     /* =========================================================
-       CLICK COUPON
+       CLICK CARD
     ========================================================= */
 
     $(document).on(
@@ -1803,12 +1743,11 @@ $(document).ready(function () {
 
             const theme =
                 $(this).data('theme')
-                ||
-                'theme-green';
+                || 'theme-green';
 
 
             /* =================================================
-               TEMA MODAL
+               RESET TEMA MODAL
             ================================================== */
 
             $('#exampleModal')
@@ -1823,19 +1762,15 @@ $(document).ready(function () {
                 .addClass(theme);
 
 
-
             /* =================================================
                AJAX
             ================================================== */
 
             $.ajax({
 
-
                 url: "{{ route('coupon.get') }}",
 
-
                 type: "POST",
-
 
                 data: {
 
@@ -1846,22 +1781,16 @@ $(document).ready(function () {
                 },
 
 
-                /* =============================================
-                   SUCCESS
-                ============================================== */
-
                 success: function(response) {
 
 
                     if (!response.success) {
-
 
                         alert(
                             response.message
                             ??
                             'Coupon non disponibile.'
                         );
-
 
                         return;
 
@@ -1872,18 +1801,14 @@ $(document).ready(function () {
                         response.coupon;
 
 
-
                     /* =========================================
                        CODICE
                     ========================================== */
 
                     $('#couponCode')
                         .text(
-                            coupon.name
-                            ??
-                            ''
+                            coupon.name ?? ''
                         );
-
 
 
                     /* =========================================
@@ -1892,15 +1817,12 @@ $(document).ready(function () {
 
                     $('#description')
                         .text(
-                            coupon.description
-                            ??
-                            ''
+                            coupon.description ?? ''
                         );
 
 
-
                     /* =========================================
-                       SCONTO FISSO
+                       SCONTO FISSO €
                     ========================================== */
 
                     if (
@@ -1908,9 +1830,7 @@ $(document).ready(function () {
                         &&
                         coupon.fixDiscount !== undefined
                         &&
-                        parseFloat(
-                            coupon.fixDiscount
-                        ) > 0
+                        parseFloat(coupon.fixDiscount) > 0
                     ) {
 
 
@@ -1928,11 +1848,7 @@ $(document).ready(function () {
 
                         $('#modalDiscount')
                             .text(
-                                '-'
-                                +
-                                discount
-                                +
-                                '€'
+                                '-' + discount + '€'
                             );
 
 
@@ -1952,7 +1868,7 @@ $(document).ready(function () {
 
 
                     /* =========================================
-                       PERCENTUALE
+                       SCONTO PERCENTUALE
                     ========================================== */
 
                     else if (
@@ -1960,9 +1876,7 @@ $(document).ready(function () {
                         &&
                         coupon.percentage !== undefined
                         &&
-                        parseFloat(
-                            coupon.percentage
-                        ) > 0
+                        parseFloat(coupon.percentage) > 0
                     ) {
 
 
@@ -1980,11 +1894,7 @@ $(document).ready(function () {
 
                         $('#modalDiscount')
                             .text(
-                                '-'
-                                +
-                                percentage
-                                +
-                                '%'
+                                '-' + percentage + '%'
                             );
 
 
@@ -2023,7 +1933,6 @@ $(document).ready(function () {
                     }
 
 
-
                     /* =========================================
                        DOVE SI APPLICA
                     ========================================== */
@@ -2043,7 +1952,6 @@ $(document).ready(function () {
                             '🛒';
 
 
-
                         switch (
                             coupon.application_type
                         ) {
@@ -2051,86 +1959,61 @@ $(document).ready(function () {
 
                             case 'product':
 
-
                                 applicationTitle =
                                     'Prodotto';
-
 
                                 applicationIcon =
                                     '📦';
 
-
                                 break;
-
 
 
                             case 'brand':
 
-
                                 applicationTitle =
                                     'Brand';
-
 
                                 applicationIcon =
                                     '🏷';
 
-
                                 break;
-
 
 
                             case 'category':
 
-
                                 applicationTitle =
                                     'Categoria';
-
 
                                 applicationIcon =
                                     '▦';
 
-
                                 break;
-
 
 
                             /*
-                             * Compatibilità:
-                             *
-                             * se il backend restituisce
-                             * ancora "subcategory",
-                             * mostriamo comunque
-                             * "Categoria".
+                             * Compatibilità nel caso
+                             * arrivasse ancora "subcategory".
                              */
-
                             case 'subcategory':
-
 
                                 applicationTitle =
                                     'Categoria';
 
-
                                 applicationIcon =
                                     '▦';
 
-
                                 break;
-
 
 
                             case 'all_products':
 
-
                                 applicationTitle =
                                     'Valido su';
-
 
                                 applicationIcon =
                                     '🛒';
 
-
                                 break;
-
 
                         }
 
@@ -2172,6 +2055,103 @@ $(document).ready(function () {
                     }
 
 
+                    /* =========================================
+                       LINK PRODOTTO / CATEGORIA /
+                       SOTTOCATEGORIA
+                    ========================================== */
+
+                    if (coupon.application_url) {
+
+
+                        let linkText =
+                            'Scopri i prodotti';
+
+
+                        switch (
+                            coupon.application_type
+                        ) {
+
+
+                            case 'product':
+
+                                linkText =
+                                    'Vai al prodotto';
+
+                                break;
+
+
+                            case 'category':
+
+                                linkText =
+                                    'Scopri i prodotti';
+
+                                break;
+
+
+                            case 'subcategory':
+
+                                linkText =
+                                    'Scopri i prodotti';
+
+                                break;
+
+
+                            case 'brand':
+
+                                linkText =
+                                    'Scopri i prodotti';
+
+                                break;
+
+
+                            default:
+
+                                linkText =
+                                    'Scopri i prodotti';
+
+                        }
+
+
+                        $('#modalApplicationLink')
+                            .attr(
+                                'href',
+                                coupon.application_url
+                            );
+
+
+                        $('#modalApplicationLinkText')
+                            .text(
+                                linkText
+                            );
+
+
+                        $('#modalApplicationLinkRow')
+                            .show();
+
+                    }
+
+
+                    else {
+
+
+                        $('#modalApplicationLink')
+                            .attr(
+                                'href',
+                                '#'
+                            );
+
+
+                        $('#modalApplicationLinkText')
+                            .text(
+                                'Scopri i prodotti'
+                            );
+
+
+                        $('#modalApplicationLinkRow')
+                            .hide();
+
+                    }
+
 
                     /* =========================================
                        ACQUISTO MINIMO
@@ -2203,9 +2183,7 @@ $(document).ready(function () {
 
                         $('#modalMinimum')
                             .text(
-                                '€ '
-                                +
-                                minimum
+                                '€ ' + minimum
                             );
 
 
@@ -2226,7 +2204,6 @@ $(document).ready(function () {
                             .hide();
 
                     }
-
 
 
                     /* =========================================
@@ -2257,11 +2234,9 @@ $(document).ready(function () {
                         '';
 
 
-
                     /*
                      * INIZIO + FINE
                      */
-
                     if (
                         startDate
                         &&
@@ -2272,7 +2247,6 @@ $(document).ready(function () {
                         /*
                          * STESSO GIORNO
                          */
-
                         if (
                             startDate === endDate
                         ) {
@@ -2289,9 +2263,8 @@ $(document).ready(function () {
 
 
                         /*
-                         * DATE DIVERSE
+                         * INTERVALLO
                          */
-
                         else {
 
 
@@ -2316,7 +2289,6 @@ $(document).ready(function () {
                     /*
                      * SOLO INIZIO
                      */
-
                     else if (startDate) {
 
 
@@ -2333,7 +2305,6 @@ $(document).ready(function () {
                     /*
                      * SOLO FINE
                      */
-
                     else if (endDate) {
 
 
@@ -2347,9 +2318,8 @@ $(document).ready(function () {
                     }
 
 
-
                     /* =========================================
-                       MOSTRA VALIDITÀ
+                       MOSTRA / NASCONDI VALIDITÀ
                     ========================================== */
 
                     if (validityText) {
@@ -2380,9 +2350,8 @@ $(document).ready(function () {
                     }
 
 
-
                     /* =========================================
-                       RESET COPY
+                       RESET COPIA
                     ========================================== */
 
                     $('#copySuccess')
@@ -2393,7 +2362,6 @@ $(document).ready(function () {
                         .text(
                             'Copia codice'
                         );
-
 
 
                     /* =========================================
@@ -2423,7 +2391,6 @@ $(document).ready(function () {
 
                 }
 
-
             });
 
         }
@@ -2431,9 +2398,8 @@ $(document).ready(function () {
     );
 
 
-
     /* =========================================================
-       CHIUDI MODAL
+       CHIUSURA MODAL
     ========================================================= */
 
     $('#closeScontoModal').on(
@@ -2446,7 +2412,6 @@ $(document).ready(function () {
 
         }
     );
-
 
 
     /* =========================================================
@@ -2465,9 +2430,7 @@ $(document).ready(function () {
 
 
             if (!code) {
-
                 return;
-
             }
 
 
@@ -2480,20 +2443,16 @@ $(document).ready(function () {
 
                 navigator.clipboard
                     .writeText(code)
-                    .then(
-                        function () {
+                    .then(function () {
 
-                            showCopiedMessage();
+                        showCopiedMessage();
 
-                        }
-                    )
-                    .catch(
-                        function () {
+                    })
+                    .catch(function () {
 
-                            fallbackCopy(code);
+                        fallbackCopy(code);
 
-                        }
-                    );
+                    });
 
             }
 
@@ -2509,9 +2468,8 @@ $(document).ready(function () {
     );
 
 
-
     /* =========================================================
-       FALLBACK COPY
+       FALLBACK COPIA
     ========================================================= */
 
     function fallbackCopy(code) {
@@ -2577,9 +2535,8 @@ $(document).ready(function () {
     }
 
 
-
     /* =========================================================
-       FEEDBACK COPIA
+       MESSAGGIO COPIATO
     ========================================================= */
 
     function showCopiedMessage() {

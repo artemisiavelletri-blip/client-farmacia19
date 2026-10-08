@@ -27,6 +27,5 @@ class SubCategory extends Model
     public function products_number()
     {
         return Product::where('subcategory_id',$this->id)->count();
-    }
-    
+    }    
 }

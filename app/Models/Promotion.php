@@ -477,4 +477,91 @@ class Promotion extends Model
 
         return null;
     }
+
+    public function getApplicationUrlAttribute(): ?string
+    {
+        /*
+         * =====================================================
+         * PRODOTTO SINGOLO
+         * =====================================================
+         *
+         * /shop-single/{minsan}
+         *
+         * Se minsan non esiste:
+         * /shop-single/{ean}
+         */
+        if ($this->product_id && $this->product) {
+
+            $productCode = !empty($this->product->minsan)
+                ? $this->product->minsan
+                : $this->product->ean;
+
+            if (!empty($productCode)) {
+                return url('/shop-single/' . $productCode);
+            }
+
+            return null;
+        }
+
+
+        /*
+         * =====================================================
+         * CATEGORIA + SOTTOCATEGORIA
+         * =====================================================
+         *
+         * Esempio:
+         * /shop-grid/token_bh70fxmz?sub_category=23
+         */
+        if (
+            $this->category_id &&
+            $this->subcategory_id &&
+            $this->category
+        ) {
+
+            if (!empty($this->category->token)) {
+
+                return url(
+                    '/shop-grid/'
+                    . $this->category->token
+                    . '?sub_category='
+                    . $this->subcategory_id
+                );
+
+            }
+
+            return null;
+        }
+
+
+        /*
+         * =====================================================
+         * SOLO CATEGORIA
+         * =====================================================
+         *
+         * Esempio:
+         * /shop-grid/token_bh70fxmz
+         */
+        if (
+            $this->category_id &&
+            $this->category
+        ) {
+
+            if (!empty($this->category->token)) {
+
+                return url(
+                    '/shop-grid/'
+                    . $this->category->token
+                );
+
+            }
+
+            return null;
+        }
+
+
+        /*
+         * Nessuna destinazione disponibile
+         */
+        return null;
+    }
 }
