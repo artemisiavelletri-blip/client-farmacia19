@@ -669,10 +669,6 @@ class UserController extends Controller
         ->where('active', 1)
         ->where('user', 1)
         ->where(function ($query) {
-            $query->whereNull('start_date')
-                  ->orWhere('start_date', '<=', now());
-        })
-        ->where(function ($query) {
             $query->whereNull('end_date')
                   ->orWhere('end_date', '>=', now());
         })
