@@ -9176,4 +9176,300 @@ label {
     margin-top: 15px!important;
 }
 
+/* =========================================================
+   HOME - BANNER COUPON
+========================================================= */
 
+.coupon-home-wrap {
+    position: relative;
+
+    padding: 34px 42px;
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(255,255,255,.14) 0,
+            rgba(255,255,255,.14) 65px,
+            transparent 66px
+        ),
+        linear-gradient(
+            120deg,
+            #05b98d 0%,
+            #078f88 48%,
+            #086d91 100%
+        );
+
+    box-shadow:
+        0 16px 40px rgba(0, 75, 100, .13);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+
+/* hover */
+
+.coupon-home-banner:hover .coupon-home-wrap {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 22px 50px rgba(0, 75, 100, .18);
+}
+
+
+/* =========================================================
+   TEXTURE LEGGERA
+========================================================= */
+
+.coupon-home-wrap::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.04) 25%,
+            transparent 25%
+        );
+
+    background-size: 32px 32px;
+
+    opacity: .35;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   ICONA %
+========================================================= */
+
+.coupon-home-icon {
+    position: relative;
+    z-index: 2;
+
+    width: 88px;
+    height: 88px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.15);
+
+    border: 1px solid rgba(255,255,255,.24);
+
+    color: #fff;
+
+    font-size: 45px;
+    line-height: 1;
+
+    font-weight: 900;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+
+/* =========================================================
+   TESTO
+========================================================= */
+
+.coupon-home-content {
+    position: relative;
+    z-index: 2;
+}
+
+
+.coupon-home-content h6 {
+    margin: 0 0 7px;
+
+    color: rgba(255,255,255,.80);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 2.5px;
+
+    text-transform: uppercase;
+}
+
+
+.coupon-home-content h2 {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 29px;
+    line-height: 1.15;
+
+    font-weight: 900;
+
+    letter-spacing: -.4px;
+}
+
+
+.coupon-home-content p {
+    margin: 9px 0 0;
+
+    color: rgba(255,255,255,.82);
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.coupon-home-cta {
+    position: relative;
+    z-index: 2;
+
+    min-width: 175px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    background: #fff;
+
+    color: #087c66;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.08);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.coupon-home-banner:hover .coupon-home-cta {
+    transform: translateX(3px);
+
+    box-shadow:
+        0 10px 28px rgba(0,0,0,.12);
+}
+
+
+.coupon-home-arrow {
+    font-size: 20px;
+    line-height: 1;
+}
+
+
+/* =========================================================
+   DECORAZIONI
+========================================================= */
+
+.coupon-home-circle {
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.coupon-home-circle-1 {
+    width: 210px;
+    height: 210px;
+
+    right: -85px;
+    top: -120px;
+
+    border: 32px solid rgba(255,255,255,.055);
+}
+
+
+.coupon-home-circle-2 {
+    width: 130px;
+    height: 130px;
+
+    left: 42%;
+    bottom: -105px;
+
+    border: 22px solid rgba(255,255,255,.045);
+}
+
+
+/* =========================================================
+   RESPONSIVE TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .coupon-home-wrap {
+        padding: 30px;
+    }
+
+    .coupon-home-content h2 {
+        font-size: 25px;
+    }
+
+    .coupon-home-cta {
+        width: 100%;
+
+        min-width: 0;
+
+        justify-content: center;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .coupon-home-wrap {
+        padding: 25px 22px;
+
+        border-radius: 18px;
+    }
+
+    .coupon-home-content h6 {
+        font-size: 10px;
+
+        letter-spacing: 1.8px;
+    }
+
+    .coupon-home-content h2 {
+        font-size: 22px;
+    }
+
+    .coupon-home-content p {
+        font-size: 13px;
+    }
+
+    .coupon-home-cta {
+        padding: 12px 16px;
+
+        font-size: 12px;
+    }
+
+}
