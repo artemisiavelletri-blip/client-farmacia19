@@ -395,22 +395,99 @@
         </div>
         <!-- popular item end -->
 
-        <div class="big-banner pb-100">
-            <div class="container wow fadeInUp" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: fadeInUp;">
-                <div class="banner-wrap" style="background-image: url({{ asset('img/product/free_shipping_2.png') }});">
-                    <div class="row">
-                        <div class="col-lg-8 mx-auto">
-                            <div class="banner-content">
-                                <div class="banner-info mb-50">
-                                    <h6>SPEDIZIONE GRATUITA</h6>
-                                    <h2>Per ordini superiori a </h2>
-                                    <h2>€49.90</h2>
-                                </div>
+        <div class="big-banner pb-100 shipping-home-banner">
+
+            <div
+                class="container wow fadeInUp"
+                data-wow-delay=".25s"
+                style="
+                    visibility: visible;
+                    animation-delay: 0.25s;
+                    animation-name: fadeInUp;
+                "
+            >
+
+                <div class="shipping-home-wrap">
+
+                    {{-- Decorazioni --}}
+                    <div class="shipping-home-circle shipping-home-circle-1"></div>
+                    <div class="shipping-home-circle shipping-home-circle-2"></div>
+
+                    <div class="row align-items-center">
+
+                        {{-- =========================================
+                             ICONA
+                        ========================================== --}}
+
+                        <div class="col-auto d-none d-md-block">
+
+                            <div class="shipping-home-icon">
+                                🚚
                             </div>
+
                         </div>
+
+
+                        {{-- =========================================
+                             TESTO
+                        ========================================== --}}
+
+                        <div class="col">
+
+                            <div class="shipping-home-content">
+
+                                <h6>
+                                    SPEDIZIONE GRATUITA
+                                </h6>
+
+                                <h2>
+                                    Ricevi il tuo ordine senza costi di spedizione
+                                </h2>
+
+                                <p>
+                                    La spedizione è gratuita per tutti gli ordini
+                                    superiori a <strong>€ 49,90</strong>.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- =========================================
+                             SOGLIA SPEDIZIONE
+                        ========================================== --}}
+
+                        <div class="col-lg-auto mt-4 mt-lg-0">
+
+                            <div class="shipping-home-threshold">
+
+                                <div class="shipping-home-threshold-icon">
+                                    ✓
+                                </div>
+
+                                <div class="shipping-home-threshold-text">
+
+                                    <small>
+                                        SPEDIZIONE GRATUITA DA
+                                    </small>
+
+                                    <strong>
+                                        € 49,90
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
 
