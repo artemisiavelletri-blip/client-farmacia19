@@ -109,7 +109,7 @@ class Promotion extends Model
     public function subcategory()
     {
         return $this->belongsTo(
-            Subcategory::class,
+            SubCategory::class,
             'subcategory_id'
         );
     }
