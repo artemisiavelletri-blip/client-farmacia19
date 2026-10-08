@@ -34,6 +34,15 @@ Route::middleware('doctor')->group(function () {
     });
 
     Route::get('/login', function () {
+        if (request()->filled('redirect')) {
+
+            $redirect = request()->query('redirect');
+
+            // Evita redirect verso siti esterni
+            if (str_starts_with($redirect, '/')) {
+                session(['url.intended' => $redirect]);
+            }
+        }
         return view('auth.login');
     });
     Route::post('/login', [UserController::class, 'login'])->name('login');
@@ -73,6 +82,15 @@ Route::middleware('doctor')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/register', function () {
+        if (request()->filled('redirect')) {
+
+            $redirect = request()->query('redirect');
+
+            // Evita redirect verso siti esterni
+            if (str_starts_with($redirect, '/')) {
+                session(['url.intended' => $redirect]);
+            }
+        }
         return view('auth.register');
     });
 

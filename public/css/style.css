@@ -9473,3 +9473,95 @@ label {
     }
 
 }
+
+/* =========================================================
+   BANNER UTENTE NON REGISTRATO
+========================================================= */
+
+.coupon-home-wrap-guest {
+    background:
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(255,255,255,.14) 0,
+            rgba(255,255,255,.14) 65px,
+            transparent 66px
+        ),
+        linear-gradient(
+            120deg,
+            #087c66 0%,
+            #078f88 48%,
+            #086d91 100%
+        );
+}
+
+.coupon-home-actions {
+    position: relative;
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* ACCEDI */
+
+.coupon-home-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px 18px;
+
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 12px;
+
+    color: #fff !important;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    text-decoration: none !important;
+
+    transition: .2s ease;
+}
+
+.coupon-home-login:hover {
+    background: rgba(255,255,255,.12);
+
+    border-color: #fff;
+
+    color: #fff !important;
+}
+
+
+/* REGISTRATI */
+
+.coupon-home-actions .coupon-home-cta {
+    margin: 0;
+
+    text-decoration: none !important;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 767px) {
+
+    .coupon-home-actions {
+        width: 100%;
+    }
+
+    .coupon-home-login {
+        flex: 1;
+    }
+
+    .coupon-home-actions .coupon-home-cta {
+        flex: 1;
+
+        min-width: 0;
+    }
+
+}

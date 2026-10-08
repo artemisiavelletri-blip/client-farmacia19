@@ -110,7 +110,12 @@
             </div>
         </div>
         <!-- feature area end -->
-        @if(Auth::user())
+        @auth
+
+            {{-- =====================================================
+                 UTENTE REGISTRATO
+            ====================================================== --}}
+
             <div
                 class="big-banner pb-100 coupon-home-banner"
                 style="cursor: pointer;"
@@ -119,24 +124,15 @@
                 <div
                     class="container wow fadeInUp"
                     data-wow-delay=".25s"
-                    style="
-                        visibility: visible;
-                        animation-delay: 0.25s;
-                        animation-name: fadeInUp;
-                    "
+                    style="visibility: visible; animation-delay: 0.25s; animation-name: fadeInUp;"
                 >
 
                     <div class="coupon-home-wrap">
 
-                        {{-- Decorazioni --}}
                         <div class="coupon-home-circle coupon-home-circle-1"></div>
                         <div class="coupon-home-circle coupon-home-circle-2"></div>
 
                         <div class="row align-items-center">
-
-                            {{-- =========================================
-                                 ICONA
-                            ========================================== --}}
 
                             <div class="col-auto d-none d-md-block">
 
@@ -146,10 +142,6 @@
 
                             </div>
 
-
-                            {{-- =========================================
-                                 TESTO
-                            ========================================== --}}
 
                             <div class="col">
 
@@ -173,10 +165,6 @@
                             </div>
 
 
-                            {{-- =========================================
-                                 CTA
-                            ========================================== --}}
-
                             <div class="col-lg-auto mt-4 mt-lg-0">
 
                                 <div class="coupon-home-cta">
@@ -199,7 +187,100 @@
 
                 </div>
             </div>
-        @endif
+
+
+        @else
+
+
+            {{-- =====================================================
+                 UTENTE NON REGISTRATO / NON AUTENTICATO
+            ====================================================== --}}
+
+            <div
+                class="big-banner pb-100 coupon-home-banner"
+                style="cursor: pointer;"
+                onclick="window.location.href='/register'"
+            >
+                <div
+                    class="container wow fadeInUp"
+                    data-wow-delay=".25s"
+                    style="visibility: visible; animation-delay: 0.25s; animation-name: fadeInUp;"
+                >
+
+                    <div class="coupon-home-wrap coupon-home-wrap-guest">
+
+                        <div class="coupon-home-circle coupon-home-circle-1"></div>
+                        <div class="coupon-home-circle coupon-home-circle-2"></div>
+
+                        <div class="row align-items-center">
+
+                            <div class="col-auto d-none d-md-block">
+
+                                <div class="coupon-home-icon">
+                                    %
+                                </div>
+
+                            </div>
+
+
+                            <div class="col">
+
+                                <div class="coupon-home-content">
+
+                                    <h6>
+                                        VANTAGGI ESCLUSIVI
+                                    </h6>
+
+                                    <h2>
+                                        Accedi ai tuoi sconti esclusivi
+                                    </h2>
+
+                                    <p>
+                                        Accedi al tuo account oppure registrati gratuitamente
+                                        per scoprire coupon e promozioni riservate ai nostri clienti.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-lg-auto mt-4 mt-lg-0">
+
+                                <div class="coupon-home-actions">
+
+                                    <a
+                                        href="/login?redirect={{ urlencode('/coupon') }}"
+                                        class="coupon-home-login"
+                                        onclick="event.stopPropagation();"
+                                    >
+                                        Accedi
+                                    </a>
+
+                                    <a
+                                        href="/register?redirect={{ urlencode('/coupon') }}"
+                                        class="coupon-home-cta"
+                                        onclick="event.stopPropagation();"
+                                    >
+                                        <span>Registrati gratis</span>
+
+                                        <span class="coupon-home-arrow">
+                                            →
+                                        </span>
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        @endauth
 
         <!-- small banner -->
         <div class="small-banner pb-100">
