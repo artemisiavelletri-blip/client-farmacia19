@@ -659,25 +659,55 @@ class UserController extends Controller
             'token' => ['required', 'string'],
         ]);
 
-        $coupon = Promotion::where('token', $request->token)
-            ->where('active', 1)
-            ->first();
+        $coupon = Promotion::with([
+            'product',
+            'brand',
+            'category',
+            'subcategory'
+        ])
+        ->where('token', $request->token)
+        ->where('active', 1)
+        ->where('user', 1)
+        ->where(function ($query) {
+            $query->whereNull('start_date')
+                  ->orWhere('start_date', '<=', now());
+        })
+        ->where(function ($query) {
+            $query->whereNull('end_date')
+                  ->orWhere('end_date', '>=', now());
+        })
+        ->first();
 
         if (!$coupon) {
             return response()->json([
                 'success' => false,
-                'message' => 'Coupon non trovato.'
+                'message' => 'Coupon non trovato o non più valido.'
             ], 404);
         }
 
         return response()->json([
             'success' => true,
+
             'coupon' => [
                 'token' => $coupon->token,
                 'name' => $coupon->name,
+
                 'percentage' => $coupon->percentage,
                 'fixDiscount' => $coupon->fixDiscount,
+
                 'description' => $coupon->description,
+
+                'start_date' => $coupon->start_date,
+                'end_date' => $coupon->end_date,
+
+                'minimum_purchase' => $coupon->minimum_purchase,
+                'max_use' => $coupon->max_use,
+
+                /*
+                 * IMPORTANTI
+                 */
+                'application_type' => $coupon->application_type,
+                'application_label' => $coupon->application_label,
             ]
         ]);
     }
