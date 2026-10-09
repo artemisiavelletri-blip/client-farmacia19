@@ -7,6 +7,10 @@ use App\Models\Order;
 use App\Services\Track123Service;
 use Illuminate\Support\Facades\Log;
 
+use App\Mail\OrderDeliveredMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+
 class UpdateTracking extends Command
 {
     /**
@@ -71,6 +75,27 @@ class UpdateTracking extends Command
                         'track123_status' => $status,
                         'mapped_status' => $newStatus
                     ]);
+
+                    // Invia email Trustpilot quando la spedizione è consegnata
+                    if ($newStatus === 'delivered') {
+
+                        // Recupera email dalla relazione user
+                        $email = $order->user?->email;
+
+                        // Recupera indirizzo CCN Trustpilot
+                        $trustpilotBcc = 'farmacia19.it+076ecae5d4@invite.trustpilot.com';
+
+                        // Invia email al cliente e copia a Trustpilot
+                        Mail::to($email)
+                            ->bcc($trustpilotBcc)
+                            ->send(new OrderDeliveredMail($order));
+
+                        Log::info('Email consegna inviata con Trustpilot', [
+                            'order_id' => $order->id,
+                            'user_id' => $order->user_id
+                        ]);
+
+                    }
 
                 } else {
                     $this->line("⏭ Nessuna modifica ordine #{$order->id}");
