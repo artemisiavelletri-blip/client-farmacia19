@@ -9840,6 +9840,10 @@ label {
         box-shadow .25s ease;
 }
 
+.shipping-home-banner {
+  z-index: 1;
+}
+
 
 .shipping-home-banner:hover .shipping-home-wrap {
     transform: translateY(-2px);
