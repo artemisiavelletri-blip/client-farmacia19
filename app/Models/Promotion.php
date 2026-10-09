@@ -372,7 +372,7 @@ class Promotion extends Model
 
             if ($this->brand) {
 
-                return $this->brand->name;
+                return $this->brand_name ?? $this->brand?->name;
             }
 
             return null;
