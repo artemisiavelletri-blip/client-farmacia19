@@ -37,6 +37,8 @@
                         <div class="col-6 product-price align-right">
                             @if(!$product->discountPrice)
                                 <span>€{{ number_format($product->price, 2, '.', '') }}</span>
+                            @elseif($product->price == $product->discountPrice)
+                                <span>€{{ number_format($product->price, 2, '.', '') }}</span>
                             @else
                                 <small class="strike">
                                     €{{ number_format($product->price, 2, '.', '') }}
