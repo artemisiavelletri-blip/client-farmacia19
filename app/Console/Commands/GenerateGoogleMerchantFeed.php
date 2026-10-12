@@ -103,6 +103,7 @@ class GenerateGoogleMerchantFeed extends Command
             // hidden è già gestito dal Global Scope del model Product
 
             ->where('vet', 0)
+            ->where('hidden', 0)
 
             ->select([
                 'id',
