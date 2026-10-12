@@ -89,6 +89,8 @@
                                 <div class="col-md-12 d-flex align-items-center gap-2">
                                     @if(!$product->discountPrice)
                                         <h3 class="mb-0">€{{number_format((float)$product->price, 2, '.', '')}}</h3>
+                                    @elseif($product->price == $product->discountPrice)
+                                        <h3 class="mb-0">€{{number_format((float)$product->price, 2, '.', '')}}</h3>
                                     @else
                                         <small class="strike mb-0">€{{number_format((float)$product->price, 2, '.', '')}}</small>
                                         <h3 class="mb-0">€{{number_format((float)$product->discountPrice, 2, '.', '')}}</h3>
