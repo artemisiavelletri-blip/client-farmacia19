@@ -11,6 +11,8 @@ use App\Mail\OrderDeliveredMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 
+use App\Services\Google\GmailService;
+
 class UpdateTracking extends Command
 {
     /**
@@ -85,10 +87,17 @@ class UpdateTracking extends Command
                         // Recupera indirizzo CCN Trustpilot
                         $trustpilotBcc = 'farmacia19.it+076ecae5d4@invite.trustpilot.com';
 
-                        // Invia email al cliente e copia a Trustpilot
-                        Mail::to($email)
-                            ->bcc($trustpilotBcc)
-                            ->send(new OrderDeliveredMail($order));
+                        $gmail = app(GmailService::class);
+
+                        $gmail->sendEmail(
+                            $user->email,
+                            'Il tuo ordine #' . $order->order_number . ' è stato consegnato - Farmacia19.it',
+                            'emails.orderComplete', // 👈 blade
+                            [
+                                'order' => $order
+                            ],
+                            $trustpilotBcc
+                        );
 
                         Log::info('Email consegna inviata con Trustpilot', [
                             'order_id' => $order->id,

@@ -53,26 +53,38 @@ class GmailService
     /**
      * Invia email Gmail API
      */
-    public function sendEmail(string $to, string $subject, string $view, array $data = []): bool
-    {
+    public function sendEmail(
+        string $to,
+        string $subject,
+        string $view,
+        array $data = [],
+        ?string $bcc = null
+    ): bool {
         $client = $this->getClient();
         $service = new Gmail($client);
 
-        // 👇 QUI
         $html = \Illuminate\Support\Facades\View::make($view, $data)->render();
 
         $boundary = uniqid('np');
 
-        $messageText =
+        $headers =
             "To: {$to}\r\n" .
-            "Subject: {$subject}\r\n" .
-            "MIME-Version: 1.0\r\n" .
-            "Content-Type: multipart/alternative; boundary=\"{$boundary}\"\r\n\r\n" .
+            "Subject: {$subject}\r\n";
 
+        // Aggiungi BCC solo se presente
+        if (!empty($bcc)) {
+            $headers .= "Bcc: {$bcc}\r\n";
+        }
+
+        $headers .=
+            "MIME-Version: 1.0\r\n" .
+            "Content-Type: multipart/alternative; boundary=\"{$boundary}\"\r\n\r\n";
+
+        $messageText =
+            $headers .
             "--{$boundary}\r\n" .
             "Content-Type: text/html; charset=UTF-8\r\n\r\n" .
             $html . "\r\n\r\n" .
-
             "--{$boundary}--";
 
         $rawMessage = rtrim(
