@@ -91,7 +91,7 @@ class UpdateTracking extends Command
 
                         $gmail->sendEmail(
                             $user->email,
-                            'Il tuo ordine #' . $order->order_number . ' è stato consegnato - Farmacia19.it',
+                            'Ordine #' . $order->order_number . ' consegnato - Farmacia19.it',
                             'emails.orderComplete', // 👈 blade
                             [
                                 'order' => $order
