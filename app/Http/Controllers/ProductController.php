@@ -230,17 +230,8 @@ class ProductController extends Controller
         $code = trim($request->coupon);
         $user = auth()->user();
 
-        // 1. Controlla se il codice appartiene a un medico
-        $doctor = Doctor::where('token', $code)->first();
+        
 
-        if ($doctor) {
-            $user->prescriber_id = $doctor->token;
-            $user->save();
-
-            return;
-        }
-
-        // 2. Altrimenti controlla se è un coupon promozionale
         $today = Carbon::today();
 
         $promotion = Promotion::where('name', strtolower($code))
@@ -259,7 +250,6 @@ class ProductController extends Controller
             return;
         }
 
-        // 3. Verifica il limite di utilizzo del coupon
         if (
             $promotion->max_use &&
             Order::where('user_id', $user->id)
@@ -270,9 +260,15 @@ class ProductController extends Controller
             return;
         }
 
-        // 4. Applica il coupon ai prodotti nel carrello
         foreach ($user->cartItems as $cartItem) {
             $cartItem->discounts()->sync([$promotion->id]);
+        }
+
+        $doctor = Doctor::where('token', $code)->first();
+
+        if ($doctor) {
+            $user->prescriber_id = $doctor->token;
+            $user->save();
         }
     }
 
