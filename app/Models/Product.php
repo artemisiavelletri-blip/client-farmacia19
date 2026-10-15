@@ -126,5 +126,10 @@ class Product extends Model
         return $title;
     }
 
+    public function productGroup()
+    {
+        return $this->belongsTo(ProductGroup::class, 'product_group_id');
+    }
+
 }
 

@@ -76,8 +76,16 @@
         <script src="{{ asset('/js/mainNoQty.js') }}"></script>
     @endif
     <script type="text/javascript">
-        $(document).on('click', '.cart-remove', function () {
-            let itemId = $(this).data('id');
+       $(document).on('click', '.cart-remove', function (e) {
+            e.preventDefault();
+
+            const itemId = $(this).data('id');
+            const $button = $(this);
+
+            if ($button.prop('disabled')) return;
+
+            $button.prop('disabled', true);
+            $('.preloader').show();
 
             $.ajax({
                 url: '/cart/remove/' + itemId,
@@ -85,23 +93,57 @@
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                beforeSend: function () {
-                    $('.preloader').show();
-                },
-                success: function (response) {
+                success: function () {
 
-                    // Rimuove la riga dalla tabella
                     $('#cart-item-' + itemId).remove();
 
-                    $('#cart-wrapper').load(window.location.href + ' #cart-wrapper > *');
-                    $('#table-cart-wrapper').load(window.location.href + ' #table-cart-wrapper > *');
-                    $('#shop-cart-summary').load(window.location.href + ' #shop-cart-summary > *');
-                    $('#prod-info').load(window.location.href + ' #prod-info > *');
-                    $('#shop-cart-id').load(window.location.href + ' #shop-cart-id > *');
-                    $('#cart-mobile-counter').load(window.location.href + ' #cart-mobile-counter > *');
+                    const selectors = [
+                        '#cart-wrapper',
+                        '#table-cart-wrapper',
+                        '#shop-cart-summary',
+                        '#shop-cart-id',
+                        '#cart-mobile-counter'
+                    ];
+
+                    const requests = selectors.map(function (selector) {
+                        const deferred = $.Deferred();
+                        const $element = $(selector);
+
+                        if (!$element.length) {
+                            deferred.resolve();
+                            return deferred.promise();
+                        }
+
+                        $element.load(
+                            window.location.href + ' ' + selector + ' > *',
+                            function (response, status) {
+                                if (status === 'error') {
+                                    deferred.reject();
+                                } else {
+                                    deferred.resolve();
+                                }
+                            }
+                        );
+
+                        return deferred.promise();
+                    });
+
+                    $.when.apply($, requests)
+                        .done(function () {
+                            $(document).trigger('cart:updated');
+                        })
+                        .fail(function () {
+                            console.error('Errore durante aggiornamento carrello');
+                        })
+                        .always(function () {
+                            $('.preloader').hide();
+                            $button.prop('disabled', false);
+                        });
                 },
-                complete: function () {
+                error: function () {
                     $('.preloader').hide();
+                    $button.prop('disabled', false);
+                    alert('Errore durante la rimozione dal carrello.');
                 }
             });
         });
