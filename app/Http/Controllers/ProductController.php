@@ -275,18 +275,25 @@ class ProductController extends Controller
     public function removeCoupon(Request $request)
     {
         $user = auth()->user();
-        dd($cartItem->discounts());
 
-        $code = trim((string) $request->input('coupon', ''));
-
-        // Se il codice rimosso è quello del medico, elimina l'associazione
-        if ($user->prescriber_id == $code) {
-            $user->prescriber_id = null;
-            $user->save();
-        }
-
-        // Rimuove gli sconti dal carrello
         foreach ($user->cartItems as $cartItem) {
+
+            // Recupera i codici sconto prima di eliminarli
+            $discounts = $cartItem->discounts()->get();
+
+            foreach ($discounts as $discount) {
+
+                // Rimuove il medico solo se il codice coincide
+                if (
+                    $user->prescriber_id !== null &&
+                    strcasecmp($discount->name, $user->prescriber_id) === 0
+                ) {
+                    $user->prescriber_id = null;
+                    $user->save();
+                }
+            }
+
+            // Rimuove gli sconti dal carrello
             $cartItem->discounts()->detach();
         }
 
