@@ -15,6 +15,7 @@ use App\Models\SubCategory;
 use App\Models\Promotion;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\Doctor;
 
 class ProductController extends Controller
 {
@@ -222,15 +223,27 @@ class ProductController extends Controller
 
     public function addCoupon(Request $request)
     {
-        if (!$request->coupon) {
+        if (!$request->filled('coupon')) {
             return;
         }
 
-        $code = strtolower($request->coupon);
-        $today = Carbon::today();
+        $code = trim($request->coupon);
         $user = auth()->user();
 
-        $promotion = Promotion::where('name', strtolower($request->coupon))
+        // 1. Controlla se il codice appartiene a un medico
+        $doctor = Doctor::where('token', $code)->first();
+
+        if ($doctor) {
+            $user->prescriber_id = $doctor->token;
+            $user->save();
+
+            return;
+        }
+
+        // 2. Altrimenti controlla se è un coupon promozionale
+        $today = Carbon::today();
+
+        $promotion = Promotion::where('name', strtolower($code))
             ->where('active', 1)
             ->where(function ($query) use ($today) {
                 $query->whereNull('start_date')
@@ -246,6 +259,7 @@ class ProductController extends Controller
             return;
         }
 
+        // 3. Verifica il limite di utilizzo del coupon
         if (
             $promotion->max_use &&
             Order::where('user_id', $user->id)
@@ -256,6 +270,7 @@ class ProductController extends Controller
             return;
         }
 
+        // 4. Applica il coupon ai prodotti nel carrello
         foreach ($user->cartItems as $cartItem) {
             $cartItem->discounts()->sync([$promotion->id]);
         }
@@ -265,6 +280,15 @@ class ProductController extends Controller
     {
         $user = auth()->user();
 
+        $code = trim((string) $request->input('coupon', ''));
+
+        // Se il codice rimosso è quello del medico, elimina l'associazione
+        if ($code !== '' && $user->prescriber_id === $code) {
+            $user->prescriber_id = null;
+            $user->save();
+        }
+
+        // Rimuove gli sconti dal carrello
         foreach ($user->cartItems as $cartItem) {
             $cartItem->discounts()->detach();
         }
