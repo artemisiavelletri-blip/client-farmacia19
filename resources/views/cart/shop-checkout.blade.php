@@ -478,7 +478,7 @@
                                                     - €{{ number_format(auth()->user()->cart_discount, 2, ',', '.') }}
                                                 </span>                                                
                                             </li>
-                                            <button class="btn btn-sm theme-btn removeCoupon w-100 mb-15" title="Rimuovi coupon">
+                                            <button type="button" class="btn btn-sm theme-btn removeCoupon w-100 mb-15" title="Rimuovi coupon">
                                                 Rimuovi coupon
                                             </button>
                                         @endif
