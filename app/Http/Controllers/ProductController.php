@@ -275,11 +275,12 @@ class ProductController extends Controller
     public function removeCoupon(Request $request)
     {
         $user = auth()->user();
+        dd($cartItem->discounts());
 
         $code = trim((string) $request->input('coupon', ''));
 
         // Se il codice rimosso è quello del medico, elimina l'associazione
-        if ($code !== '' && $user->prescriber_id === $code) {
+        if ($user->prescriber_id == $code) {
             $user->prescriber_id = null;
             $user->save();
         }
