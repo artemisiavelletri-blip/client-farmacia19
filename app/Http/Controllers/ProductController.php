@@ -118,36 +118,56 @@ class ProductController extends Controller
     {
         $search = trim((string) request('search', ''));
 
-        $searchTerms = collect(explode(' ', $search))
+        $searchTerms = collect(preg_split('/\s+/', $search))
             ->filter()
             ->values();
 
-        $query = Product::where(function ($q) use ($search, $searchTerms) {
-            $q->where(function ($query) use ($searchTerms) {
-                foreach ($searchTerms as $term) {
-                    $query->where('name', 'LIKE', '%' . $term . '%');
-                }
-            })
-            ->orWhere('ean', $search)
-            ->orWhereRaw('CAST(minsan AS UNSIGNED) = ?', [(int) ltrim($search, '0')])
-            ->orWhereHas('tags', function ($query) use ($search) {
-                $query->where('name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('slug', 'LIKE', '%' . $search . '%');
-            })
-            ->orWhereHas('brandRelation', function ($query) use ($search) {
-                $query->where('name', 'LIKE', '%' . $search . '%');
-            })
-            ->orWhereHas('productGroup', function ($group) use ($searchTerms) {
-                foreach ($searchTerms as $term) {
-                    $group->where('name', 'LIKE', '%' . $term . '%');
-                }
+        $query = Product::query();
+
+        if ($search !== '') {
+
+            $query->where(function ($q) use ($search, $searchTerms) {
+
+                // Ricerca per nome prodotto
+                $q->where(function ($subQuery) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        $subQuery->where('name', 'LIKE', '%' . $term . '%');
+                    }
+                });
+
+                // Ricerca per EAN
+                $q->orWhere('ean', $search);
+
+                // Ricerca per MINSAN
+                $q->orWhere('minsan', $search);
+
+                // Ricerca per tag
+                $q->orWhereHas('tags', function ($subQuery) use ($search) {
+                    $subQuery->where(function ($tagQuery) use ($search) {
+                        $tagQuery->where('name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('slug', 'LIKE', '%' . $search . '%');
+                    });
+                });
+
+                // Ricerca per brand
+                $q->orWhereHas('brandRelation', function ($subQuery) use ($search) {
+                    $subQuery->where('name', 'LIKE', '%' . $search . '%');
+                });
+
+                // Ricerca per gruppo prodotto
+                $q->orWhereHas('productGroup', function ($subQuery) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        $subQuery->where('name', 'LIKE', '%' . $term . '%');
+                    }
+                });
             });
-        });
+        }
 
         $category = null;
 
         if (request('category')) {
             $categoryModel = Category::where('token', request('category'))->first();
+
             if ($categoryModel) {
                 $query->where('category_id', $categoryModel->id);
                 $category = $categoryModel->name;
@@ -156,46 +176,58 @@ class ProductController extends Controller
 
         if (request('brand')) {
             $query->where('brand_id', request('brand'));
+
             $brand = Brand::find(request('brand'));
+
             if ($brand) {
                 $search = $brand->name;
             }
         }
 
+        $tag = null;
+
         if (request('tag')) {
-            $tagSlug = request('tag');
-            $tag = Tag::where('slug', $tagSlug)->first();
-            if ($tag) {
-                $query->whereHas('tags', function ($q) use ($tag) {
-                    $q->where('tags.id', $tag->id);
+            $tagModel = Tag::where('slug', request('tag'))->first();
+
+            if ($tagModel) {
+                $query->whereHas('tags', function ($q) use ($tagModel) {
+                    $q->where('tags.id', $tagModel->id);
                 });
+
+                $tag = $tagModel->name;
             }
         }
 
-        $tag = isset($tag) ? $tag->name : null;
         $type_message = null;
 
-        if ($type == 'offerts') {
-            $query->where('discountPrice', '>', 0)->where('stock', '>', 0);
+        if ($type === 'offerts') {
+            $query->where('discountPrice', '>', 0)
+                  ->where('stock', '>', 0);
+
             $type_message = 'Prodotti in Promozione';
         }
 
-        if ($type == 'new') {
+        if ($type === 'new') {
             $query->where('new', 1);
+
             $type_message = 'Novità';
         }
 
+        // Manteniamo la logica di raggruppamento esistente
         $query = $this->groupFootwearProducts($query);
 
-        $products = $query->with('productGroup')
-            ->paginate(12)->onEachSide(0)->withQueryString();
+        // Paginazione senza COUNT(*) completo
+        $products = $query
+            ->with('productGroup')
+            ->simplePaginate(12)
+            ->withQueryString();
 
         return view('products.shop-search', [
             'products' => $products,
             'search' => $search,
             'category' => $category,
             'tag' => $tag,
-            'type_message' => $type_message
+            'type_message' => $type_message,
         ]);
     }
 
