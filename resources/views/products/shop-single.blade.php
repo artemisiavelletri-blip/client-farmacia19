@@ -294,7 +294,8 @@
             'BLU NAVY':'#172f52','ROSSO':'#d63343','ROSA':'#efb1c7','GRIGIO':'#a1a6ad',
             'BEIGE':'#d8c5a3','MARRONE':'#78523c','VERDE':'#38805b','GIALLO':'#f2d34f',
             'ARANCIONE':'#ee9141','VIOLA':'#8055a3','BORDEAUX':'#773047','CELESTE':'#8dc8e8',
-            'FUCSIA': '#CC5B87', 'SMERALDO': '#4FB9AB', 'EMERALD': '#227F78'
+            'FUCSIA': '#CC5B87', 'SMERALDO': '#4FB9AB', 'EMERALD': '#227F78', 'LILLA': '#B299D0',
+            'LIGHT BLUE': '#8098C0', 'VINACCIA': '#A9324E'
         };
         const normalize = value => value == null ? '' : String(value).trim();
         const unique = values => [...new Set(values.map(normalize).filter(Boolean))]
