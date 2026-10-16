@@ -319,7 +319,7 @@ class ProductController extends Controller
                 'productGroup.products'
             ])
             ->orderBy('products.id')
-            ->simplePaginate(12)
+            ->paginate(12)
             ->withQueryString();
 
         /*
