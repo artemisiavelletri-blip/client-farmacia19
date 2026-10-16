@@ -122,108 +122,137 @@ class ProductController extends Controller
             ->filter()
             ->values();
 
-        $query = Product::query();
+        $category = null;
+        $tag = null;
+        $type_message = null;
+
+        // Query dei gruppi
+        $groupsQuery = \App\Models\ProductGroup::query();
+
+        // Query dei prodotti
+        $productsQuery = Product::query();
 
         if ($search !== '') {
 
-            $query->where(function ($q) use ($search, $searchTerms) {
+            // Cerca direttamente i gruppi per nome
+            $groupsQuery->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->where('name', 'LIKE', '%' . $term . '%');
+                }
+            });
 
-                // Ricerca per nome prodotto
+            // Cerca i prodotti singoli
+            $productsQuery->where(function ($q) use ($search, $searchTerms) {
+
                 $q->where(function ($subQuery) use ($searchTerms) {
                     foreach ($searchTerms as $term) {
                         $subQuery->where('name', 'LIKE', '%' . $term . '%');
                     }
-                });
-
-                // Ricerca per EAN
-                $q->orWhere('ean', $search);
-
-                // Ricerca per MINSAN
-                $q->orWhere('minsan', $search);
-
-                // Ricerca per tag
-                $q->orWhereHas('tags', function ($subQuery) use ($search) {
+                })
+                ->orWhere('ean', $search)
+                ->orWhere('minsan', $search)
+                ->orWhereHas('tags', function ($subQuery) use ($search) {
                     $subQuery->where(function ($tagQuery) use ($search) {
                         $tagQuery->where('name', 'LIKE', '%' . $search . '%')
                             ->orWhere('slug', 'LIKE', '%' . $search . '%');
                     });
-                });
-
-                // Ricerca per brand
-                $q->orWhereHas('brandRelation', function ($subQuery) use ($search) {
+                })
+                ->orWhereHas('brandRelation', function ($subQuery) use ($search) {
                     $subQuery->where('name', 'LIKE', '%' . $search . '%');
-                });
-
-                // Ricerca per gruppo prodotto
-                $q->orWhereHas('productGroup', function ($subQuery) use ($searchTerms) {
-                    foreach ($searchTerms as $term) {
-                        $subQuery->where('name', 'LIKE', '%' . $term . '%');
-                    }
                 });
             });
         }
 
-        $category = null;
-
+        // Categoria
         if (request('category')) {
             $categoryModel = Category::where('token', request('category'))->first();
 
             if ($categoryModel) {
-                $query->where('category_id', $categoryModel->id);
                 $category = $categoryModel->name;
+
+                $productsQuery->where('category_id', $categoryModel->id);
+
+                $groupsQuery->whereHas('products', function ($q) use ($categoryModel) {
+                    $q->where('category_id', $categoryModel->id);
+                });
             }
         }
 
+        // Marca
         if (request('brand')) {
-            $query->where('brand_id', request('brand'));
+            $brandId = request('brand');
 
-            $brand = Brand::find(request('brand'));
+            $productsQuery->where('brand_id', $brandId);
+
+            $groupsQuery->whereHas('products', function ($q) use ($brandId) {
+                $q->where('brand_id', $brandId);
+            });
+
+            $brand = Brand::find($brandId);
 
             if ($brand) {
                 $search = $brand->name;
             }
         }
 
-        $tag = null;
-
+        // Tag
         if (request('tag')) {
             $tagModel = Tag::where('slug', request('tag'))->first();
 
             if ($tagModel) {
-                $query->whereHas('tags', function ($q) use ($tagModel) {
+                $tag = $tagModel->name;
+
+                $productsQuery->whereHas('tags', function ($q) use ($tagModel) {
                     $q->where('tags.id', $tagModel->id);
                 });
 
-                $tag = $tagModel->name;
+                $groupsQuery->whereHas('products.tags', function ($q) use ($tagModel) {
+                    $q->where('tags.id', $tagModel->id);
+                });
             }
         }
 
-        $type_message = null;
-
+        // Offerte
         if ($type === 'offerts') {
-            $query->where('discountPrice', '>', 0)
+            $productsQuery
+                ->where('discountPrice', '>', 0)
+                ->where('stock', '>', 0);
+
+            $groupsQuery->whereHas('products', function ($q) {
+                $q->where('discountPrice', '>', 0)
                   ->where('stock', '>', 0);
+            });
 
             $type_message = 'Prodotti in Promozione';
         }
 
+        // Novità
         if ($type === 'new') {
-            $query->where('new', 1);
+            $productsQuery->where('new', 1);
+
+            $groupsQuery->whereHas('products', function ($q) {
+                $q->where('new', 1);
+            });
 
             $type_message = 'Novità';
         }
 
-        // Manteniamo la logica di raggruppamento esistente
-        $query = $this->groupFootwearProducts($query);
+        // Esclude i prodotti appartenenti ai gruppi trovati
+        $productsQuery->where(function ($q) use ($groupsQuery) {
+            $q->whereNull('product_group_id')
+              ->orWhereNotIn('product_group_id', (clone $groupsQuery)->select('id'));
+        });
 
-        // Paginazione senza COUNT(*) completo
-        $products = $query
+        $groups = $groupsQuery->get();
+
+        $products = $productsQuery
             ->with('productGroup')
             ->simplePaginate(12)
             ->withQueryString();
 
         return view('products.shop-search', [
             'products' => $products,
+            'groups' => $groups,
             'search' => $search,
             'category' => $category,
             'tag' => $tag,
