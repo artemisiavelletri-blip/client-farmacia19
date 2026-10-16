@@ -122,137 +122,214 @@ class ProductController extends Controller
             ->filter()
             ->values();
 
-        $category = null;
-        $tag = null;
-        $type_message = null;
+        $query = Product::query();
 
-        // Query dei gruppi
-        $groupsQuery = \App\Models\ProductGroup::query();
-
-        // Query dei prodotti
-        $productsQuery = Product::query();
+        /*
+        |--------------------------------------------------------------------------
+        | RICERCA
+        |--------------------------------------------------------------------------
+        */
 
         if ($search !== '') {
 
-            // Cerca direttamente i gruppi per nome
-            $groupsQuery->where(function ($q) use ($searchTerms) {
-                foreach ($searchTerms as $term) {
-                    $q->where('name', 'LIKE', '%' . $term . '%');
-                }
-            });
+            $query->where(function ($q) use ($search, $searchTerms) {
 
-            // Cerca i prodotti singoli
-            $productsQuery->where(function ($q) use ($search, $searchTerms) {
-
+                // Nome prodotto
                 $q->where(function ($subQuery) use ($searchTerms) {
                     foreach ($searchTerms as $term) {
-                        $subQuery->where('name', 'LIKE', '%' . $term . '%');
+                        $subQuery->where(
+                            'products.name',
+                            'LIKE',
+                            '%' . $term . '%'
+                        );
                     }
-                })
-                ->orWhere('ean', $search)
-                ->orWhere('minsan', $search)
-                ->orWhereHas('tags', function ($subQuery) use ($search) {
+                });
+
+                // EAN
+                $q->orWhere('products.ean', $search);
+
+                // MINSAN
+                $q->orWhere('products.minsan', $search);
+
+                // Tag
+                $q->orWhereHas('tags', function ($subQuery) use ($search) {
                     $subQuery->where(function ($tagQuery) use ($search) {
-                        $tagQuery->where('name', 'LIKE', '%' . $search . '%')
+                        $tagQuery
+                            ->where('name', 'LIKE', '%' . $search . '%')
                             ->orWhere('slug', 'LIKE', '%' . $search . '%');
                     });
-                })
-                ->orWhereHas('brandRelation', function ($subQuery) use ($search) {
-                    $subQuery->where('name', 'LIKE', '%' . $search . '%');
+                });
+
+                // Brand
+                $q->orWhereHas('brandRelation', function ($subQuery) use ($search) {
+                    $subQuery->where(
+                        'name',
+                        'LIKE',
+                        '%' . $search . '%'
+                    );
+                });
+
+                // Nome gruppo
+                $q->orWhereHas('productGroup', function ($subQuery) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        $subQuery->where(
+                            'name',
+                            'LIKE',
+                            '%' . $term . '%'
+                        );
+                    }
                 });
             });
         }
 
-        // Categoria
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO CATEGORIA
+        |--------------------------------------------------------------------------
+        */
+
+        $category = null;
+
         if (request('category')) {
-            $categoryModel = Category::where('token', request('category'))->first();
+
+            $categoryModel = Category::where(
+                'token',
+                request('category')
+            )->first();
 
             if ($categoryModel) {
+
+                $query->where(
+                    'products.category_id',
+                    $categoryModel->id
+                );
+
                 $category = $categoryModel->name;
-
-                $productsQuery->where('category_id', $categoryModel->id);
-
-                $groupsQuery->whereHas('products', function ($q) use ($categoryModel) {
-                    $q->where('category_id', $categoryModel->id);
-                });
             }
         }
 
-        // Marca
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO BRAND
+        |--------------------------------------------------------------------------
+        */
+
         if (request('brand')) {
-            $brandId = request('brand');
 
-            $productsQuery->where('brand_id', $brandId);
+            $query->where(
+                'products.brand_id',
+                request('brand')
+            );
 
-            $groupsQuery->whereHas('products', function ($q) use ($brandId) {
-                $q->where('brand_id', $brandId);
-            });
-
-            $brand = Brand::find($brandId);
+            $brand = Brand::find(request('brand'));
 
             if ($brand) {
                 $search = $brand->name;
             }
         }
 
-        // Tag
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO TAG
+        |--------------------------------------------------------------------------
+        */
+
+        $tag = null;
+
         if (request('tag')) {
-            $tagModel = Tag::where('slug', request('tag'))->first();
+
+            $tagModel = Tag::where(
+                'slug',
+                request('tag')
+            )->first();
 
             if ($tagModel) {
+
+                $query->whereHas('tags', function ($q) use ($tagModel) {
+                    $q->where('tags.id', $tagModel->id);
+                });
+
                 $tag = $tagModel->name;
-
-                $productsQuery->whereHas('tags', function ($q) use ($tagModel) {
-                    $q->where('tags.id', $tagModel->id);
-                });
-
-                $groupsQuery->whereHas('products.tags', function ($q) use ($tagModel) {
-                    $q->where('tags.id', $tagModel->id);
-                });
             }
         }
 
-        // Offerte
-        if ($type === 'offerts') {
-            $productsQuery
-                ->where('discountPrice', '>', 0)
-                ->where('stock', '>', 0);
+        /*
+        |--------------------------------------------------------------------------
+        | OFFERTE E NOVITÀ
+        |--------------------------------------------------------------------------
+        */
 
-            $groupsQuery->whereHas('products', function ($q) {
-                $q->where('discountPrice', '>', 0)
-                  ->where('stock', '>', 0);
-            });
+        $type_message = null;
+
+        if ($type === 'offerts') {
+
+            $query
+                ->where('products.discountPrice', '>', 0)
+                ->where('products.stock', '>', 0);
 
             $type_message = 'Prodotti in Promozione';
         }
 
-        // Novità
         if ($type === 'new') {
-            $productsQuery->where('new', 1);
 
-            $groupsQuery->whereHas('products', function ($q) {
-                $q->where('new', 1);
-            });
+            $query->where('products.new', 1);
 
             $type_message = 'Novità';
         }
 
-        // Esclude i prodotti appartenenti ai gruppi trovati
-        $productsQuery->where(function ($q) use ($groupsQuery) {
-            $q->whereNull('product_group_id')
-              ->orWhereNotIn('product_group_id', (clone $groupsQuery)->select('id'));
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | RAGGRUPPAMENTO PRODOTTI
+        |--------------------------------------------------------------------------
+        |
+        | Se più varianti appartengono allo stesso gruppo,
+        | mostriamo soltanto la prima variante che soddisfa
+        | ricerca e filtri.
+        |
+        | I prodotti senza gruppo rimangono tutti.
+        |
+        | La Blade utilizza automaticamente nome e immagine
+        | del ProductGroup.
+        |
+        */
 
-        $groups = $groupsQuery->get();
+        $matchingQuery = clone $query;
 
-        $products = $productsQuery
-            ->with('productGroup')
+        $representativeIds = $matchingQuery
+            ->reorder()
+            ->selectRaw('MIN(products.id) AS id')
+            ->groupByRaw('
+                products.product_group_id,
+                CASE
+                    WHEN products.product_group_id IS NULL
+                        THEN products.id
+                    ELSE NULL
+                END
+            ');
+
+        /*
+        |--------------------------------------------------------------------------
+        | PAGINAZIONE
+        |--------------------------------------------------------------------------
+        */
+
+        $products = Product::query()
+            ->whereIn('products.id', $representativeIds->toBase())
+            ->with([
+                'productGroup.products'
+            ])
+            ->orderBy('products.id')
             ->simplePaginate(12)
             ->withQueryString();
 
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW
+        |--------------------------------------------------------------------------
+        */
+
         return view('products.shop-search', [
             'products' => $products,
-            'groups' => $groups,
             'search' => $search,
             'category' => $category,
             'tag' => $tag,
