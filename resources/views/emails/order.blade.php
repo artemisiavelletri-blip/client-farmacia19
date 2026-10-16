@@ -91,7 +91,7 @@
 
                                         Restiamo in attesa del bonifico bancario di € {{number_format($order->total, 2, ',', ' ')}} su:<br>
 
-                                        REVOLUT BANK - IBAN: LT693250045565056926, indicando come causale "Farmacia19 {{$order_number}}",
+                                        REVOLUT BANK - IBAN: LT693250045565056926, indicando come causale "Farmacia19 {{$order->order_number}}",
                                         INTESTATO A: FARMACIA ARTEMISIA DI MONTECUOLLO DOTT. ANGELO - SOCIETA' IN NOME COLLETTIVO"</p>
                                     @endif
 
