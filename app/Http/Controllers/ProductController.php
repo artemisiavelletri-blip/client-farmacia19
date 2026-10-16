@@ -238,18 +238,30 @@ class ProductController extends Controller
      */
     private function groupFootwearProducts($query)
     {
+        // Mantiene la ricerca originale prima del raggruppamento
         $matchingProducts = clone $query;
-        $matchingIds = $matchingProducts->reorder()->select('products.id');
+
+        $matchingIds = $matchingProducts
+            ->reorder()
+            ->select('products.id');
 
         return $query->where(function ($q) use ($matchingIds) {
+
+            // Prodotti senza gruppo: sempre visibili
             $q->whereNull('products.product_group_id')
-                ->orWhereNotExists(function ($subquery) use ($matchingIds) {
-                    $subquery->selectRaw('1')
-                        ->from('products as other')
-                        ->whereColumn('other.product_group_id', 'products.product_group_id')
-                        ->whereColumn('other.id', '<', 'products.id')
-                        ->whereIn('other.id', $matchingIds);
-                });
+
+              // Prodotti con gruppo: mostra soltanto
+              // il primo prodotto che soddisfa la ricerca
+              ->orWhere('products.id', '=', function ($subquery) use ($matchingIds) {
+
+                  $subquery->from('products as grouped')
+                      ->selectRaw('MIN(grouped.id)')
+                      ->whereColumn(
+                          'grouped.product_group_id',
+                          'products.product_group_id'
+                      )
+                      ->whereIn('grouped.id', $matchingIds);
+              });
         });
     }
 
