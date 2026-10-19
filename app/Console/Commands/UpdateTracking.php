@@ -90,7 +90,7 @@ class UpdateTracking extends Command
                         $gmail = app(GmailService::class);
 
                         $gmail->sendEmail(
-                            $user->email,
+                            $email,
                             'Ordine #' . $order->order_number . ' consegnato - Farmacia19.it',
                             'emails.orderComplete', // 👈 blade
                             [
