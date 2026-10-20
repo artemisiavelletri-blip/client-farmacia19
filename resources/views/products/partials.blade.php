@@ -31,6 +31,12 @@
                 }
             }
             $productUrl = '/shop-single/' . (!empty($product->minsan) ? $product->minsan : $product->ean);
+            // Disponibilità: controlla tutte le varianti se è un gruppo
+            $isAvailable = $product->product_group_id && $product->productGroup
+                ? $product->productGroup->products->contains(
+                    fn ($variant) => (int) $variant->stock > 0
+                )
+                : (int) $product->stock > 0;
         @endphp
         <div class="col-md-6 col-lg-4">
             <div class="product-item">
@@ -56,7 +62,7 @@
 
                     <div class="product-bottom mt-10">
                         <div class="col-6">
-                            @if($product->stock > 0)
+                            @if($isAvailable)
                                 <span>Disponibile</span>
                             @else
                                 <span>Non Disponibile</span>

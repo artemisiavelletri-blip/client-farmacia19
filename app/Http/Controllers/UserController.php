@@ -285,7 +285,7 @@ class UserController extends Controller
             'old_password.required' => 'Inserisci la vecchia password',
             'new_password.required' => 'Inserisci la nuova password',
             'new_password.min' => 'La password deve avere almeno 8 caratteri',
-            'new_password.regex' => 'La password deve contenere almeno una lettera maiuscola, una minuscola, un numero ed un carattere speciale',
+            'new_password.regex' => 'La password deve contenere almeno una lettera maiuscola, una minuscola, un numero ed un carattere speciale (@$!%*#?&)',
             'new_password.confirmed' => 'Le password non coincidono'
         ]);
 
