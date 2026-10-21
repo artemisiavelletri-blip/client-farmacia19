@@ -35,8 +35,10 @@ class CategoryProductsController extends Controller
                 if ($p->product_group_id) {
                     $group = DB::table('product_groups')->where('id', $p->product_group_id)->first();
                     $item['group_name'] = $group?->name;
-                    // La tabella product_groups non ha una colonna immagine:
-                    // usiamo l'immagine del prodotto rappresentativo.
+                    $item['group_image_url'] = self::groupImageUrl($group?->image);
+                    // Per la scheda gruppo usa la sua immagine, non quella della variante.
+                    // Per i gruppi non ripiegare sull'immagine della variante.
+                    $item['image_url'] = $item['group_image_url'] ?? '';
                 }
                 return $item;
             }),
@@ -47,6 +49,13 @@ class CategoryProductsController extends Controller
                 'total' => $page->total(),
             ],
         ]);
+    }
+
+    public static function groupImageUrl(?string $image): ?string
+    {
+        if (!$image) return null;
+        if (filter_var($image, FILTER_VALIDATE_URL)) return $image;
+        return asset('storage-admin/product-groups/' . basename($image));
     }
 
     public static function productJson($product): array

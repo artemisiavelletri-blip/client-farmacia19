@@ -20,7 +20,8 @@ class ProductGroupController extends Controller
             ->get();
 
         return response()->json([
-            'group' => ['id' => $group->id, 'name' => $group->name, 'slug' => $group->slug],
+            'group' => ['id' => $group->id, 'name' => $group->name, 'slug' => $group->slug,
+                'image_url' => CategoryProductsController::groupImageUrl($group->image)],
             'variants' => $variants->map(fn ($p) => CategoryProductsController::productJson($p)),
         ]);
     }
