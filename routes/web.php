@@ -54,12 +54,12 @@ Route::middleware('doctor')->group(function () {
         [ProductGroupController::class, 'show']
     );
 
-    Route::get('/api/products/related', [
+    Route::get('/api/v1/products/related', [
         RelatedProductsController::class,
         'index'
     ]);
 
-    Route::get('/api/products/{id}', [
+    Route::get('/api/b1/products/{id}', [
         ProductDetailController::class,
         'show'
     ])->whereNumber('id');
