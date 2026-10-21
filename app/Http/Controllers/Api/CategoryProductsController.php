@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class CategoryProductsController extends Controller
 {
@@ -29,7 +30,16 @@ class CategoryProductsController extends Controller
 
         return response()->json([
             'category' => ['name' => $category->name, 'token' => $category->token],
-            'data' => $page->getCollection()->map(fn ($p) => self::productJson($p)),
+            'data' => $page->getCollection()->map(function ($p) {
+                $item = self::productJson($p);
+                if ($p->product_group_id) {
+                    $group = DB::table('product_groups')->where('id', $p->product_group_id)->first();
+                    $item['group_name'] = $group?->name;
+                    // La tabella product_groups non ha una colonna immagine:
+                    // usiamo l'immagine del prodotto rappresentativo.
+                }
+                return $item;
+            }),
             'pagination' => [
                 'current_page' => $page->currentPage(),
                 'last_page' => $page->lastPage(),
