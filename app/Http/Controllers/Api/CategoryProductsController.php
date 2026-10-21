@@ -62,6 +62,12 @@ class CategoryProductsController extends Controller
     {
         return [
             'id' => $product->id,
+            // Adegua il nome del campo se il magazzino usa una colonna diversa.
+            'stock' => data_get($product, 'stock')
+                ?? data_get($product, 'stock_quantity')
+                ?? data_get($product, 'quantity_available')
+                ?? data_get($product, 'available_quantity')
+                ?? data_get($product, 'giacenza'),
             'name' => $product->name,
             'description' => (string) (data_get($product, 'description') ?? ''),
             'ean' => $product->ean,
