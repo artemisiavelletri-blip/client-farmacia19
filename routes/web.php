@@ -29,6 +29,7 @@ use App\Services\Google\GmailService;
 
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\CategoryProductsController;
+use App\Http\Controllers\Api\ProductSearchController;
 
 Route::middleware('doctor')->group(function () {
 
@@ -42,6 +43,8 @@ Route::middleware('doctor')->group(function () {
     Route::get('/refresh-csrf', function () {
         return response()->json(['token' => csrf_token()]);
     });
+
+    Route::get('/api/v1/products/search', [ProductSearchController::class, 'index']);
 
     Route::get('/login', function () {
         if (request()->filled('redirect')) {
