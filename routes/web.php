@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\CategoryProductsController;
 use App\Http\Controllers\Api\ProductSearchController;
 use App\Http\Controllers\Api\ProductGroupController;
 use App\Http\Controllers\Api\RelatedProductsController;
+use App\Http\Controllers\Api\ProductDetailController;
 
 Route::middleware('doctor')->group(function () {
 
@@ -53,10 +54,15 @@ Route::middleware('doctor')->group(function () {
         [ProductGroupController::class, 'show']
     );
 
-    Route::get('/products/related', [
+    Route::get('/api/products/related', [
         RelatedProductsController::class,
         'index'
     ]);
+
+    Route::get('/api/products/{id}', [
+        ProductDetailController::class,
+        'show'
+    ])->whereNumber('id');
 
     Route::get('/login', function () {
         if (request()->filled('redirect')) {
