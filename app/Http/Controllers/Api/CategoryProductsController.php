@@ -63,6 +63,7 @@ class CategoryProductsController extends Controller
         return [
             'id' => $product->id,
             'name' => $product->name,
+            'description' => (string) (data_get($product, 'description') ?? ''),
             'ean' => $product->ean,
             'minsan' => $product->minsan,
             'price' => (float) $product->price,

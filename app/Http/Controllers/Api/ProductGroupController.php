@@ -21,6 +21,7 @@ class ProductGroupController extends Controller
 
         return response()->json([
             'group' => ['id' => $group->id, 'name' => $group->name, 'slug' => $group->slug,
+                'description' => (string) ($group->description ?? ''),
                 'image_url' => CategoryProductsController::groupImageUrl($group->image)],
             'variants' => $variants->map(fn ($p) => CategoryProductsController::productJson($p)),
         ]);
