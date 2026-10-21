@@ -46,6 +46,11 @@ Route::middleware('doctor')->group(function () {
 
     Route::get('/api/v1/products/search', [ProductSearchController::class, 'index']);
 
+    Route::get(
+        '/api/v1/product-groups/{id}',
+        [ProductGroupController::class, 'show']
+    );
+
     Route::get('/login', function () {
         if (request()->filled('redirect')) {
 

@@ -37,6 +37,9 @@ class ProductSearchController extends Controller
             'data' => $products->getCollection()->map(function ($product) {
                 return [
                     'id' => $product->id,
+                    'product_group_id' => $product->product_group_id,
+                    'variant_color' => $product->variant_color,
+                    'variant_size' => $product->variant_size,
                     'name' => $product->name,
                     'ean' => $product->ean,
                     'minsan' => $product->minsan,
@@ -53,6 +56,22 @@ class ProductSearchController extends Controller
                 'per_page' => $products->perPage(),
                 'total' => $products->total(),
             ],
+        ]);
+    }
+
+    public function show(int $id): JsonResponse
+    {
+        $group = DB::table('product_groups')->where('id', $id)->first();
+        abort_unless($group, 404);
+
+        $variants = Product::query()
+            ->where('product_group_id', $id)
+            ->orderBy('id')
+            ->get();
+
+        return response()->json([
+            'group' => ['id' => $group->id, 'name' => $group->name, 'slug' => $group->slug],
+            'variants' => $variants->map(fn ($p) => CategoryProductsController::productJson($p)),
         ]);
     }
 }
