@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductSearchController extends Controller
 {
@@ -35,7 +36,12 @@ class ProductSearchController extends Controller
 
         return response()->json([
             'data' => $products->getCollection()->map(function ($product) {
+                $group = $product->product_group_id
+                    ? DB::table('product_groups')->where('id', $product->product_group_id)->first()
+                    : null;
                 return [
+                    'group_name' => $group?->name,
+                    'group_image_url' => CategoryProductsController::groupImageUrl($group?->image),
                     'id' => $product->id,
                     'product_group_id' => $product->product_group_id,
                     'variant_color' => $product->variant_color,
