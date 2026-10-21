@@ -13,9 +13,7 @@ class HomeController extends Controller
     public function index(): JsonResponse
     {
         $categories = Category::query()
-            ->whereNotNull('position')
             ->orderBy('position')
-            ->withCount('products')
             ->get()
             ->map(fn ($category) => [
                 'id' => $category->id,
