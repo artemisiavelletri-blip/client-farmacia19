@@ -31,7 +31,7 @@ use App\Http\Controllers\Api\HomeController;
 
 Route::middleware('doctor')->group(function () {
 
-    Route::get('/v1/home', [HomeController::class, 'index']);
+    Route::get('/api/v1/home', [HomeController::class, 'index']);
 
     Route::get('/refresh-csrf', function () {
         return response()->json(['token' => csrf_token()]);
