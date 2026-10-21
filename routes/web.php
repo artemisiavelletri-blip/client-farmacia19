@@ -28,10 +28,16 @@ use Illuminate\Http\Request;
 use App\Services\Google\GmailService;
 
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\CategoryProductsController;
 
 Route::middleware('doctor')->group(function () {
 
     Route::get('/api/v1/home', [HomeController::class, 'index']);
+
+    Route::get(
+        '/api/v1/categories/{token}/products',
+        [CategoryProductsController::class, 'index']
+    );
 
     Route::get('/refresh-csrf', function () {
         return response()->json(['token' => csrf_token()]);
