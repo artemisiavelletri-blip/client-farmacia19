@@ -59,7 +59,7 @@ Route::middleware('doctor')->group(function () {
         'index'
     ]);
 
-    Route::get('/api/b1/products/{id}', [
+    Route::get('/api/v1/products/{id}', [
         ProductDetailController::class,
         'show'
     ])->whereNumber('id');
