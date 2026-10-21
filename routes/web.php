@@ -30,6 +30,7 @@ use App\Services\Google\GmailService;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\CategoryProductsController;
 use App\Http\Controllers\Api\ProductSearchController;
+use App\Http\Controllers\Api\ProductGroupController;
 
 Route::middleware('doctor')->group(function () {
 
