@@ -52,6 +52,115 @@
             </div>
         </div>
         <!-- preloader end -->
+        <style>
+            /* MINI CARRELLO FARMACIA19 */
+
+            .dropdown-cart-list {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+            }
+
+            .dropdown-cart-list > li {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .dropdown-cart-list .dropdown-cart-item {
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            /* Immagine */
+            .dropdown-cart-list .cart-img {
+                flex: 0 0 60px !important;
+                width: 60px !important;
+                min-width: 60px !important;
+                max-width: 60px !important;
+                overflow: hidden;
+            }
+
+            .dropdown-cart-list .cart-img a {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .dropdown-cart-list .cart-img img {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 60px !important;
+                object-fit: contain !important;
+            }
+
+            /* Testo prodotto */
+            .dropdown-cart-list .cart-info {
+                flex: 1 1 0 !important;
+                width: 0 !important;
+                min-width: 0 !important;
+                max-width: 100%;
+            }
+
+            .dropdown-cart-list .cart-info h4 {
+                margin-bottom: 6px;
+                overflow-wrap: anywhere;
+                line-height: 1.3;
+            }
+
+            .dropdown-cart-list .cart-info h4 a {
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+                overflow: hidden;
+            }
+
+            .dropdown-cart-list .cart-qty {
+                margin: 0;
+            }
+
+            /* Pulsante elimina */
+            .dropdown-cart-list .cart-remove {
+                position: static !important;
+                transform: none !important;
+                flex: 0 0 20px !important;
+                width: 20px !important;
+                min-width: 20px !important;
+                margin: 0 !important;
+                display: flex !important;
+                justify-content: center;
+                align-items: center;
+            }
+
+            /* Mobile */
+            @media (max-width: 480px) {
+                .dropdown-cart-list .dropdown-cart-item {
+                    gap: 6px !important;
+                }
+
+                .dropdown-cart-list .cart-img {
+                    flex-basis: 55px !important;
+                    width: 55px !important;
+                    min-width: 55px !important;
+                }
+
+                .dropdown-cart-list .cart-img img {
+                    height: 55px !important;
+                }
+
+                .dropdown-cart-list .cart-info h4 {
+                    font-size: 12px;
+                }
+            }
+        </style>
         @include('navbar')
         @yield('content')
         @include('footer')
