@@ -47,6 +47,16 @@ Route::prefix('v1')->group(function () {
         Farmacia19AuthController::class, 'login'
     ])->middleware('throttle:5,1');
 
+    Route::post('/auth/register', [
+        \App\Http\Controllers\Api\Farmacia19RegistrationController::class,
+        'register'
+    ])->middleware('throttle:5,1');
+
+    Route::get('/cities', [
+        \App\Http\Controllers\Api\Farmacia19CitiesController::class,
+        'index'
+    ])->middleware('throttle:30,1');
+
     // ROTTE PROTETTE APP
     Route::middleware(Farmacia19ApiToken::class)->group(function () {
 
