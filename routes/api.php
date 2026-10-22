@@ -77,6 +77,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/account/password', [\App\Http\Controllers\Api\Farmacia19ProfileController::class, 'password']);
         Route::post('/account/delete', [\App\Http\Controllers\Api\Farmacia19ProfileController::class, 'delete']);
 
+        Route::get('/account/billing-address', [\App\Http\Controllers\Api\Farmacia19BillingController::class, 'show']);
+        Route::patch('/account/billing-address', [\App\Http\Controllers\Api\Farmacia19BillingController::class, 'update']);
+
     });
 
 });
