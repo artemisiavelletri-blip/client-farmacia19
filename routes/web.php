@@ -235,8 +235,6 @@ Route::middleware('doctor')->group(function () {
             });
 
         });
-
-        Route::post('/payment/customer/create', [PaymentController::class, 'createCustomer'])->name('payment.customer.create');
         Route::get('/payment-method/store', [PaymentMethodController::class, 'store'])->name('payment-method.store');
         Route::delete('/payment-method/delete/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('payment-method.destroy');
         Route::get('/logout', [UserController::class, 'logout'])->name('logout');
