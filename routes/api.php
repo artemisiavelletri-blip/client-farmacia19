@@ -57,6 +57,9 @@ Route::prefix('v1')->group(function () {
         'index'
     ])->middleware('throttle:30,1');
 
+    Route::get('/app/payment-method/bridge/{ticket}', [\App\Http\Controllers\Farmacia19CardBridgeController::class, 'enter'])
+    ->name('farmacia19.card.bridge')->middleware('throttle:10,1');
+
     // ROTTE PROTETTE APP
     Route::middleware(Farmacia19ApiToken::class)->group(function () {
 
@@ -85,6 +88,10 @@ Route::prefix('v1')->group(function () {
         Route::patch('/account/shipping-addresses/{id}', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'update'])->whereNumber('id');
         Route::patch('/account/shipping-addresses/{id}/default', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'setDefault'])->whereNumber('id');
         Route::delete('/account/shipping-addresses/{id}', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'destroy'])->whereNumber('id');
+
+        Route::get('/account/payment-methods', [\App\Http\Controllers\Api\Farmacia19PaymentMethodsController::class, 'index']);
+        Route::post('/account/payment-methods/start', [\App\Http\Controllers\Api\Farmacia19PaymentMethodsController::class, 'start'])->middleware('throttle:10,1');
+        Route::delete('/account/payment-methods/{id}', [\App\Http\Controllers\Api\Farmacia19PaymentMethodsController::class, 'destroy'])->whereNumber('id');
 
     });
 
