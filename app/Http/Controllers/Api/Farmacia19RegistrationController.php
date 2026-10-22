@@ -138,9 +138,28 @@ class Farmacia19RegistrationController extends Controller
             report($e);
         }
 
+        // Genera il token per l'accesso automatico
+        $plainToken = \Illuminate\Support\Str::random(80);
+
+        \Illuminate\Support\Facades\DB::table('farmacia19_api_tokens')->insert([
+            'user_id' => $user->id,
+            'token_hash' => hash('sha256', $plainToken),
+            'created_at' => now(),
+            'updated_at' => now(),
+            'expires_at' => now()->addDays(30),
+        ]);
+
         return response()->json([
             'success' => true,
-            'message' => 'Registrazione completata. Ora puoi accedere.',
+            'message' => 'Registrazione completata con successo!',
+            'token' => $plainToken,
+            'token_type' => 'Bearer',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'surname' => $user->surname,
+                'email' => $user->email,
+            ],
         ], 201);
     }
 }
