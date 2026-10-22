@@ -294,9 +294,12 @@ class CheckoutController extends Controller
                     }
                 }
 
+                do {
+                    $order_number = strtoupper(Str::random(10));
+                } while (Order::where('order_number', $order_number)->exists());
 
                 // Segna ordine come pagato
-                $order_number = $this->createOrder($user, $total, 'stripe', $request['codTrans'],$request['num_contratto']);
+                $this->createOrder($user, $total, 'stripe', $request['codTrans'],$order_number,$request['num_contratto']);
 
                 return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'stripe']);
             } catch (\Exception $e) {
