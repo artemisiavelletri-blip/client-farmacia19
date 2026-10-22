@@ -57,7 +57,7 @@ Route::prefix('v1')->group(function () {
         'index'
     ])->middleware('throttle:30,1');
 
-    Route::get('/app/payment-method/bridge/{ticket}', [\App\Http\Controllers\Farmacia19CardBridgeController::class, 'enter'])
+    Route::get('/app/payment-method/bridge/{ticket}', [\App\Http\Controllers\Api\Farmacia19CardBridgeController::class, 'enter'])
     ->name('farmacia19.card.bridge')->middleware('throttle:10,1');
 
     // ROTTE PROTETTE APP
