@@ -58,6 +58,11 @@
         'num_contratto' => $numContratto,
         'tipo_servizio' => 'paga_oc3d',
         'tipo_richiesta' => $tipoRichiesta,
+
+        // Dati cliente
+        'nome' => auth()->user()->name,
+        'cognome' => auth()->user()->surname,
+        'email' => auth()->user()->email,
     ];
 
     $facoltativi = [];
