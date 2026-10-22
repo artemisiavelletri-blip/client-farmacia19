@@ -20,9 +20,12 @@ class Farmacia19CartController extends Controller
                 'id' => $item->id,
                 'product_id' => $item->product_id,
                 'name' => $item->product?->name ?? 'Prodotto',
-                'image_url' => $item->product?->image_url ?? null,
+                'image_url' => $item->product?->image
+                    ? asset('storage-admin/' . ltrim($item->product->image, '/')) : null,
                 'quantity' => (int) $item->quantity,
                 'subtotal' => round((float) $item->subtotal, 2),
+                'unit_price' => $item->quantity > 0
+                    ? round((float) $item->subtotal / (int) $item->quantity, 2) : 0,
                 'available' => $item->product && $item->product->stock > 0,
             ])->values(),
         ];
