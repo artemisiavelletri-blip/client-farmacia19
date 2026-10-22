@@ -80,6 +80,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/account/billing-address', [\App\Http\Controllers\Api\Farmacia19BillingController::class, 'show']);
         Route::patch('/account/billing-address', [\App\Http\Controllers\Api\Farmacia19BillingController::class, 'update']);
 
+        Route::get('/account/shipping-addresses', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'index']);
+        Route::post('/account/shipping-addresses', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'store']);
+        Route::patch('/account/shipping-addresses/{id}', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'update'])->whereNumber('id');
+        Route::patch('/account/shipping-addresses/{id}/default', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'setDefault'])->whereNumber('id');
+        Route::delete('/account/shipping-addresses/{id}', [\App\Http\Controllers\Api\Farmacia19ShippingController::class, 'destroy'])->whereNumber('id');
+
     });
 
 });
