@@ -9,7 +9,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentMethodController;
-use App\Http\Controllers\PaypalController;
 use App\Services\Track123Service;
 
 use App\Http\Controllers\GoogleMerchantController;
@@ -257,12 +256,6 @@ Route::middleware('doctor')->group(function () {
         })->name('paypal.cancel');
 
         Route::post('/delete-account', [UserController::class, 'delete_account'])->name('delete-account');
-
-        Route::post('/paypal/order/create', [PaypalController::class, 'createOrder'])
-            ->name('paypal.create');
-
-        Route::post('/paypal/order/{orderId}/capture', [PaypalController::class, 'captureOrder'])
-            ->name('paypal.capture');
 
         Route::get('/coupon', function () {
 
