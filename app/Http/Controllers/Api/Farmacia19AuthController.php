@@ -26,9 +26,17 @@ class Farmacia19AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('farmacia19-android')->plainTextToken;
+        $plainToken = \Illuminate\Support\Str::random(80);
+
+        \Illuminate\Support\Facades\DB::table('farmacia19_api_tokens')->insert([
+            'user_id' => $user->id,
+            'token_hash' => hash('sha256', $plainToken),
+            'created_at' => now(),
+            'updated_at' => now(),
+            'expires_at' => now()->addDays(30),
+        ]);
         return response()->json([
-            'token' => $token,
+            'token' => $plainToken,
             'token_type' => 'Bearer',
             'user' => [
                 'id' => $user->id,
