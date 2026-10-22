@@ -113,6 +113,7 @@ class PaymentMethodController extends Controller
         }
     }
 
+    
     public function destroy(Request $request, $pm)
     {
         $user = auth()->user();
@@ -120,83 +121,63 @@ class PaymentMethodController extends Controller
         $paymentMethod = PaymentMethod::where(
             'stripe_payment_method_id',
             $pm
-        )->firstOrFail();
-
-        if ($paymentMethod->user_id !== $user->id) {
-            abort(403);
-        }
-
-        /*\Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        )
+        ->where('user_id', $user->id)
+        ->firstOrFail();
 
         try {
-            $stripePm = \Stripe\PaymentMethod::retrieve(
-                $paymentMethod->stripe_payment_method_id
-            );
 
-            // 1️⃣ Se è default, tolgo PRIMA il default su Stripe
-            if ($paymentMethod->is_default) {
+            $eraPredefinita = (bool) $paymentMethod->default;
 
-                $newDefault = $user->paymentMethods()
-                    ->where('id', '!=', $paymentMethod->id)
-                    ->first();
-
-                if ($newDefault) {
-                    // Caso A: esiste un altro metodo
-                    $newDefault->update(['is_default' => true]);
-
-                    \Stripe\Customer::update(
-                        $user->stripe_customer_id,
-                        [
-                            'invoice_settings' => [
-                                'default_payment_method' =>
-                                    $newDefault->stripe_payment_method_id
-                            ]
-                        ]
-                    );
-                } else {
-                    // Caso B: è l’unico metodo
-                    \Stripe\Customer::update(
-                        $user->stripe_customer_id,
-                        [
-                            'invoice_settings' => [
-                                'default_payment_method' => null
-                            ]
-                        ]
-                    );
-                }
-            }
-
-            $stripePm->detach();
+            // Nasconde la carta senza eliminarla fisicamente.
+            $paymentMethod->default = 0;
+            $paymentMethod->is_default = 0;
+            $paymentMethod->save();
 
             $paymentMethod->delete();
 
-            return response()->json(['success' => true]);
+            // Se era la carta predefinita,
+            // imposta come predefinita l'ultima carta attiva.
+            if ($eraPredefinita) {
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }*/
-        try {            
-            if($paymentMethod->default){
-                $previous = PaymentMethod::where('user_id', $user->id)
-                    ->where('id','!=',$paymentMethod->id)
-                    ->orderByDesc('id')
-                    ->first();
+                $previous = PaymentMethod::where(
+                    'user_id',
+                    $user->id
+                )
+                ->orderByDesc('id')
+                ->first();
+
                 if ($previous) {
+                    PaymentMethod::where('user_id', $user->id)
+                        ->update([
+                            'default' => 0,
+                            'is_default' => 0,
+                        ]);
+
                     $previous->default = 1;
+                    $previous->is_default = 1;
                     $previous->save();
                 }
             }
-            //$paymentMethod->delete();
-            return response()->json(['success' => true]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Metodo di pagamento rimosso.'
+            ]);
+
         } catch (\Exception $e) {
+
+            Log::error('Errore rimozione carta', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+
             return response()->json([
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => 'Impossibile rimuovere il metodo di pagamento.'
             ], 500);
         }
     }
+
 
 }
