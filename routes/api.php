@@ -68,6 +68,11 @@ Route::prefix('v1')->group(function () {
             Farmacia19AuthController::class, 'logout'
         ]);
 
+        Route::get('/cart', [\App\Http\Controllers\Api\Farmacia19CartController::class, 'index']);
+        Route::post('/cart/add', [\App\Http\Controllers\Api\Farmacia19CartController::class, 'add']);
+        Route::patch('/cart/items/{id}', [\App\Http\Controllers\Api\Farmacia19CartController::class, 'update']);
+        Route::delete('/cart/items/{id}', [\App\Http\Controllers\Api\Farmacia19CartController::class, 'remove']);
+
     });
 
 });
