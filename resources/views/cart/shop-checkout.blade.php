@@ -531,6 +531,14 @@
                     e.preventDefault();
 
                     document.getElementById('addCardForm').submit();
+                } else {
+                    const element = document.getElementById('pills-tabContent');
+                    const navbarHeight = 150; // altezza navbar in px
+
+                    window.scrollTo({
+                        top: element.offsetTop - navbarHeight,
+                        behavior: 'smooth'
+                    });
                 }
             });
 
@@ -578,16 +586,6 @@
             $(this).find('input[type="radio"]').prop('checked', true);
             $(this).addClass('card-box-active');
         });
-
-        $('#pills-tab-1').on('click',function(){
-            const element = document.getElementById('pills-tabContent');
-            const navbarHeight = 150; // altezza navbar in px
-
-            window.scrollTo({
-                top: element.offsetTop - navbarHeight,
-                behavior: 'smooth'
-            });
-        })
 
         $('#pay').on('click',function(){
             $('#payForm').submit();
