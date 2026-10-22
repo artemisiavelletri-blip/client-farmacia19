@@ -518,23 +518,22 @@
         @endif
 
 
-        $('#pills-tab-1').on('click', function (e) {
+        
+        document.getElementById('pills-tab-1')
+            .addEventListener('show.bs.tab', function (e) {
 
-            // Controlla se esistono carte salvate
-            const numeroCarte = $('input[name="selected_card_id"]').length;
+                const numeroCarte =
+                    document.querySelectorAll(
+                        'input[name="selected_card_id"]'
+                    ).length;
 
-            if (numeroCarte === 0) {
+                if (numeroCarte === 0) {
+                    e.preventDefault();
 
-                // Impedisce l'apertura della tab
-                e.preventDefault();
-                e.stopImmediatePropagation();
+                    document.getElementById('addCardForm').submit();
+                }
+            });
 
-                // Submit del form desiderato
-                document.getElementById('addCardForm').submit();
-
-            }
-
-        });
 
 
         $('.payment').on('click', 'li', function() {
