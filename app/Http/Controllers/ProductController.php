@@ -265,6 +265,7 @@ class ProductController extends Controller
 
             $query
                 ->where('products.discountPrice', '>', 0)
+                ->where('products.discountPrice', '<', 'products.price')
                 ->where('products.stock', '>', 0);
 
             $type_message = 'Prodotti in Promozione';
