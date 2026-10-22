@@ -73,6 +73,10 @@ Route::prefix('v1')->group(function () {
         Route::patch('/cart/items/{id}', [\App\Http\Controllers\Api\Farmacia19CartController::class, 'update']);
         Route::delete('/cart/items/{id}', [\App\Http\Controllers\Api\Farmacia19CartController::class, 'remove']);
 
+        Route::patch('/account/profile', [\App\Http\Controllers\Api\Farmacia19ProfileController::class, 'update']);
+        Route::post('/account/password', [\App\Http\Controllers\Api\Farmacia19ProfileController::class, 'password']);
+        Route::post('/account/delete', [\App\Http\Controllers\Api\Farmacia19ProfileController::class, 'delete']);
+
     });
 
 });
