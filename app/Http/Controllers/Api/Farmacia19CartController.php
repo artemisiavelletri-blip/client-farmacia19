@@ -27,6 +27,7 @@ class Farmacia19CartController extends Controller
                 'unit_price' => $item->quantity > 0
                     ? round((float) $item->subtotal / (int) $item->quantity, 2) : 0,
                 'available' => $item->product && $item->product->stock > 0,
+                'remaining_stock' => $item->product ? max(0, (int) $item->product->stock) : 0,
             ])->values(),
         ];
     }
@@ -69,16 +70,21 @@ class Farmacia19CartController extends Controller
             $product->stock -= $quantity;
             $product->save();
         }, 3);
-        return response()->json(['success' => true, 'message' => 'Prodotto aggiunto al carrello.'] + $this->summary($user));
+        return response()->json(['success' => true, 'message' => 'Prodotto aggiunto al carrello.',
+            'remaining_stock' => (int) Product::findOrFail($data['product_id'])->stock,
+            'stock_updates' => [(string) $data['product_id'] => (int) Product::findOrFail($data['product_id'])->stock],
+        ] + $this->summary($user));
     }
 
     public function update(Request $request, int $id)
     {
         $data = $request->validate(['quantity' => ['required', 'integer', 'min:1', 'max:99']]);
         $user = $request->user();
-        DB::transaction(function () use ($user, $id, $data) {
+        $updatedProductId = null;
+        DB::transaction(function () use ($user, $id, $data, &$updatedProductId) {
             $item = $user->cartItems()->findOrFail($id);
             $product = Product::whereKey($item->product_id)->lockForUpdate()->firstOrFail();
+            $updatedProductId = $product->id;
             $new = (int) $data['quantity'];
             $difference = $new - (int) $item->quantity;
             if ($difference > $product->stock) {
@@ -89,20 +95,26 @@ class Farmacia19CartController extends Controller
             $item->quantity = $new;
             $item->save();
         }, 3);
-        return response()->json(['success' => true] + $this->summary($user));
+        return response()->json(['success' => true, 'stock_updates' => [
+            (string) $updatedProductId => (int) Product::findOrFail($updatedProductId)->stock,
+        ]] + $this->summary($user));
     }
 
     public function remove(Request $request, int $id)
     {
         $user = $request->user();
-        DB::transaction(function () use ($user, $id) {
+        $updatedProductId = null;
+        DB::transaction(function () use ($user, $id, &$updatedProductId) {
             $item = $user->cartItems()->findOrFail($id);
             $product = Product::whereKey($item->product_id)->lockForUpdate()->firstOrFail();
+            $updatedProductId = $product->id;
             $product->stock += $item->quantity;
             $product->save();
             $item->discounts()->detach();
             $item->delete();
         }, 3);
-        return response()->json(['success' => true] + $this->summary($user));
+        return response()->json(['success' => true, 'stock_updates' => [
+            (string) $updatedProductId => (int) Product::findOrFail($updatedProductId)->stock,
+        ]] + $this->summary($user));
     }
 }
