@@ -18,9 +18,7 @@
     $divisa = 'EUR';
 
     // Contratto per la nuova carta
-    $numContratto = 'NC_' . strtoupper(
-        bin2hex(random_bytes(12))
-    );
+    $numContratto = "NC_" . date('YmdHis');;
 
     $tipoRichiesta = 'PP';
 
