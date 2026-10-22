@@ -18,6 +18,7 @@ class PaymentMethod extends Model
         'exp_month',
         'exp_year',
         'is_default',
+        'default',
     ];
 
     public function user()
