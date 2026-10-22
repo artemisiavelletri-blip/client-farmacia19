@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,53 +14,48 @@ class RelatedProductsController extends Controller
     {
         $groupId = $request->integer('group_id') ?: null;
         $productId = $request->integer('product_id') ?: null;
-        if (!$groupId && !$productId) return response()->json(['data' => []]);
 
-        if ($groupId) {
-            $group = DB::table('product_groups')->where('id', $groupId)->first();
-            if (!$group) return response()->json(['data' => []]);
-            $category = Category::find($group->category_id);
-        } else {
-            $product = Product::find($productId);
-            if (!$product) return response()->json(['data' => []]);
-            $category = Category::query()->whereHas('products', function ($query) use ($productId) {
-                $query->where('products.id', $productId);
-            })->first();
+        if (!$groupId && !$productId) {
+            return response()->json(['data' => []]);
         }
 
-        if (!$category) return response()->json(['data' => []]);
+        // Per una scheda gruppo usiamo una sua variante come prodotto di riferimento.
+        // Per i prodotti singoli usiamo direttamente il prodotto aperto.
+        $product = $groupId
+            ? Product::where('product_group_id', $groupId)->orderBy('id')->first()
+            : Product::find($productId);
 
-        $representatives = $category->products()
-            ->whereNotNull('products.product_group_id')
-            ->when($groupId, fn ($q) => $q->where('products.product_group_id', '!=', $groupId))
-            ->selectRaw('MIN(products.id)')
-            ->groupBy('products.product_group_id');
+        if (!$product) {
+            return response()->json(['data' => []]);
+        }
 
-        $products = $category->products()
-            ->where(function ($query) use ($representatives) {
-                $query->whereNull('products.product_group_id')
-                    ->orWhereIn('products.id', $representatives);
-            })
-            ->when($groupId, fn ($q) => $q->where(function ($sub) use ($groupId) {
-                $sub->whereNull('products.product_group_id')
-                    ->orWhere('products.product_group_id', '!=', $groupId);
-            }))
-            ->when($productId, fn ($q) => $q->where('products.id', '!=', $productId))
-            ->orderBy('products.id')->limit(10)->get();
+        // Stessa logica del sito: non sostituire con prodotti casuali della categoria.
+        $related = collect($product->relatedProducts(4));
+
+        // Evita di proporre il prodotto aperto o un'altra variante del suo gruppo.
+        $related = $related->filter(function ($item) use ($product, $groupId) {
+            if (!$item instanceof Product || $item->id === $product->id) return false;
+            $currentGroupId = $groupId ?: $product->product_group_id;
+            return !$currentGroupId || (int) $item->product_group_id !== (int) $currentGroupId;
+        })->unique(fn ($item) => $item->product_group_id
+            ? 'group:' . $item->product_group_id
+            : 'product:' . $item->id)->values();
 
         $groups = DB::table('product_groups')
-            ->whereIn('id', $products->pluck('product_group_id')->filter()->unique())
+            ->whereIn('id', $related->pluck('product_group_id')->filter()->unique())
             ->get()->keyBy('id');
 
-        return response()->json(['data' => $products->map(function ($product) use ($groups) {
-            $item = CategoryProductsController::productJson($product);
-            if ($product->product_group_id) {
-                $group = $groups->get($product->product_group_id);
-                $item['group_name'] = $group?->name;
-                $item['group_image_url'] = CategoryProductsController::groupImageUrl($group?->image);
-                $item['image_url'] = $item['group_image_url'] ?? '';
-            }
-            return $item;
-        })]);
+        return response()->json([
+            'data' => $related->map(function (Product $item) use ($groups) {
+                $data = CategoryProductsController::productJson($item);
+                if ($item->product_group_id) {
+                    $group = $groups->get($item->product_group_id);
+                    $data['group_name'] = $group?->name;
+                    $data['group_image_url'] = CategoryProductsController::groupImageUrl($group?->image);
+                    $data['image_url'] = $data['group_image_url'] ?? '';
+                }
+                return $data;
+            })->values(),
+        ]);
     }
 }
