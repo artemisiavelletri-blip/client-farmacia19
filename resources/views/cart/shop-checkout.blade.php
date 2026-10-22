@@ -1,54 +1,86 @@
 @extends('master')
 
+
 <?php
 
-    // Pagamento OneClik - Primo pagamento - Avvio pagamento
+    // Nexi OneClick - Primo pagamento (PP)
+    // Pagamento ordine + registrazione contratto
 
-    // Alias e chiave segreta 
-    $ALIAS = env('XPAY_ALIAS'); // Sostituire con il valore fornito da Nexi
-    $CHIAVESEGRETA = env('XPAY_SECRET'); // Sostituire con il valore fornito da Nexi
+    $ALIAS = env('XPAY_ALIAS');
+    $CHIAVESEGRETA = env('XPAY_SECRET');
 
     $requestUrl = env('NEXI_BASE_URL');
-    //$merchantServerUrl = "http://" . $_SERVER['HTTP_HOST'] . "/cards/";
-    $merchantServerUrl = "https://" . $_SERVER['HTTP_HOST'];
 
-    $codTrans = "PS" . date('YmdHis');
-    $divisa = "EUR";
-    $importo = 0;
+    // Importo dell'ordine in centesimi
+    $importo = (int) round(auth()->user()->cart_total * 100);
 
-    // Calcolo MAC
-    $mac = sha1('codTrans=' . $codTrans . 'divisa=' . $divisa . 'importo=' . $importo . $CHIAVESEGRETA);
+    $codTrans = 'PS' . strtoupper(bin2hex(random_bytes(10)));
+    $divisa = 'EUR';
 
-    $numContratto = "NC_" . date('YmdHis');
+    // Contratto per la nuova carta
+    $numContratto = 'NC_' . strtoupper(
+        bin2hex(random_bytes(12))
+    );
+
     $tipoRichiesta = 'PP';
 
-    // Parametri obbligatori
-    $obbligatori = array(
+    // MAC richiesta Nexi
+    $mac = sha1(
+        'codTrans=' . $codTrans .
+        'divisa=' . $divisa .
+        'importo=' . $importo .
+        $CHIAVESEGRETA
+    );
+
+    // Memorizza il tentativo per la callback
+    \Illuminate\Support\Facades\Cache::put(
+        'nexi_payment_' . $codTrans,
+        [
+            'user_id' => auth()->id(),
+            'importo' => $importo,
+            'divisa' => $divisa,
+            'tipo_richiesta' => 'PP',
+            'num_contratto' => $numContratto,
+        ],
+        now()->addHours(2)
+    );
+
+    $obbligatori = [
         'alias' => $ALIAS,
         'importo' => $importo,
         'divisa' => $divisa,
         'codTrans' => $codTrans,
-        'url' => $merchantServerUrl . "/payment-method/store",
-        'url_back' => $merchantServerUrl . "/shop-checkout",
+
+        // Ritorno alla funzione pagamento()
+        'url' => route('cart.pagamento'),
+
+        'url_back' => route('cart.shop_checkout'),
+
         'mac' => $mac,
         'num_contratto' => $numContratto,
         'tipo_servizio' => 'paga_oc3d',
         'tipo_richiesta' => $tipoRichiesta,
-        );
+    ];
 
-    // Parametri facoltativi
-    $facoltativi = array(
+    $facoltativi = [];
+
+    $requestParams = array_merge(
+        $obbligatori,
+        $facoltativi
     );
 
-    $requestParams = array_merge($obbligatori, $facoltativi);
+?>
 
-    ?>
+<form method="POST" id="addCardForm" action="{{ $requestUrl }}">
+    @foreach ($requestParams as $name => $value)
+        <input
+            type="hidden"
+            name="{{ $name }}"
+            value="{{ $value }}"
+        >
+    @endforeach
+</form>
 
-    <form method='POST' id="addCardForm" action='<?php echo $requestUrl ?>'>
-        <?php foreach ($requestParams as $name => $value) { ?>
-            <input type='hidden' name='<?php echo $name; ?>' value='<?php echo htmlentities($value); ?>' />
-        <?php } ?>
-    </form>
 
 @section('css')
 

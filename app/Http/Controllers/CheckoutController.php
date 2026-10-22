@@ -80,37 +80,6 @@ class CheckoutController extends Controller
 
     protected function processStripe($user, $total, $request)
     {
-        /*Stripe::setApiKey(config('services.stripe.secret'));
-
-        if ($request->selected_card_id) {
-            // Usa carta salvata
-            $card = $user->paymentMethods()->findOrFail($request->selected_card_id);
-            $paymentMethodId = $card->stripe_payment_method_id;
-        } elseif ($request->new_card_token) {
-            // Usa nuova carta
-            $paymentMethodId = $request->new_card_token;
-        } else {
-            return back()->with('error', 'Nessuna carta selezionata.');
-        }
-
-        // Crea PaymentIntent
-        try {
-            $intent = PaymentIntent::create([
-                'amount' => intval($total * 100), // in centesimi
-                'currency' => 'eur',
-                'customer' => $user->stripe_customer_id,
-                'payment_method' => $paymentMethodId,
-                'off_session' => true,
-                'confirm' => true,
-            ]);
-
-            // Segna ordine come pagato
-            $order_number = $this->createOrder($user, $total, 'stripe', $intent->id);
-
-            return redirect()->route('cart.shop_checkout_complete', ['order_number' => $order_number,'success' => true,'payment_method' => 'stripe']);
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }*/
 
         $paymentMethod = PaymentMethod::where(
             'id',
@@ -136,7 +105,7 @@ class CheckoutController extends Controller
         //PARAMETRI PER CALCOLO MAC
         $codTrans = "PS" . date('YmdHis');
         $chiaveSegreta = env('XPAY_SECRET');
-        $divisa = "EUR"; /* <-- EUR oppure 978 */
+        $divisa = "EUR"; 
 
         //CALCOLO MAC
         $mac = sha1('codTrans=' . $codTrans . 'divisa=' . $divisa . 'importo=' . $importo . $chiaveSegreta);
@@ -152,7 +121,7 @@ class CheckoutController extends Controller
             'url_back' => $merchantServerUrlBack, //necessita HTTP:// oppure HTTPS://
             'num_contratto' => $paymentMethod->stripe_payment_method_id,
             'tipo_servizio' => 'paga_oc3d',
-            'tipo_richiesta' => 'PR', /* <-- PR = Pagamento Ricorrente */
+            'tipo_richiesta' => 'PR', 
         );
 
         return view('cart.pagamento', compact('requestUrl', 'params'));
@@ -244,6 +213,8 @@ class CheckoutController extends Controller
         }
     }
 
+
+
     public function pagamento(Request $request)
     {
         $total = (float)$request['importo']/100;
@@ -273,6 +244,56 @@ class CheckoutController extends Controller
         if(!$codiceEsito){
             try {
 
+
+                $payment = Cache::get(
+                    'nexi_payment_' . $request->input('codTrans')
+                );
+
+                // Se è una nuova carta (PP), registrala.
+                if (
+                    $payment &&
+                    ($payment['tipo_richiesta'] ?? null) === 'PP'
+                ) {
+                    $numContratto = $payment['num_contratto'];
+
+                    // Controlla il contratto restituito da Nexi.
+                    if ($request->input('num_contratto') !== $numContratto) {
+                        return redirect()->route('cart.shop_checkout')
+                            ->with('error', 'Contratto Nexi non valido.');
+                    }
+
+                    // Evita duplicati, comprese le carte nascoste
+                    // se hai abilitato SoftDeletes.
+                    $existingCard = PaymentMethod::withTrashed()
+                        ->where('user_id', $user->id)
+                        ->where('stripe_payment_method_id', $numContratto)
+                        ->first();
+
+                    if (!$existingCard) {
+                        $anno = substr($request->scadenza_pan, 0, 4);
+                        $mese = substr($request->scadenza_pan, 4, 2);
+
+                        PaymentMethod::where('user_id', $user->id)
+                            ->update(['default' => null]);
+
+                        PaymentMethod::create([
+                            'holder_name' =>
+                                $request->nome . ' ' . $request->cognome,
+                            'user_id' => $user->id,
+                            'stripe_payment_method_id' => $numContratto,
+                            'brand' => $request->brand ?? null,
+                            'last4' => $request->pan
+                                ? substr($request->pan, -4)
+                                : null,
+                            'exp_month' => $mese,
+                            'exp_year' => $anno,
+                            'is_default' => 1,
+                            'default' => 1,
+                        ]);
+                    }
+                }
+
+
                 // Segna ordine come pagato
                 $order_number = $this->createOrder($user, $total, 'stripe', $request['codTrans'],$request['num_contratto']);
 
@@ -290,6 +311,7 @@ class CheckoutController extends Controller
         }
 
     }
+
 
     protected function processPaypal($user, $total,$paypalOrderId)
     {
