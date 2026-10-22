@@ -328,7 +328,7 @@
                                         </div>
                                         <div class="accordion-item">
                                           <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep3" ($errors->any()) aria-expanded="true" @else aria-expanded="true" @endif aria-controls="checkoutStep3">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep3" @if($errors->any()) aria-expanded="true" @else aria-expanded="true" @endif aria-controls="checkoutStep3">
                                                Metodo di Pagamento
                                             </button>
                                             <input type="hidden" id="paymentMethod" name="payment_method">
