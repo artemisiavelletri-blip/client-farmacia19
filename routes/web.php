@@ -36,45 +36,8 @@ use App\Http\Controllers\Api\ProductDetailController;
 
 Route::middleware('doctor')->group(function () {
 
-    Route::get('/api/v1/home', [HomeController::class, 'index']);
-
-    Route::get(
-        '/api/v1/categories/{token}/products',
-        [CategoryProductsController::class, 'index']
-    );
-
     Route::get('/refresh-csrf', function () {
         return response()->json(['token' => csrf_token()]);
-    });
-
-    Route::get('/api/v1/products/search', [ProductSearchController::class, 'index']);
-
-    Route::get(
-        '/api/v1/product-groups/{id}',
-        [ProductGroupController::class, 'show']
-    );
-
-    Route::get('/api/v1/products/related', [
-        RelatedProductsController::class,
-        'index'
-    ]);
-
-    Route::get('/api/v1/products/{id}', [
-        ProductDetailController::class,
-        'show'
-    ])->whereNumber('id');
-
-    // Aggiungere a routes/api.php, dentro il gruppo prefix('v1') se già presente.
-    // Se il gruppo v1 non esiste, usare Route::prefix('v1')->group(function () { ... });
-    Route::post('/api/v1/auth/login', [\App\Http\Controllers\Api\Farmacia19AuthController::class, 'login'])
-        ->middleware('throttle:5,1');
-
-    Route::middleware(\App\Http\Middleware\Farmacia19ApiToken::class)->group(function () {
-        Route::get('/api/v1/auth/me', [\App\Http\Controllers\Api\Farmacia19AuthController::class, 'me']);
-        Route::post('/api/v1/auth/logout', [\App\Http\Controllers\Api\Farmacia19AuthController::class, 'logout']);
-
-        // Inserire QUI la rotta API per aggiungere al carrello quando la colleghiamo.
-        // Es.: Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'add']);
     });
 
     Route::get('/login', function () {
