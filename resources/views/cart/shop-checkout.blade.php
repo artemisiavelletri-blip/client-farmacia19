@@ -404,67 +404,6 @@
                                                                         <button class="theme-btn addCard w-100 btn-sm" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
                                                                     </div>
                                                                 </div>
-                                                                <!-- <div class="table-responsive">
-                                                                    <table class="table table-borderless text-nowrap">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Info Carta</th>
-                                                                                <th>Nome Carta</th>
-                                                                                <th>Numero Carta</th>
-                                                                                <th>Data Scadenza</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            @foreach($user->paymentMethods()->get() as $card)
-                                                                                <tr class="tr-card {{ $loop->first ? 'tr-selected' : '' }}">
-                                                                                    <td>
-                                                                                        <input type="radio" name="selected_card_id" value="{{ $card->id }}" class="select-card hidden" {{ $loop->first ? 'checked' : '' }}>
-                                                                                        <div class="table-list-img w-25">
-                                                                                            @if($card->brand == 'visa')
-                                                                                                <img class="rounded-3" src="{{ asset('/img/payment/visa.svg') }}" alt="">
-                                                                                            @elseif($card->brand == 'mastercard')
-                                                                                                <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
-                                                                                            @else
-                                                                                                <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
-                                                                                            @endif
-                                                                                        </div>
-                                                                                    </td>
-                                                                                    <td><span class="table-list-code">{{$card->holder_name}}</span></td>
-                                                                                    <td>***********{{$card->last4}}</td>
-                                                                                    <td>{{$card->exp_month}}/{{$card->exp_year}}</td>
-                                                                                </tr>
-                                                                            @endforeach
-                                                                        </tbody>
-                                                                    </table>
-                                                                    <div class="text-center">
-                                                                        <button class="theme-btn addCard" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="cart-mobile">
-                                                                    <h5 class="mb-3">Seleziona carta</h5>
-                                                                    @foreach($user->paymentMethods()->get() as $card)
-                                                                        <div class="card-box {{ $loop->first ? 'card-box-active' : '' }}">
-                                                                            <input type="radio" name="selected_card_id" value="{{ $card->id }}" class="select-card-mobile hidden" {{ $loop->first ? 'checked' : '' }}>
-                                                                            <div class="card-box-img">
-                                                                                @if($card->brand == 'visa')
-                                                                                    <img class="rounded-3" style="width: 80px!important;" src="{{ asset('/img/payment/visa.svg') }}" alt="">
-                                                                                @elseif($card->brand == 'mastercard')
-                                                                                    <img class="rounded-3" style="width: 80px!important;" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
-                                                                                @else
-                                                                                    <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
-                                                                                @endif
-                                                                            </div>
-                                                                            <div class="card-box-info">
-                                                                                <h5 class="table-list-code">{{$card->holder_name}}</h5>
-                                                                                <h5>***********{{$card->last4}}</h5>
-                                                                                <h5>{{$card->exp_month}}/{{$card->exp_year}}</h5>
-                                                                            </div>
-                                                                        </div>
-                                                                    @endforeach
-                                                                    <div class="text-center">
-                                                                        <button class="theme-btn addCard" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
-                                                                    </div>
-                                                                </div> -->
                                                             </div>
                                                         </div>
                                                         <div class="tab-pane fade" id="pills-2" role="tabpanel"
@@ -577,6 +516,25 @@
                 ).show();
             });
         @endif
+
+
+        $('#pills-tab-1').on('click', function (e) {
+
+            // Controlla se esistono carte salvate
+            const numeroCarte = $('input[name="selected_card_id"]').length;
+
+            if (numeroCarte === 0) {
+
+                // Impedisce l'apertura della tab
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                // Submit del form desiderato
+                document.getElementById('addCardForm').submit();
+
+            }
+
+        });
 
 
         $('.payment').on('click', 'li', function() {
