@@ -64,6 +64,19 @@ Route::middleware('doctor')->group(function () {
         'show'
     ])->whereNumber('id');
 
+    // Aggiungere a routes/api.php, dentro il gruppo prefix('v1') se già presente.
+    // Se il gruppo v1 non esiste, usare Route::prefix('v1')->group(function () { ... });
+    Route::post('/auth/login', [\App\Http\Controllers\Api\Farmacia19AuthController::class, 'login'])
+        ->middleware('throttle:5,1');
+
+    Route::middleware(\App\Http\Middleware\Farmacia19ApiToken::class)->group(function () {
+        Route::get('/auth/me', [\App\Http\Controllers\Api\Farmacia19AuthController::class, 'me']);
+        Route::post('/auth/logout', [\App\Http\Controllers\Api\Farmacia19AuthController::class, 'logout']);
+
+        // Inserire QUI la rotta API per aggiungere al carrello quando la colleghiamo.
+        // Es.: Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'add']);
+    });
+
     Route::get('/login', function () {
         if (request()->filled('redirect')) {
 
