@@ -20,11 +20,26 @@ class CategoryProductsController extends Controller
             ->selectRaw('MIN(products.id)')
             ->groupBy('products.product_group_id');
 
+        // Le visualizzazioni di un gruppo sono la somma delle sue varianti.
+        // Per i prodotti singoli utilizziamo direttamente products.views_count.
+        $groupViews = DB::table('products')
+            ->select('product_group_id')
+            ->selectRaw('SUM(COALESCE(views_count, 0)) AS total_views')
+            ->whereNotNull('product_group_id')
+            ->groupBy('product_group_id');
+
         $page = $category->products()
+            ->select('products.*')
+            ->leftJoinSub($groupViews, 'group_views', function ($join) {
+                $join->on('products.product_group_id', '=', 'group_views.product_group_id');
+            })
             ->where(function ($query) use ($representatives) {
                 $query->whereNull('products.product_group_id')
                     ->orWhereIn('products.id', $representatives);
             })
+            ->orderByRaw('CASE WHEN products.product_group_id IS NULL
+                THEN COALESCE(products.views_count, 0)
+                ELSE COALESCE(group_views.total_views, 0) END DESC')
             ->orderBy('products.id')
             ->paginate(20);
 
