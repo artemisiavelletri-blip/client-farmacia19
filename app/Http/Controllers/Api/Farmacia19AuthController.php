@@ -58,9 +58,20 @@ class Farmacia19AuthController extends Controller
         ]]);
     }
 
-    public function logout(Request $request): JsonResponse
+    public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()?->delete();
-        return response()->json(['message' => 'Logout effettuato']);
+        $token = $request->bearerToken();
+
+        if ($token) {
+            \Illuminate\Support\Facades\DB::table('farmacia19_api_tokens')
+                ->where('token_hash', hash('sha256', $token))
+                ->where('user_id', $request->user()->id)
+                ->delete();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout effettuato correttamente'
+        ]);
     }
 }
