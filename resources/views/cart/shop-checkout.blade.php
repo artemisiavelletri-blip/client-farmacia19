@@ -257,7 +257,7 @@
                                         </div>
                                         <div class="accordion-item">
                                           <h2 class="accordion-header">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep2" @if (!$errors->any() || !session()->has('error')) aria-expanded="true" @else aria-expanded="true" @endif aria-controls="checkoutStep2">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep2" aria-expanded="true" aria-controls="checkoutStep2">
                                                 Indirizzo di Spedizione
                                             </button>
                                           </h2>
@@ -328,7 +328,7 @@
                                         </div>
                                         <div class="accordion-item">
                                           <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep3" @if($errors->any() || session()->has('error')) aria-expanded="true" @else aria-expanded="true" @endif aria-controls="checkoutStep3">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#checkoutStep3" aria-expanded="false" aria-controls="checkoutStep3">
                                                Metodo di Pagamento
                                             </button>
                                             <input type="hidden" id="paymentMethod" name="payment_method">
@@ -559,6 +559,32 @@
                 });
             });
         });
+
+        
+        @if ($errors->any())
+            $(document).ready(function () {
+
+                // Chiude indirizzo di spedizione
+                bootstrap.Collapse.getOrCreateInstance(
+                    document.getElementById('checkoutStep2'),
+                    { toggle: false }
+                ).hide();
+
+                // Apre metodo di pagamento
+                bootstrap.Collapse.getOrCreateInstance(
+                    document.getElementById('checkoutStep3'),
+                    { toggle: false }
+                ).show();
+
+                // Scorre fino al metodo di pagamento
+                document.getElementById('checkoutStep3')
+                    .scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+            });
+        @endif
+
 
         $('.payment').on('click', 'li', function() {
             $('#paymentMethod').val($(this).attr('data-id'));
