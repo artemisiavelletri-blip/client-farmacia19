@@ -94,6 +94,68 @@
     @endforelse
 </div>
 
-<div class="mt-30">
+
+{{-- Desktop --}}
+<div class="d-none d-md-flex justify-content-center mt-30">
     {{ $products->links() }}
+</div>
+
+{{-- Mobile --}}
+<div class="d-md-none mt-30">
+    <nav aria-label="Paginazione prodotti">
+        <ul class="pagination justify-content-center">
+
+            {{-- Freccia precedente --}}
+            @if ($products->onFirstPage())
+                <li class="page-item disabled">
+                    <span class="page-link">‹</span>
+                </li>
+            @else
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ $products->previousPageUrl() }}">‹</a>
+                </li>
+            @endif
+
+            {{-- Pagina precedente --}}
+            @if ($products->currentPage() > 1)
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ $products->url($products->currentPage() - 1) }}">
+                        {{ $products->currentPage() - 1 }}
+                    </a>
+                </li>
+            @endif
+
+            {{-- Pagina corrente --}}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                    {{ $products->currentPage() }}
+                </span>
+            </li>
+
+            {{-- Pagina successiva --}}
+            @if ($products->hasMorePages())
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ $products->nextPageUrl() }}">
+                        {{ $products->currentPage() + 1 }}
+                    </a>
+                </li>
+            @endif
+
+            {{-- Freccia successiva --}}
+            @if ($products->hasMorePages())
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ $products->nextPageUrl() }}">›</a>
+                </li>
+            @else
+                <li class="page-item disabled">
+                    <span class="page-link">›</span>
+                </li>
+            @endif
+
+        </ul>
+    </nav>
 </div>

@@ -639,3 +639,22 @@
         margin-left: 5px;
     }
 }
+
+
+@media (max-width: 767.98px) {
+    .pagination {
+        display: flex;
+        justify-content: center;
+        flex-wrap: nowrap;
+        gap: 5px;
+        padding: 0;
+    }
+
+    .pagination .page-link {
+        min-width: 38px;
+        padding: 8px 10px;
+        text-align: center;
+        border-radius: 7px;
+        font-size: 14px;
+    }
+}
