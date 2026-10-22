@@ -560,7 +560,7 @@
             });
         });
 
-        
+
         @if ($errors->any())
             $(document).ready(function () {
 
@@ -575,13 +575,6 @@
                     document.getElementById('checkoutStep3'),
                     { toggle: false }
                 ).show();
-
-                // Scorre fino al metodo di pagamento
-                document.getElementById('checkoutStep3')
-                    .scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
             });
         @endif
 
