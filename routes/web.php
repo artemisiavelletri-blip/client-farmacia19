@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\TrackingController;
 use App\Services\Track123Service;
 
 use App\Http\Controllers\GoogleMerchantController;
