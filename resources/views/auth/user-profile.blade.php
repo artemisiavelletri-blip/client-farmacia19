@@ -123,17 +123,17 @@
                                                     Elimina Account
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button type="button" class="theme-btn button-delete-user"><i class="fa fa-trash" aria-hidden="true"></i>  Elimina Account</button>
-                                        </div>
-                                        <div class="f19-billing-actions f19-billing-mobile">
-                                            <button type="submit" 
-                                               class="f19-billing-edit">
-                                                <i class="fa fa-trash"></i>
-                                                Elimina Account
-                                            </button>
-                                        </div>
+                                            <div class="col-md-12">
+                                                <button type="button" class="theme-btn button-delete-user f19-billing-desktop"><i class="fa fa-trash" aria-hidden="true"></i>  Elimina Account</button>
+                                            </div>
+                                            <div class="f19-billing-actions f19-billing-mobile">
+                                                <button type="submit" 
+                                                   class="f19-billing-edit">
+                                                    <i class="fa fa-trash"></i>
+                                                    Elimina Account
+                                                </button>
+                                            </div>
+                                        </div>                                        
                                     </form>
                                 </div>
                             </div>
