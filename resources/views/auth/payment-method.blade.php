@@ -71,13 +71,13 @@
                                     <div class="user-card">
                                         <div class="user-card-header mobile-card-header">
                                             <h4 class="user-card-title">Metodo di Pagamento</h4>
-                                            <div class="user-card-header-right">
+                                            <div class="user-card-header-right f19-payment-desktop">
                                                 <form method='POST' action='<?php echo $requestUrl ?>'>
                                                     <?php foreach ($requestParams as $name => $value) { ?>
                                                         <input type='hidden' name='<?php echo $name; ?>' value='<?php echo htmlentities($value); ?>' />
                                                     <?php } ?>
                                                     
-                                                    <button class="theme-btn"><span class="far fa-plus-circle f19-payment-desktop"></span>Aggiungi Metodo di Pagamento</button>
+                                                    <button class="theme-btn"><span class="far fa-plus-circle"></span>Aggiungi Metodo di Pagamento</button>
                                                 </form>
                                             </div>
                                         </div>
