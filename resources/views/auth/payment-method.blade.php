@@ -35,6 +35,16 @@
         'tipo_richiesta' => $tipoRichiesta,
         );
 
+    \Illuminate\Support\Facades\Cache::put(
+        'nexi_payment_' . $codTrans,
+        [
+            'user_id' => auth()->id(),
+            'tipo_richiesta' => 'PP',
+            'num_contratto' => $numContratto,
+        ],
+        now()->addMinutes(30)
+    );
+
     // Parametri facoltativi
     $facoltativi = array(
     );
@@ -71,41 +81,152 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        <div class="mobile-table-custom">
-                                            <table class="table table-borderless text-nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Info Carta</th>
-                                                        <th>Nome Carta</th>
-                                                        <th>Numero Carta</th>
-                                                        <th>Data Scadenza</th>
-                                                        <th>Azione</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($payment_method as $card)
+
+                                        {{-- VERSIONE DESKTOP: tabella originale --}}
+                                        <div class="f19-payment-desktop">
+                                            <div class="mobile-table-custom">
+                                                <table class="table table-borderless text-nowrap">
+                                                    <thead>
                                                         <tr>
-                                                            <td>
-                                                                <div class="table-list-img w-25" style="height: auto!important;">
-                                                                    @if($card->brand == 'visa' || $card->brand == 'VISA')
-                                                                        <img class="rounded-3" src="{{ asset('/img/payment/visa.svg') }}" alt="">
-                                                                    @elseif($card->brand == 'mastercard')
-                                                                        <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
-                                                                    @else
-                                                                        <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
+                                                            <th>Info Carta</th>
+                                                            <th>Nome Carta</th>
+                                                            <th>Numero Carta</th>
+                                                            <th>Data Scadenza</th>
+                                                            <th>Azione</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($payment_method as $card)
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="table-list-img w-25" style="height: auto!important;">
+                                                                        @if($card->brand == 'visa' || $card->brand == 'VISA')
+                                                                            <img class="rounded-3" src="{{ asset('/img/payment/visa.svg') }}" alt="">
+                                                                        @elseif($card->brand == 'mastercard')
+                                                                            <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
+                                                                        @else
+                                                                            <img class="rounded-3" src="{{ asset('/img/payment/mastercard.png') }}" alt="">
+                                                                        @endif
+                                                                    </div>
+                                                                </td>
+                                                                <td data-label="Nome Carta"><span class="table-list-code">{{$card->holder_name}}</span></td>
+                                                                <td data-label="Numero Carta">***********{{$card->last4}}</td>
+                                                                <td data-label="Data Scadenza">{{$card->exp_month}}/{{$card->exp_year}}</td>
+                                                                <td data-label="Azione">
+                                                                    <a href="#" class="btn btn-outline-danger btn-sm rounded-2 delete-card" data-tooltip="tooltip" title="Delete" data-id="{{$card->stripe_payment_method_id}}"><i class="far fa-trash-can"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        {{-- VERSIONE MOBILE: nuove carte bancarie --}}
+                                        <div class="f19-payment-mobile">
+                                            <div class="f19-payment-grid">
+                                                @forelse($payment_method as $card)
+                                                    @php
+                                                        $brand = strtolower($card->brand ?? '');
+                                                        $isDefault = (bool) ($card->default ?? $card->is_default);
+                                                        $cardClass = $brand === 'visa'
+                                                            ? 'f19-card-visa'
+                                                            : ($brand === 'mastercard'
+                                                                ? 'f19-card-mastercard'
+                                                                : 'f19-card-generic');
+                                                    @endphp
+
+                                                    <div class="f19-payment-item">
+
+                                                        <div class="f19-bank-card {{ $cardClass }}">
+
+                                                            <div class="f19-card-top">
+                                                                <div>
+                                                                    @if($isDefault)
+                                                                        <span class="f19-default-badge">
+                                                                            <i class="far fa-star"></i>
+                                                                            Predefinita
+                                                                        </span>
                                                                     @endif
                                                                 </div>
-                                                            </td>
-                                                            <td data-label="Nome Carta"><span class="table-list-code">{{$card->holder_name}}</span></td>
-                                                            <td data-label="Numero Carta">***********{{$card->last4}}</td>
-                                                            <td data-label="Data Scadenza">{{$card->exp_month}}/{{$card->exp_year}}</td>
-                                                            <td data-label="Azione">
-                                                                <a href="#" class="btn btn-outline-danger btn-sm rounded-2 delete-card" data-tooltip="tooltip" title="Delete" data-id="{{$card->stripe_payment_method_id}}"><i class="far fa-trash-can"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+
+                                                                <div class="f19-card-brand">
+                                                                    @if($brand === 'visa')
+                                                                        <img src="{{ asset('img/payment/visa.svg') }}"
+                                                                             alt="Visa">
+                                                                    @elseif($brand === 'mastercard')
+                                                                        <img src="{{ asset('img/payment/mastercard.png') }}"
+                                                                             alt="Mastercard">
+                                                                    @else
+                                                                        <span>{{ strtoupper($brand ?: 'CARD') }}</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="f19-card-chip">
+                                                                <span></span>
+                                                            </div>
+
+                                                            <div class="f19-card-number">
+                                                                <span>••••</span>
+                                                                <span>••••</span>
+                                                                <span>••••</span>
+                                                                <strong>{{ $card->last4 }}</strong>
+                                                            </div>
+
+                                                            <div class="f19-card-bottom">
+                                                                <div class="f19-card-holder">
+                                                                    <small>TITOLARE</small>
+                                                                    <strong>{{ $card->holder_name }}</strong>
+                                                                </div>
+
+                                                                <div class="f19-card-expiry">
+                                                                    <small>SCADENZA</small>
+                                                                    <strong>
+                                                                        {{ str_pad($card->exp_month, 2, '0', STR_PAD_LEFT) }}/{{ $card->exp_year }}
+                                                                    </strong>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="f19-card-actions">
+                                                            <div class="f19-card-status">
+                                                                <i class="far fa-credit-card"></i>
+                                                                <div>
+                                                                    <strong>
+                                                                        {{ $isDefault ? 'Carta predefinita' : 'Carta salvata' }}
+                                                                    </strong>
+                                                                    <small>
+                                                                        {{ $isDefault
+                                                                            ? 'Utilizzata come carta preferita'
+                                                                            : 'Disponibile per i tuoi acquisti' }}
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+
+                                                            <a href="#"
+                                                               class="f19-card-delete delete-card"
+                                                               data-id="{{ $card->stripe_payment_method_id }}"
+                                                               title="Elimina carta"
+                                                               aria-label="Elimina carta"
+                                                               data-tooltip="tooltip">
+                                                                <i class="far fa-trash-can"></i>
+                                                            </a>
+                                                        </div>
+
+                                                    </div>
+
+                                                @empty
+
+                                                    <div class="f19-empty-cards">
+                                                        <i class="far fa-credit-card"></i>
+                                                        <h5>Nessuna carta salvata</h5>
+                                                        <p>Aggiungi una carta per i tuoi prossimi acquisti.</p>
+                                                    </div>
+
+                                                @endforelse
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

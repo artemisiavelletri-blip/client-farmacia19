@@ -657,3 +657,394 @@
         font-size: 14px;
     }
 }
+
+
+/* ==========================================
+   FARMACIA19 - CARTE BANCARIE
+   ========================================== */
+
+.f19-payment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+}
+
+/* Contenitore carta + azioni */
+.f19-payment-item {
+    min-width: 0;
+    border-radius: 20px;
+}
+
+/* Carta bancaria */
+.f19-bank-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    aspect-ratio: 1.65 / 1;
+    min-height: 215px;
+    padding: 24px;
+    border-radius: 20px;
+    overflow: hidden;
+    color: #fff;
+    isolation: isolate;
+    box-shadow: 0 12px 25px rgba(0, 42, 70, .15);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.f19-bank-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 35px rgba(0, 42, 70, .2);
+}
+
+/* Sfumature */
+.f19-card-visa {
+    background: linear-gradient(
+        125deg,
+        #06b5aa 0%,
+        #008c92 38%,
+        #03476b 100%
+    );
+}
+
+.f19-card-mastercard {
+    background: linear-gradient(
+        125deg,
+        #294b7c 0%,
+        #172f55 48%,
+        #0b1933 100%
+    );
+}
+
+.f19-card-generic {
+    background: linear-gradient(
+        125deg,
+        #42657c,
+        #142f47
+    );
+}
+
+/* Decorazione */
+.f19-bank-card::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 90%;
+    height: 130%;
+    right: -35%;
+    top: -50%;
+    border-radius: 45%;
+    transform: rotate(-25deg);
+    background: rgba(255,255,255,.055);
+}
+
+.f19-bank-card::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 85%;
+    left: -35%;
+    bottom: -65%;
+    border-radius: 50%;
+    background: rgba(255,255,255,.045);
+}
+
+/* Intestazione */
+.f19-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 35px;
+}
+
+.f19-default-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,.9);
+    color: #008e89;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* Logo circuito */
+.f19-card-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 68px;
+    max-width: 90px;
+    height: 42px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: #fff;
+    color: #173650;
+    font-weight: 800;
+}
+
+.f19-card-brand img {
+    display: block;
+    max-width: 100%;
+    max-height: 34px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Chip dorato */
+.f19-card-chip {
+    position: relative;
+    width: 43px;
+    height: 32px;
+    margin-top: 12px;
+    border-radius: 7px;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        #fff0ad,
+        #d9a83f 55%,
+        #f5cf69
+    );
+    border: 1px solid rgba(112, 75, 12, .35);
+}
+
+.f19-card-chip::before {
+    content: "";
+    position: absolute;
+    inset: 5px 12px;
+    border-left: 1px solid rgba(120,80,15,.5);
+    border-right: 1px solid rgba(120,80,15,.5);
+}
+
+.f19-card-chip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1px solid rgba(120,80,15,.5);
+}
+
+/* Numero mascherato */
+.f19-card-number {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: clamp(5px, 1.5vw, 13px);
+    margin-top: auto;
+    padding-top: 16px;
+    font-size: clamp(15px, 2vw, 23px);
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.f19-card-number strong {
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+/* Titolare e scadenza */
+.f19-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.f19-card-holder,
+.f19-card-expiry {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.f19-card-holder {
+    flex: 1;
+}
+
+.f19-card-expiry {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.f19-card-bottom small {
+    color: rgba(255,255,255,.75);
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.f19-card-bottom strong {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+/* Barra sotto la carta */
+.f19-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 14px 16px;
+    background: #f7f9fc;
+    border: 1px solid #e5ebf0;
+    border-radius: 14px;
+}
+
+.f19-card-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.f19-card-status > i {
+    font-size: 21px;
+    color: #00a49b;
+}
+
+.f19-card-status > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.f19-card-status strong {
+    color: #00334d;
+    font-size: 13px;
+}
+
+.f19-card-status small {
+    color: #718096;
+    font-size: 11px;
+}
+
+/* Elimina carta */
+.f19-card-delete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    color: #e63946;
+    border: 1px solid #e63946;
+    border-radius: 10px;
+    background: #fff;
+    transition: .2s;
+}
+
+.f19-card-delete:hover {
+    color: #fff;
+    background: #e63946;
+}
+
+/* Nessuna carta */
+.f19-empty-cards {
+    grid-column: 1 / -1;
+    padding: 40px 20px;
+    text-align: center;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+}
+
+.f19-empty-cards > i {
+    color: #00a49b;
+    font-size: 36px;
+    margin-bottom: 14px;
+}
+
+.f19-empty-cards h5 {
+    color: #00334d;
+}
+
+.f19-empty-cards p {
+    color: #718096;
+}
+
+/* Tablet e mobile */
+@media (max-width: 991px) {
+    .f19-payment-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .f19-bank-card {
+        max-width: 480px;
+        margin-inline: auto;
+    }
+
+    .f19-card-actions {
+        max-width: 480px;
+        margin-inline: auto;
+        margin-top: 8px;
+    }
+}
+
+/* Smartphone */
+@media (max-width: 480px) {
+    .f19-payment-grid {
+        gap: 18px;
+    }
+
+    .f19-bank-card {
+        min-height: 195px;
+        padding: 19px;
+        border-radius: 17px;
+    }
+
+    .f19-card-number {
+        font-size: clamp(14px, 4.5vw, 20px);
+        letter-spacing: 0;
+        gap: 7px;
+    }
+
+    .f19-card-bottom strong {
+        font-size: 12px;
+    }
+
+    .f19-card-bottom small {
+        font-size: 9px;
+    }
+
+    .f19-card-actions {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .f19-bank-card {
+        padding: 15px;
+        min-height: 180px;
+    }
+
+    .f19-card-number {
+        font-size: 13px;
+        gap: 5px;
+    }
+
+    .f19-card-brand {
+        min-width: 58px;
+        max-width: 70px;
+    }
+}
+
+@media (max-width: 575px) {
+    .f19-add-payment {
+        display: block;
+        width: 100%;
+        margin-top: 15px;
+        text-align: center;
+    }
+}
