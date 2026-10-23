@@ -232,7 +232,7 @@
                                                     <input type='hidden' name='<?php echo $name; ?>' value='<?php echo htmlentities($value); ?>' />
                                                 <?php } ?>                                           
                                                 <button type="submit"
-                                                        class="f19-add-card addCard">
+                                                        class="f19-add-card addCard mt-30">
 
                                                     <span class="f19-add-card-icon">
                                                         <i class="far fa-plus"></i>
