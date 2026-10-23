@@ -253,7 +253,9 @@ class CheckoutController extends Controller
                 // Se è una nuova carta (PP), registrala.
                 if (
                     $payment &&
-                    ($payment['tipo_richiesta'] ?? null) === 'PP'
+                    ($payment['tipo_richiesta'] ?? null) === 'PP' &&
+                    ($request->input('tipoTransazione') != 'APPLEPAY') &&
+                    ($request->input('tipoTransazione') != 'GOOGLEPAY')
                 ) {
                     $numContratto = $payment['num_contratto'];
 
