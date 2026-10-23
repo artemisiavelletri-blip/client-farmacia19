@@ -1154,3 +1154,129 @@
     }
 }
 
+
+/* ====================================
+   FARMACIA19 - INDIRIZZO FATTURAZIONE
+   ==================================== */
+
+/* Desktop */
+.f19-billing-desktop {
+    display: block;
+}
+
+.f19-billing-mobile {
+    display: none;
+}
+
+/* Solo mobile */
+@media (max-width: 767px) {
+
+    .f19-billing-desktop {
+        display: none !important;
+    }
+
+    .f19-billing-mobile {
+        display: block !important;
+        width: 100%;
+    }
+
+    .f19-billing-card {
+        padding: 18px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        box-shadow: 0 6px 20px rgba(0, 35, 65, .04);
+    }
+
+    .f19-billing-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 17px 0;
+        border-bottom: 1px solid #e4eaf0;
+    }
+
+    .f19-billing-row:first-child {
+        padding-top: 5px;
+    }
+
+    .f19-billing-row:nth-child(4) {
+        border-bottom: none;
+    }
+
+    /* Icone */
+    .f19-billing-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        border-radius: 50%;
+        background: #e2f7f5;
+        color: #00a69c;
+        font-size: 19px;
+    }
+
+    /* Testi */
+    .f19-billing-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .f19-billing-info small {
+        color: #7a8ba4;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .7px;
+    }
+
+    .f19-billing-info strong {
+        color: #00334d;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    /* Azioni in basso */
+    .f19-billing-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 12px;
+        padding-top: 15px;
+        border-top: 1px solid #e4eaf0;
+    }
+
+    /* Pulsante modifica */
+    .f19-billing-edit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 12px 17px;
+        background: #e7f8f6;
+        color: #008f88;
+        border: 1px solid #a9e6e1;
+        border-radius: 11px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+    .f19-billing-edit:hover {
+        background: #00a69c;
+        color: #fff;
+        border-color: #00a69c;
+        text-decoration: none;
+    }
+
+    .f19-billing-edit i {
+        font-size: 14px;
+    }
+}
+
+
