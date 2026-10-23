@@ -172,6 +172,10 @@ class PaymentMethodController extends Controller
                         'is_default' => 0,
                     ]);
 
+                Log::error('Errore registrazione carta Nexi', [
+                    'error' => $request,
+                ]);
+
                 PaymentMethod::create([
                     'holder_name' => trim(
                         $request->input('nome', '') . ' ' .
