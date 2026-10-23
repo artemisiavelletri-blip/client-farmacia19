@@ -1048,3 +1048,23 @@
         text-align: center;
     }
 }
+
+/* Desktop: visibile */
+.f19-payment-desktop {
+    display: block;
+}
+
+.f19-payment-mobile {
+    display: none!important;
+}
+
+/* Mobile: nascosto */
+@media (max-width: 767px) {
+    .f19-payment-desktop {
+        display: none !important;
+    }
+
+    .f19-payment-mobile {
+        display: block;
+    }
+}
