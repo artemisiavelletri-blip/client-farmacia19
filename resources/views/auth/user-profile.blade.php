@@ -59,7 +59,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button type="submit" class="theme-btn"><span class="far fa-user"></span> Salva</button>
+                                                <button type="submit" class="theme-btn f19-billing-desktop"><span class="far fa-user"></span> Salva</button>
+                                                <div class="f19-billing-actions f19-billing-mobile">
+                                                    <button type="submit" 
+                                                       class="f19-billing-edit">
+                                                        <i class="far fa-user"></i>
+                                                        Salva
+                                                    </button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -94,7 +101,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <button type="submit" class="theme-btn"><span class="far fa-key"></span> Cambia Password</button>
+                                                    <button type="submit" class="theme-btn f19-billing-desktop"><span class="far fa-key"></span> Cambia Password</button>
+                                                    <div class="f19-billing-actions f19-billing-mobile">
+                                                        <button type="submit" 
+                                                           class="f19-billing-edit">
+                                                            <i class="far fa-key"></i>
+                                                            Cambia Password
+                                                        </button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -108,10 +122,17 @@
                                                 <div class="col-md-6">
                                                     Elimina Account
                                                 </div>
-                                                <div class="col-md-6 align-right">
-                                                    <button id="button-delete-user" type="button" class="theme-btn"><i class="fa fa-trash" aria-hidden="true"></i>  Elimina Account</button>
-                                                </div>
                                             </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="button" class="theme-btn button-delete-user"><i class="fa fa-trash" aria-hidden="true"></i>  Elimina Account</button>
+                                        </div>
+                                        <div class="f19-billing-actions f19-billing-mobile">
+                                            <button type="submit" 
+                                               class="f19-billing-edit">
+                                                <i class="fa fa-trash"></i>
+                                                Elimina Account
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -131,7 +152,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    $('#button-delete-user').on('click',function(){
+    $('.button-delete-user').on('click',function(){
         Swal.fire({
             title: 'Sei sicuro?',
             text: "Questa azione è irreversibile ed eliminerà definitivamente il tuo account!",
