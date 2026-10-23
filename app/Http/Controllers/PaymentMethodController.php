@@ -98,7 +98,9 @@ class PaymentMethodController extends Controller
             !hash_equals(
                 (string) ($payment['num_contratto'] ?? ''),
                 (string) $request->input('num_contratto', '')
-            )
+            ) ||
+            ($payment['tipoTransazione'] == 'APPLEPAY') ||
+            ($payment['tipoTransazione'] == 'GOOGLEPAY')
         ) {
             return redirect()
                 ->route('settingspayment_method')
@@ -171,10 +173,6 @@ class PaymentMethodController extends Controller
                         'default' => 0,
                         'is_default' => 0,
                     ]);
-
-                Log::error('Errore registrazione carta Nexi', [
-                    'error' => $request,
-                ]);
 
                 PaymentMethod::create([
                     'holder_name' => trim(
