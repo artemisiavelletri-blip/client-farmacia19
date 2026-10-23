@@ -164,12 +164,12 @@
                                                         </div> 
                                                     @endif                                                 
                                                 </div>
-                                                <button type="submit" class="theme-btn"><span class="far fa-save"></span> Salva Indirizzo</button>
-                                                <div class="f19-billing-actions">
+                                                <button type="submit" class="theme-btn f19-billing-desktop"><span class="far fa-save"></span> Salva Indirizzo</button>
+                                                <div class="f19-billing-actions f19-billing-mobile">
                                                     <button type="submit" 
                                                        class="f19-billing-edit">
-                                                        <i class="far fa-pen"></i>
-                                                        Modifica indirizzo
+                                                        <i class="far fa-save"></i>
+                                                        Salva indirizzo
                                                     </button>
                                                 </div>
                                             </form>
