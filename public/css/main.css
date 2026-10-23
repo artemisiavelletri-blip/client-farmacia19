@@ -1277,6 +1277,10 @@
     .f19-billing-edit i {
         font-size: 14px;
     }
+
+    .f19-billing-edit {
+        width: 100%!important;
+    }
 }
 
 
