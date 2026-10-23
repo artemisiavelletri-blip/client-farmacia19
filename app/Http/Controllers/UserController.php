@@ -316,7 +316,7 @@ class UserController extends Controller
 
     public function payment_method(Request $request)
     {
-        $payment_method = PaymentMethod::where('user_id', Auth::user()->id)->select(['brand','last4','exp_month','exp_year','stripe_payment_method_id','holder_name'])->get();
+        $payment_method = PaymentMethod::where('user_id', Auth::user()->id)->select(['brand','last4','exp_month','exp_year','stripe_payment_method_id','holder_name','default','is_default'])->get();
         return view('auth.payment-method', [
             'payment_method' => $payment_method
         ]);
