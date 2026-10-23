@@ -189,9 +189,9 @@
                                                 @endforelse
 
                                             </div>
-                                            
+
                                                 <a href="/settings/create-address/shipping"
-                                                   class="f19-add-address">
+                                                   class="f19-add-address mt-30">
 
                                                     <span class="f19-add-address-icon">
                                                         <i class="far fa-plus"></i>

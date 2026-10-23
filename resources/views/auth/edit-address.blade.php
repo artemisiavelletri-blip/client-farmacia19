@@ -165,6 +165,13 @@
                                                     @endif                                                 
                                                 </div>
                                                 <button type="submit" class="theme-btn"><span class="far fa-save"></span> Salva Indirizzo</button>
+                                                <div class="f19-billing-actions">
+                                                    <button type="submit" 
+                                                       class="f19-billing-edit">
+                                                        <i class="far fa-pen"></i>
+                                                        Modifica indirizzo
+                                                    </button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
