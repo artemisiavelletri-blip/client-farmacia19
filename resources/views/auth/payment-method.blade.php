@@ -77,7 +77,7 @@
                                                         <input type='hidden' name='<?php echo $name; ?>' value='<?php echo htmlentities($value); ?>' />
                                                     <?php } ?>
                                                     
-                                                    <button class="theme-btn"><span class="far fa-plus-circle"></span>Aggiungi Metodo di Pagamento</button>
+                                                    <button class="theme-btn"><span class="far fa-plus-circle f19-payment-desktop"></span>Aggiungi Metodo di Pagamento</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -226,7 +226,26 @@
                                                     </div>
 
                                                 @endforelse
-                                            </div>
+                                            </div> 
+                                            <form method='POST' action='<?php echo $requestUrl ?>'>
+                                                <?php foreach ($requestParams as $name => $value) { ?>
+                                                    <input type='hidden' name='<?php echo $name; ?>' value='<?php echo htmlentities($value); ?>' />
+                                                <?php } ?>                                           
+                                                <button type="submit"
+                                                        class="f19-add-card addCard">
+
+                                                    <span class="f19-add-card-icon">
+                                                        <i class="far fa-plus"></i>
+                                                    </span>
+
+                                                    <span class="f19-add-card-text">
+                                                        <strong>Aggiungi nuova carta</strong>
+                                                        <small>Carta di credito o debito</small>
+                                                    </span>
+
+                                                    <i class="far fa-chevron-right f19-add-card-arrow"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
