@@ -19,9 +19,6 @@
                                     <div class="user-card">
                                         <div class="user-card-header">
                                             <h4 class="user-card-title">Indirizzo di Spedizione</h4>
-                                            <div class="user-card-header-right">
-                                                <a href="/settings/shipping-address" class="theme-btn"><span class="fas fa-arrow-left"></span>Indirizzo di Spedizione</a>
-                                            </div>
                                         </div>
                                         <div class="user-form">
                                             @if ($errors->any())
@@ -75,7 +72,14 @@
                                                         </div>
                                                     </div>                                                    
                                                 </div>
-                                                <button type="submit" class="theme-btn"><span class="far fa-save"></span> Salva Indirizzo</button>
+                                                <button type="submit" class="theme-btn f19-billing-desktop"><span class="far fa-save"></span> Salva Indirizzo</button>
+                                                <div class="f19-billing-actions f19-billing-mobile">
+                                                    <button type="submit" 
+                                                       class="f19-billing-edit">
+                                                        <i class="far fa-save"></i>
+                                                        Salva indirizzo
+                                                    </button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>

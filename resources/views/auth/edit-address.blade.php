@@ -19,9 +19,6 @@
                                     <div class="user-card">
                                         <div class="user-card-header">
                                             <h4 class="user-card-title">Modifica Indirizzo di Fatturazione</h4>
-                                            <div class="user-card-header-right">
-                                                <a href="/settings/billing-address" class="theme-btn"><span class="fas fa-arrow-left"></span>Indirizzo di Fatturazione</a>
-                                            </div>
                                         </div>
                                         <div class="user-form">
                                             @if ($errors->any())
