@@ -189,6 +189,21 @@
                                                 @endforelse
 
                                             </div>
+                                            
+                                                <a href="/settings/create-address/shipping"
+                                                   class="f19-add-address">
+
+                                                    <span class="f19-add-address-icon">
+                                                        <i class="far fa-plus"></i>
+                                                    </span>
+
+                                                    <span class="f19-add-address-text">
+                                                        <strong>Aggiungi nuovo indirizzo</strong>
+                                                        <small>Inserisci un indirizzo di consegna</small>
+                                                    </span>
+
+                                                    <i class="far fa-chevron-right"></i>
+                                                </a>
 
                                         </div>
 

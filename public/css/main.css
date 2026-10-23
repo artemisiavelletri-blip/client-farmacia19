@@ -1492,4 +1492,63 @@
 }
 
 
+@media (max-width: 767px) {
+
+    .f19-add-address {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        width: 100%;
+        padding: 16px;
+        margin-bottom: 20px;
+        background: #f0fbfa;
+        border: 2px dashed #8bded8;
+        border-radius: 16px;
+        text-decoration: none;
+        transition: .2s ease;
+    }
+
+    .f19-add-address-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        border: 2px solid #00a69c;
+        border-radius: 50%;
+        color: #009f98;
+        font-size: 19px;
+    }
+
+    .f19-add-address-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .f19-add-address-text strong {
+        color: #008e88;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .f19-add-address-text small {
+        color: #718096;
+        font-size: 12px;
+    }
+
+    .f19-add-address > i {
+        color: #008e88;
+    }
+
+    .f19-add-address:hover {
+        background: #e1f7f5;
+        border-color: #00a69c;
+        text-decoration: none;
+    }
+}
+
 
