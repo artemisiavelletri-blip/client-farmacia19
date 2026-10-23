@@ -1054,8 +1054,11 @@
     display: block;
 }
 
-.f19-payment-mobile {
-    display: none!important;
+@media (min-width: 767px) {
+
+    .f19-payment-mobile {
+        display: none!important;
+    }
 }
 
 /* Mobile: nascosto */
