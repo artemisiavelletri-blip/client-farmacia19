@@ -99,8 +99,8 @@ class PaymentMethodController extends Controller
                 (string) ($payment['num_contratto'] ?? ''),
                 (string) $request->input('num_contratto', '')
             ) ||
-            ($payment['tipoTransazione'] == 'APPLEPAY') ||
-            ($payment['tipoTransazione'] == 'GOOGLEPAY')
+            ($request->input('tipoTransazione') == 'APPLEPAY') ||
+            ($request->input('tipoTransazione') == 'GOOGLEPAY')
         ) {
             return redirect()
                 ->route('settingspayment_method')
