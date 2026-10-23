@@ -1284,3 +1284,212 @@
 }
 
 
+/* ==========================================
+   FARMACIA19 - INDIRIZZI SPEDIZIONE
+   ========================================== */
+
+/* Desktop: tabella visibile */
+.f19-shipping-desktop {
+    display: block;
+}
+
+/* Desktop: schede nascoste */
+.f19-shipping-mobile {
+    display: none;
+}
+
+/* ==========================================
+   SOLO MOBILE
+   ========================================== */
+
+@media (max-width: 767px) {
+
+    .f19-shipping-desktop {
+        display: none !important;
+    }
+
+    .f19-shipping-mobile {
+        display: block !important;
+        width: 100%;
+    }
+
+    .f19-shipping-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+        width: 100%;
+    }
+
+    /* Scheda singolo indirizzo */
+    .f19-shipping-card {
+        min-width: 0;
+        padding: 18px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        box-shadow: 0 6px 20px rgba(0,35,65,.04);
+    }
+
+    /* Riga informazioni */
+    .f19-shipping-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 16px 0;
+        border-bottom: 1px solid #e4eaf0;
+    }
+
+    .f19-shipping-row:first-child {
+        padding-top: 3px;
+    }
+
+    .f19-shipping-row:nth-child(4) {
+        border-bottom: none;
+    }
+
+    /* Icone */
+    .f19-shipping-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        border-radius: 50%;
+        background: #e2f7f5;
+        color: #00a69c;
+        font-size: 19px;
+    }
+
+    /* Testi */
+    .f19-shipping-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .f19-shipping-info small {
+        color: #7a8ba4;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .7px;
+    }
+
+    .f19-shipping-info strong {
+        color: #00334d;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    /* Barra azioni */
+    .f19-shipping-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 12px;
+        padding-top: 15px;
+        border-top: 1px solid #e4eaf0;
+    }
+
+    /* Modifica */
+    .f19-shipping-edit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 12px 16px;
+        background: #e7f8f6;
+        border: 1px solid #a9e6e1;
+        border-radius: 11px;
+        color: #008f88;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+    .f19-shipping-edit:hover {
+        background: #00a69c;
+        color: #fff;
+        border-color: #00a69c;
+        text-decoration: none;
+    }
+
+    /* Elimina */
+    .f19-shipping-delete {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 43px;
+        height: 43px;
+        flex: 0 0 43px;
+        background: #fff1f2;
+        border: 1px solid #ffc9ce;
+        border-radius: 11px;
+        color: #e63946;
+        font-size: 16px;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+    .f19-shipping-delete:hover {
+        background: #e63946;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    /* Nessun indirizzo */
+    .f19-shipping-empty {
+        padding: 35px 20px;
+        text-align: center;
+        border: 1px dashed #cbd5e1;
+        border-radius: 16px;
+    }
+
+    .f19-shipping-empty > i {
+        display: block;
+        margin-bottom: 14px;
+        font-size: 32px;
+        color: #00a69c;
+    }
+
+    .f19-shipping-empty h5 {
+        color: #00334d;
+        font-size: 16px;
+    }
+
+    .f19-shipping-empty p {
+        color: #718096;
+        font-size: 13px;
+    }
+}
+
+/* Smartphone piccoli */
+@media (max-width: 360px) {
+
+    .f19-shipping-card {
+        padding: 14px;
+    }
+
+    .f19-shipping-row {
+        gap: 12px;
+    }
+
+    .f19-shipping-icon {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .f19-shipping-edit {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
+
+
+
