@@ -66,9 +66,6 @@ Route::prefix('v1')->group(function () {
     ->middleware('web')
     ->name('farmacia19.card.bridge');
 
-    Route::get('/cart/summary', [Farmacia19CartCouponController::class, 'summary']);
-    Route::post('/cart/coupon', [Farmacia19CartCouponController::class, 'addCoupon']);
-    Route::post('/cart/coupon/remove', [Farmacia19CartCouponController::class, 'removeCoupon']);
 
     // ROTTE PROTETTE APP
     Route::middleware(Farmacia19ApiToken::class)->group(function () {
@@ -102,6 +99,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/account/payment-methods', [\App\Http\Controllers\Api\Farmacia19PaymentMethodsController::class, 'index']);
         Route::post('/account/payment-methods/start', [\App\Http\Controllers\Api\Farmacia19PaymentMethodsController::class, 'start'])->middleware('throttle:10,1');
         Route::delete('/account/payment-methods/{id}', [\App\Http\Controllers\Api\Farmacia19PaymentMethodsController::class, 'destroy'])->whereNumber('id');
+
+        Route::get('/cart/summary', [Farmacia19CartCouponController::class, 'summary']);
+        Route::post('/cart/coupon', [Farmacia19CartCouponController::class, 'addCoupon']);
+        Route::post('/cart/coupon/remove', [Farmacia19CartCouponController::class, 'removeCoupon']);
 
     });
 
