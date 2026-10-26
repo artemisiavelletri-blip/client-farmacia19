@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \App\Http\Middleware\Authenticate::class,
             'doctor' => \App\Http\Middleware\TrackPrescriber::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'app/payment-method/nexi/start',
+            'app/payment-method/nexi/callback',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->report(function (\Throwable $e) {
