@@ -106,6 +106,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/cart/coupon/remove', [Farmacia19CartCouponController::class, 'removeCoupon']);
         Route::post('/checkout/confirm', [Farmacia19CheckoutApiController::class, 'confirm']);
 
+        Route::get('/account/orders', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'index']);
+        Route::get('/account/orders/{orderNumber}', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'show']);
+
     });
 
 });
