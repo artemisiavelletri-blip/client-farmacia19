@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ProductGroupController;
 use App\Http\Controllers\Api\RelatedProductsController;
 use App\Http\Controllers\Api\ProductDetailController;
 use App\Http\Controllers\Api\Farmacia19CartCouponController;
+use App\Http\Controllers\Api\Farmacia19CheckoutApiController;
 
 use App\Http\Controllers\Api\Farmacia19AuthController;
 use App\Http\Middleware\Farmacia19ApiToken;
@@ -103,6 +104,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/cart/summary', [Farmacia19CartCouponController::class, 'summary']);
         Route::post('/cart/coupon', [Farmacia19CartCouponController::class, 'addCoupon']);
         Route::post('/cart/coupon/remove', [Farmacia19CartCouponController::class, 'removeCoupon']);
+        Route::post('/checkout/confirm', [Farmacia19CheckoutApiController::class, 'confirm']);
 
     });
 
