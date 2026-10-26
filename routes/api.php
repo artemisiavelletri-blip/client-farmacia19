@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ProductSearchController;
 use App\Http\Controllers\Api\ProductGroupController;
 use App\Http\Controllers\Api\RelatedProductsController;
 use App\Http\Controllers\Api\ProductDetailController;
+use App\Http\Controllers\Api\Farmacia19CartCouponController;
 
 use App\Http\Controllers\Api\Farmacia19AuthController;
 use App\Http\Middleware\Farmacia19ApiToken;
@@ -64,6 +65,10 @@ Route::prefix('v1')->group(function () {
     )
     ->middleware('web')
     ->name('farmacia19.card.bridge');
+
+    Route::get('/cart/summary', [Farmacia19CartCouponController::class, 'summary']);
+    Route::post('/cart/coupon', [Farmacia19CartCouponController::class, 'addCoupon']);
+    Route::post('/cart/coupon/remove', [Farmacia19CartCouponController::class, 'removeCoupon']);
 
     // ROTTE PROTETTE APP
     Route::middleware(Farmacia19ApiToken::class)->group(function () {
