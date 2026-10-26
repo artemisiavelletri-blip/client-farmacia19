@@ -37,7 +37,7 @@ class Farmacia19PaymentMethodsController extends Controller
 
         return response()->json([
             'success' => true,
-            'url' => route('farmacia19.card.bridge', ['ticket' => $ticket]),
+            'ticket' => $ticket,
         ]);
     }
 
