@@ -108,7 +108,10 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/account/orders', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'index']);
         Route::get('/account/orders/{orderNumber}', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'show']);
-
+        Route::get('/account/orders/{orderNumber}/tracking', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'tracking']);
+        Route::post('/account/orders/{orderNumber}/cancel', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'cancel']);
+        Route::get('/account/return-reasons', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'reasons']);
+        Route::post('/account/orders/{orderNumber}/refund', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'refund']);
     });
 
 });
