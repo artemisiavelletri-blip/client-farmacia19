@@ -30,6 +30,11 @@ class Farmacia19CouponsApiController extends Controller
             'end_date' => $coupon->end_date,
             'application_type' => $coupon->application_type,
             'application_label' => $coupon->application_label,
+            'all_products' => (bool) $coupon->all_products,
+            'product_id' => $coupon->product_id,
+            'category_id' => $coupon->category_id,
+            'subcategory_id' => $coupon->subcategory_id,
+            'brand_id' => $coupon->brand_id,
         ];
         if ($includeCode) {
             $data['name'] = $coupon->name;

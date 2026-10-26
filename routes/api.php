@@ -115,6 +115,9 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/account/coupons', [\App\Http\Controllers\Api\Farmacia19CouponsApiController::class, 'index']);
         Route::post('/account/coupons/reveal', [\App\Http\Controllers\Api\Farmacia19CouponsApiController::class, 'reveal']);
+
+        Route::get('/account/coupons/{token}/products', [\App\Http\Controllers\Api\Farmacia19CouponProductsController::class, 'index']);
+
     });
 
 });
