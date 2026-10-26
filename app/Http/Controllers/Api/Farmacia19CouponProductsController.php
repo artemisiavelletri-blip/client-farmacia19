@@ -16,7 +16,6 @@ class Farmacia19CouponProductsController extends Controller
         abort_unless($request->user(), 401);
         $coupon = Promotion::query()->where('token', $token)->where('active', 1)
             ->where('user', 1)
-            ->where(function ($q) { $q->whereNull('start_date')->orWhereDate('start_date', '<=', today()); })
             ->where(function ($q) { $q->whereNull('end_date')->orWhereDate('end_date', '>=', today()); })
             ->firstOrFail();
 
