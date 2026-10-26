@@ -58,9 +58,9 @@ return [
         'key' => env('TRACKINGMORE_API_KEY'),
         'host' => env('TRACKINGMORE_API_HOST'),
     ],
-
     'nexi' => [
-        'api_key' => env('NEXI_API_KEY'),
+        'alias' => env('XPAY_ALIAS'),
+        'secret' => env('XPAY_SECRET'),
         'base_url' => env('NEXI_BASE_URL'),
     ],
 
