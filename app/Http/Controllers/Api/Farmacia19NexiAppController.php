@@ -68,13 +68,9 @@ class Farmacia19NexiAppController extends Controller
             return $this->completeWithMessage('Richiesta scaduta o già elaborata.', 409);
         }
 
-        // IMPORTANTE: la formula esatta va confermata sulla documentazione
-        // Nexi XPay OneClick relativa al contratto in uso prima del rilascio.
-        // Non sostituire questo controllo con il solo codiceEsito == 0.
-        if (!$this->verifyNexiResponseMac($request, $payment)) {
-            Log::warning('MAC Nexi PP non valido', ['codTrans' => $codTrans]);
-            return $this->completeWithMessage('Impossibile verificare la risposta Nexi.', 403);
-        }
+        // ATTENZIONE: replica il controllo del metodo store fornito.
+        // Non autentica crittograficamente la risposta Nexi.
+        // NON usare in produzione senza validazione autenticata del callback.
 
         if (!hash_equals((string) ($payment['num_contratto'] ?? ''),
             (string) $request->input('num_contratto', ''))) {
@@ -87,8 +83,7 @@ class Farmacia19NexiAppController extends Controller
         }
 
         $codiceEsito = filter_var($request->input('codiceEsito'), FILTER_VALIDATE_INT);
-        if ($codiceEsito === false || $codiceEsito !== 0
-            || strtoupper((string) $request->input('esito', '')) !== 'OK') {
+        if ($codiceEsito === false || $codiceEsito !== 0) {
             $erroriUtente = [
                 116 => 'Operazione annullata.', 121 => 'Sessione scaduta. Riprova.',
                 400 => 'Operazione non autorizzata.', 401 => 'Carta scaduta o data non corretta.',
@@ -157,26 +152,6 @@ class Farmacia19NexiAppController extends Controller
             ]);
             return $this->completeWithMessage('Impossibile registrare la carta.', 500);
         }
-    }
-
-    private function verifyNexiResponseMac(Request $request, array $payment): bool
-    {
-        $secret = (string) config('services.nexi.secret', '');
-        $receivedMac = strtolower((string) $request->input('mac', ''));
-        if ($secret === '' || !preg_match('/^[a-f0-9]{40}$/D', $receivedMac)) {
-            return false;
-        }
-        // Formula di risposta XPay classico da CONFERMARE con la specifica Nexi
-        // del proprio profilo OneClick prima di abilitare in produzione.
-        $expected = sha1('codTrans=' . (string) $request->input('codTrans', '')
-            . 'esito=' . (string) $request->input('esito', '')
-            . 'importo=' . (string) $request->input('importo', '')
-            . 'divisa=' . (string) $request->input('divisa', '') . $secret);
-        if ((string) $request->input('importo', '') !== (string) ($payment['importo'] ?? '')
-            || (string) $request->input('divisa', '') !== (string) ($payment['divisa'] ?? '')) {
-            return false;
-        }
-        return hash_equals($expected, $receivedMac);
     }
 
     private function completeWithMessage(string $message, int $status = 200)
