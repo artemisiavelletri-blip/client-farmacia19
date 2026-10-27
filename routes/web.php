@@ -58,6 +58,46 @@ Route::middleware('doctor')->group(function () {
     });
     Route::post('/login', [UserController::class, 'login'])->name('login');
 
+    Route::get('/paypal/app/return', function (Request $request) {
+        return response(
+            '<!DOCTYPE html>
+            <html lang="it">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport"
+                      content="width=device-width, initial-scale=1">
+                <title>Farmacia19 - PayPal</title>
+            </head>
+            <body style="font-family:Arial;text-align:center;padding:35px">
+                <h2>Autorizzazione PayPal completata</h2>
+                <p>Il pagamento deve ancora essere verificato.</p>
+                <p>Torna nell’app Farmacia19 e premi
+                <strong>Verifica pagamento</strong>.</p>
+                <p>Non effettuare un secondo pagamento.</p>
+            </body>
+            </html>'
+        );
+    });
+
+    Route::get('/paypal/app/cancel', function () {
+        return response(
+            '<!DOCTYPE html>
+            <html lang="it">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport"
+                      content="width=device-width, initial-scale=1">
+                <title>Farmacia19 - PayPal</title>
+            </head>
+            <body style="font-family:Arial;text-align:center;padding:35px">
+                <h2>Procedura PayPal interrotta</h2>
+                <p>Torna nell’app Farmacia19.</p>
+                <p>Verifica lo stato prima di avviare un altro pagamento.</p>
+            </body>
+            </html>'
+        );
+    });
+
     Route::get('/work', function () {
         return view('work');
     })->name('work');

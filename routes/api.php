@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\RelatedProductsController;
 use App\Http\Controllers\Api\ProductDetailController;
 use App\Http\Controllers\Api\Farmacia19CartCouponController;
 use App\Http\Controllers\Api\Farmacia19CheckoutApiController;
+use App\Http\Controllers\Api\Farmacia19PaypalCheckoutController;
 
 use App\Http\Controllers\Api\Farmacia19AuthController;
 use App\Http\Middleware\Farmacia19ApiToken;
@@ -66,6 +67,16 @@ Route::prefix('v1')->group(function () {
     )
     ->middleware('web')
     ->name('farmacia19.card.bridge');
+
+    Route::post(
+        '/checkout/paypal/start',
+        [Farmacia19PaypalCheckoutController::class, 'start']
+    );
+
+    Route::get(
+        '/checkout/paypal/status',
+        [Farmacia19PaypalCheckoutController::class, 'status']
+    );
 
 
     // ROTTE PROTETTE APP

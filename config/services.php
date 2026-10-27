@@ -64,4 +64,11 @@ return [
         'base_url' => env('NEXI_BASE_URL'),
     ],
 
+    'paypal_checkout' => [
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'client_secret' => env('PAYPAL_CLIENT_SECRET'),
+        'merchant_id' => env('PAYPAL_MERCHANT_ID'),
+        'mode' => env('PAYPAL_MODE', 'live'),
+    ],
+
 ];
