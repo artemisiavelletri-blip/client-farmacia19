@@ -68,16 +68,6 @@ Route::prefix('v1')->group(function () {
     ->middleware('web')
     ->name('farmacia19.card.bridge');
 
-    Route::post(
-        '/checkout/paypal/start',
-        [Farmacia19PaypalCheckoutController::class, 'start']
-    );
-
-    Route::get(
-        '/checkout/paypal/status',
-        [Farmacia19PaypalCheckoutController::class, 'status']
-    );
-
 
     // ROTTE PROTETTE APP
     Route::middleware(Farmacia19ApiToken::class)->group(function () {
@@ -128,6 +118,16 @@ Route::prefix('v1')->group(function () {
         Route::post('/account/coupons/reveal', [\App\Http\Controllers\Api\Farmacia19CouponsApiController::class, 'reveal']);
 
         Route::get('/account/coupons/{token}/products', [\App\Http\Controllers\Api\Farmacia19CouponProductsController::class, 'index']);
+
+        Route::post(
+            '/checkout/paypal/start',
+            [Farmacia19PaypalCheckoutController::class, 'start']
+        );
+
+        Route::get(
+            '/checkout/paypal/status',
+            [Farmacia19PaypalCheckoutController::class, 'status']
+        );
 
     });
 
