@@ -136,6 +136,14 @@ Route::prefix('v1')->group(function () {
             [Farmacia19PaypalCheckoutController::class, 'abandon']
         )->middleware('throttle:10,1');
 
+        Route::post('/fcm/token',
+            [\App\Http\Controllers\Api\Farmacia19FcmTokenController::class, 'store']
+        )->middleware('throttle:30,1');
+
+        Route::delete('/fcm/token',
+            [\App\Http\Controllers\Api\Farmacia19FcmTokenController::class, 'destroy']
+        )->middleware('throttle:30,1');
+
     });
 
 });
