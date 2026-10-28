@@ -300,9 +300,34 @@ class Farmacia19PaypalCheckoutController extends CheckoutController
             ]);
         }
 
-        return $this->result($attempt->status, [
-            'request_id' => $attempt->request_id,
-        ]);
+        $extra = ['request_id' => $attempt->request_id];
+
+        // Consenti di riprendere soltanto un ordine PayPal che richiede
+        // ancora l'azione del cliente. Non eseguire catture qui.
+        if ($attempt->status === 'created'
+            && $attempt->paypal_order_id
+            && $attempt->approval_url) {
+            try {
+                $paypal = $this->paypalGet($attempt->paypal_order_id);
+                if ($this->validatePaypalOrder($paypal, $attempt)
+                    && ($paypal['status'] ?? null) === 'PAYER_ACTION_REQUIRED') {
+                    $parsed = parse_url($attempt->approval_url);
+                    $host = is_array($parsed) ? strtolower($parsed['host'] ?? '') : '';
+                    if (is_array($parsed)
+                        && ($parsed['scheme'] ?? '') === 'https'
+                        && ($host === 'paypal.com' || str_ends_with($host, '.paypal.com'))) {
+                        $extra['approval_url'] = $attempt->approval_url;
+                    }
+                }
+            } catch (Throwable $e) {
+                Log::warning('PayPal resume verification unavailable', [
+                    'attempt_id' => $attempt->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return $this->result($attempt->status, $extra);
     }
 
     /*
