@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "it.farmacia19.app",
+      "sha256_cert_fingerprints": [
+        "67:C2:50:69:5C:F9:0F:EB:DA:42:01:4B:52:89:2E:53:C5:FF:34:0E:B0:AE:B2:89:F8:23:19:29:82:16:D4:AA"
+      ]
+    }
+  }
+]

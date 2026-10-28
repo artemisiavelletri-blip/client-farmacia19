@@ -603,6 +603,51 @@ class Farmacia19PaypalCheckoutController extends CheckoutController
         }
     }
 
+    // Abbandono autenticato: non e' una cancellazione remota PayPal.
+    public function abandon(Request $request)
+    {
+        $input = $request->validate(['request_id' => ['required', 'uuid']]);
+        $user = $request->user();
+        if (!$user) return response()->json(['message' => 'Accesso richiesto.'], 401);
+
+        $lock = Cache::lock('farmacia19:checkout:user:' . $user->id, 120);
+        if (!$lock->get()) return response()->json(['message' => 'Pagamento in elaborazione. Riprova.'], 409);
+        try {
+            $attempt = $this->attempt($user->id, $input['request_id']);
+            if (!$attempt) return response()->json(['message' => 'Tentativo non trovato.'], 404);
+            if ($this->existingOrder($attempt)) return $this->result('completed', [
+                'order_number' => $attempt->order_number,
+            ]);
+            if ($attempt->status === 'cancelled') return $this->result('cancelled');
+            if ($attempt->status !== 'created' || !$attempt->paypal_order_id || $attempt->capture_id) {
+                return response()->json(['status' => 'pending',
+                    'message' => 'Stato non annullabile: verificare il pagamento.'], 409);
+            }
+            $paypal = $this->paypalGet($attempt->paypal_order_id);
+            if (!$this->validatePaypalOrder($paypal, $attempt)) {
+                return response()->json(['status' => 'pending',
+                    'message' => 'Verifica dati PayPal non riuscita.'], 409);
+            }
+            if (!in_array($paypal['status'] ?? null, ['CREATED', 'PAYER_ACTION_REQUIRED'], true)
+                || !empty($paypal['purchase_units'][0]['payments']['captures'])
+                || !empty($paypal['purchase_units'][0]['payments']['authorizations'])) {
+                return response()->json(['status' => 'pending',
+                    'message' => 'Pagamento gia autorizzato o da verificare.'], 409);
+            }
+            $this->updateAttempt($attempt, ['status' => 'cancelled', 'approval_url' => null]);
+            return $this->result('cancelled');
+        } catch (Throwable $e) {
+            Log::warning('PayPal abandon verification failed', [
+                'user_id' => $user->id, 'request_id' => $input['request_id'],
+                'error' => $e->getMessage(),
+            ]);
+            return response()->json(['status' => 'pending',
+                'message' => 'Verifica PayPal non disponibile. Riprova prima di pagare.'], 503);
+        } finally {
+            $lock->release();
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | VERIFICA PAYPAL E CATTURA
