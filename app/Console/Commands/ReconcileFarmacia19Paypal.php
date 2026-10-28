@@ -68,7 +68,27 @@ class ReconcileFarmacia19Paypal extends Command
                 }
                 $response = Http::withToken($auth->json('access_token'))->acceptJson()->timeout(15)
                     ->get($base . '/v2/checkout/orders/' . rawurlencode($attempt->paypal_order_id));
-                if (!$response->successful()) throw new \RuntimeException('GET PayPal HTTP ' . $response->status());
+                if ($response->status() === 404 && $response->json('name') === 'RESOURCE_NOT_FOUND') {
+                    $issue = $response->json('details.0.issue');
+                    if ($issue === 'INVALID_RESOURCE_ID') {
+                        // Un 404 NON dimostra che il pagamento non sia stato acquisito.
+                        // Non sblocchiamo il checkout e non modifichiamo lo stato.
+                        // Riduciamo il rumore nei log, mantenendo la verifica nei cicli successivi.
+                        $logKey = 'farmacia19:paypal:missing-resource:'.$attempt->id;
+                        if (Cache::add($logKey, true, now()->addHours(24))) {
+                            Log::warning('PayPal RESOURCE_NOT_FOUND: verifica manuale richiesta', [
+                                'attempt_id' => $attempt->id,
+                                'paypal_order_id' => $attempt->paypal_order_id,
+                                'local_status' => $attempt->status,
+                                'paypal_debug_id' => $response->json('debug_id'),
+                            ]);
+                        }
+                        continue;
+                    }
+                }
+                if (!$response->successful()) {
+                    throw new \RuntimeException('GET PayPal HTTP '.$response->status());
+                }
                 $data = $response->json();
                 $unit = $data['purchase_units'][0] ?? [];
                 $expected = number_format((float) $attempt->total, 2, '.', '');
