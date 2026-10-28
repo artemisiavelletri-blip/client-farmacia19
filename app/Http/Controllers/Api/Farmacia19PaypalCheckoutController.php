@@ -248,26 +248,56 @@ class Farmacia19PaypalCheckoutController extends CheckoutController
             ->first();
     }
 
-    // Recupera il tentativo attivo dopo una chiusura dell'app.
-    // Non avvia catture e non crea ordini.
+    // Con request_id restituisce solo il tentativo specifico, anche se concluso.
+    // Senza request_id restituisce soltanto un tentativo attivo.
+    // Non esegue catture e non crea ordini.
     public function recover(Request $request)
     {
+        $input = $request->validate([
+            'request_id' => ['nullable', 'uuid'],
+        ]);
+
         $user = $request->user();
         if (!$user) {
             return response()->json(['message' => 'Accesso richiesto.'], 401);
         }
 
-        $attempt = DB::table('paypal_checkout_attempts')
-            ->where('user_id', $user->id)
-            ->whereIn('status', [
+        $query = DB::table('paypal_checkout_attempts')
+            ->where('user_id', $user->id);
+
+        if (!empty($input['request_id'])) {
+            $query->where('request_id', $input['request_id']);
+        } else {
+            $query->whereIn('status', [
                 'creating', 'creation_uncertain', 'created', 'approved',
                 'capture_uncertain', 'captured', 'captured_pending_order',
-            ])
-            ->orderByDesc('id')
-            ->first();
+            ]);
+        }
 
+        $attempt = $query->orderByDesc('id')->first();
         if (!$attempt) {
             return $this->result('none');
+        }
+
+        // Se l'ordine locale esiste, il risultato e' confermato anche
+        // quando l'ultimo aggiornamento del tentativo non e' riuscito.
+        $existing = $this->existingOrder($attempt);
+        if ($existing) {
+            return $this->result('completed', [
+                'request_id' => $attempt->request_id,
+                'order_number' => $existing->order_number,
+                'total' => $this->money($attempt->total),
+            ]);
+        }
+
+        // Non dichiarare completato un tentativo soltanto per il suo stato.
+        if ($attempt->status === 'completed') {
+            Log::critical('PayPal completed senza ordine locale', [
+                'attempt_id' => $attempt->id,
+            ]);
+            return $this->result('captured_pending_order', [
+                'request_id' => $attempt->request_id,
+            ]);
         }
 
         return $this->result($attempt->status, [
