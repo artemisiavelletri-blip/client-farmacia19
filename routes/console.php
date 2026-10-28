@@ -26,3 +26,7 @@ Schedule::command('app:site-map-update')
 Schedule::command('merchant:generate-feed')
     ->dailyAt('23:00')
     ->withoutOverlapping();
+
+Schedule::command('farmacia19:paypal:reconcile --limit=100')
+    ->everyFiveMinutes()
+    ->withoutOverlapping();

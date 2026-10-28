@@ -248,6 +248,33 @@ class Farmacia19PaypalCheckoutController extends CheckoutController
             ->first();
     }
 
+    // Recupera il tentativo attivo dopo una chiusura dell'app.
+    // Non avvia catture e non crea ordini.
+    public function recover(Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Accesso richiesto.'], 401);
+        }
+
+        $attempt = DB::table('paypal_checkout_attempts')
+            ->where('user_id', $user->id)
+            ->whereIn('status', [
+                'creating', 'creation_uncertain', 'created', 'approved',
+                'capture_uncertain', 'captured', 'captured_pending_order',
+            ])
+            ->orderByDesc('id')
+            ->first();
+
+        if (!$attempt) {
+            return $this->result('none');
+        }
+
+        return $this->result($attempt->status, [
+            'request_id' => $attempt->request_id,
+        ]);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | AVVIO PAYPAL

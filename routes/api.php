@@ -129,6 +129,8 @@ Route::prefix('v1')->group(function () {
             [Farmacia19PaypalCheckoutController::class, 'status']
         );
 
+        Route::get('/checkout/paypal/recover', [Farmacia19PaypalCheckoutController::class, 'recover']);
+
     });
 
 });
