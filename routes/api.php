@@ -131,6 +131,11 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/checkout/paypal/recover', [Farmacia19PaypalCheckoutController::class, 'recover']);
 
+        Route::post(
+            '/checkout/paypal/abandon',
+            [Farmacia19PaypalCheckoutController::class, 'abandon']
+        )->middleware('throttle:10,1');
+
     });
 
 });
