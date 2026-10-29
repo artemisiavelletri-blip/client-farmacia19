@@ -17,6 +17,12 @@ class OrderObserver implements ShouldHandleEventsAfterCommit
 
     public function updated(Order $order): void
     {
+        \Log::info('FARMACIA19 ORDER OBSERVER UPDATED', [
+            'order_id' => $order->id,
+            'status' => $order->status,
+            'status_changed' => $order->wasChanged('status'),
+            'payment_status' => $order->payment_status,
+        ]);
         $statusChanged = $order->wasChanged('status');
 
         $becamePaid =
