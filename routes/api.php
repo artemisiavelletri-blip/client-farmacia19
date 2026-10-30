@@ -18,49 +18,75 @@ use App\Http\Middleware\Farmacia19ApiToken;
 
 use App\Jobs\SendFarmacia19OrderPush;
 
-Route::post('/internal/farmacia19/order-push', function (Request $request) {
+Route::post('/internal/farmacia19/order-push', function (\Illuminate\Http\Request $request) {
 
+    // 1. Verifica token segreto condiviso tra ADMIN e CLIENT
     $expectedToken = config('services.farmacia19.internal_push_token');
 
     abort_unless(
         is_string($expectedToken)
         && $expectedToken !== ''
-        && hash_equals($expectedToken, (string) $request->bearerToken()),
-        403
+        && hash_equals(
+            $expectedToken,
+            (string) $request->bearerToken()
+        ),
+        403,
+        'Token interno non valido'
     );
 
+    // 2. Validazione dati ricevuti dal pannello amministrativo
     $data = $request->validate([
         'order_id' => 'required|integer|exists:orders,id',
-        'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+        'status'   => 'required|in:pending,processing,shipped,delivered,cancelled',
     ]);
 
-    $order = Order::findOrFail($data['order_id']);
+    // 3. Recupera ordine dal database condiviso
+    $order = \App\Models\Order::findOrFail($data['order_id']);
 
-    // Verifica lo stato effettivamente salvato nel database.
+    // 4. Verifica che lo stato ricevuto corrisponda a quello nel database
     if ($order->status !== $data['status']) {
         return response()->json([
             'success' => false,
-            'message' => 'Stato ordine non corrispondente',
+            'message' => 'Lo stato dell’ordine non corrisponde',
         ], 409);
     }
 
+    // 5. Verifica che l'ordine appartenga a un utente
     if (!$order->user_id) {
-        return response()->json(['success' => true, 'queued' => false]);
+        return response()->json([
+            'success' => true,
+            'queued'  => false,
+            'message' => 'Ordine senza utente associato',
+        ]);
     }
 
-    if ($order->status !== 'cancelled' && $order->payment_status !== 'paid') {
-        return response()->json(['success' => true, 'queued' => false]);
+    // 6. Invia notifiche solo per ordini pagati,
+    //    tranne quelli annullati
+    if (
+        $order->status !== 'cancelled'
+        && $order->payment_status !== 'paid'
+    ) {
+        return response()->json([
+            'success' => true,
+            'queued'  => false,
+            'message' => 'Ordine non ancora pagato',
+        ]);
     }
 
-    SendFarmacia19OrderPush::dispatch(
+    // 7. Accoda la notifica Firebase
+    \App\Jobs\SendFarmacia19OrderPush::dispatch(
         (int) $order->id,
         (string) $order->status,
         (int) $order->user_id
     );
 
+    // 8. Risposta al pannello amministrativo
     return response()->json([
-        'success' => true,
-        'queued' => true,
+        'success'  => true,
+        'queued'   => true,
+        'order_id' => $order->id,
+        'status'   => $order->status,
+        'message'  => 'Notifica push accodata correttamente',
     ]);
 
 });
