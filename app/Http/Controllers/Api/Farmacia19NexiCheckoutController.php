@@ -186,7 +186,7 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             'importo' => $attempt->amount_cents,
             'divisa' => $attempt->currency,
             'codTrans' => $attempt->cod_trans,
-            'url' => route('farmacia19.nexi.app.callback'),
+            'url' => route('farmacia19.nexi.checkout.callback'),
             'url_back' => route('farmacia19.nexi.app.return', ['codTrans' => $attempt->cod_trans]),
             'num_contratto' => $attempt->num_contratto,
             'tipo_servizio' => 'paga_oc3d',
