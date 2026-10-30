@@ -230,6 +230,13 @@ Route::prefix('v1')->group(function () {
             [\App\Http\Controllers\Api\Farmacia19FcmTokenController::class, 'destroy']
         )->middleware('throttle:30,1');
 
+        Route::post('/checkout/nexi/start', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'start'])
+            ->middleware('throttle:10,1');
+
+        Route::get('/checkout/nexi/status', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'status']);
+
+        Route::get('/checkout/nexi/recover', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'recover']);
+
     });
 
 });

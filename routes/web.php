@@ -40,6 +40,15 @@ Route::middleware('doctor')->group(function () {
     Route::match(['GET','POST'], '/app/payment-method/nexi/callback', [\App\Http\Controllers\Api\Farmacia19NexiAppController::class, 'callback'])->name('farmacia19.nexi.app.callback');
     Route::get('/app/payment-method/complete', [\App\Http\Controllers\Api\Farmacia19NexiAppController::class, 'complete'])->name('farmacia19.nexi.app.complete');
 
+    Route::get('/app/nexi/pay/{codTrans}', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'pay'])
+    ->name('farmacia19.nexi.app.pay');
+
+    Route::match(['GET', 'POST'], '/app/nexi/callback', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'callback'])
+        ->name('farmacia19.nexi.app.callback');
+
+    Route::get('/app/nexi/return/{codTrans}', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'returned'])
+        ->name('farmacia19.nexi.app.return');
+
     Route::get('/refresh-csrf', function () {
         return response()->json(['token' => csrf_token()]);
     });

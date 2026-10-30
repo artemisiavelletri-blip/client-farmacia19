@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'app/payment-method/nexi/start',
             'app/payment-method/nexi/callback',
+            'app/nexi/callback',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
