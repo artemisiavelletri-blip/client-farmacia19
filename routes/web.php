@@ -44,7 +44,7 @@ Route::middleware('doctor')->group(function () {
     ->name('farmacia19.nexi.app.pay');
 
     Route::match(['GET', 'POST'], '/app/nexi/callback', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'callback'])
-        ->name('farmacia19.nexi.app.callback');
+    ->name('farmacia19.nexi.checkout.callback');
 
     Route::get('/app/nexi/return/{codTrans}', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'returned'])
         ->name('farmacia19.nexi.app.return');
