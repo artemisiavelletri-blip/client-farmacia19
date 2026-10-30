@@ -230,8 +230,8 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             $esito = (string) $request->input('esito', '');
             $importo = (string) $request->input('importo', '');
             $divisa = (string) $request->input('divisa', '');
-            $expected = sha1('codTrans=' . $codTrans . 'esito=' . $esito
-                . 'importo=' . $importo . 'divisa=' . $divisa . $secret);
+            // Nexi XPay DispatcherServlet response MAC includes data, orario and codAut.
+            // Compute the verified extended candidate below before accepting any result.
             // Diagnostic logging: only whitelisted non-card fields. Never log
             // XPAY_SECRET, full request payload, PAN, CVV, or complete MAC.
             $dataNexi = (string) $request->input('data', '');
@@ -243,8 +243,7 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                 . 'data=' . $dataNexi . 'orario=' . $orarioNexi
                 . 'codAut=' . $codAut . $secret
             ) : '';
-            $legacyMacMatches = $secret !== '' && preg_match('/^[a-f0-9]{40}$/i', $mac)
-                && hash_equals(strtolower($expected), strtolower($mac));
+            // Legacy candidate removed from authorization: it did not match the real Nexi callback.
             $extendedMacMatches = $candidateExtended !== '' && preg_match('/^[a-f0-9]{40}$/i', $mac)
                 && hash_equals(strtolower($candidateExtended), strtolower($mac));
             Log::info('Nexi app callback diagnostic', [
@@ -263,12 +262,11 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                 'mac_present' => $mac !== '',
                 'mac_length' => strlen($mac),
                 'mac_hex_sha1_format' => (bool) preg_match('/^[a-f0-9]{40}$/i', $mac),
-                'legacy_mac_matches' => (bool) $legacyMacMatches,
+                'legacy_mac_matches' => false,
                 'extended_mac_matches' => (bool) $extendedMacMatches,
             ]);
-            // Keep the existing acceptance rule unchanged until the official
-            // response specification is verified. The extended MAC is diagnostic only.
-            if (!$secret || !$legacyMacMatches
+            // Authorize only a well-formed, signed response matching this attempt.
+            if (!$secret || !$extendedMacMatches
                 || !ctype_digit($importo) || (int) $importo !== (int) $attempt->amount_cents
                 || $divisa !== 'EUR') {
                 Log::warning('Nexi app callback rejected', ['attempt_id' => $attempt->id]);
