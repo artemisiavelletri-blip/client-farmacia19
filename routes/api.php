@@ -195,6 +195,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/account/return-reasons', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'reasons']);
         Route::post('/account/orders/{orderNumber}/refund', [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'refund']);
 
+        Route::post(
+            '/account/orders/{orderNumber}/refund/tracking',
+            [\App\Http\Controllers\Api\Farmacia19OrdersApiController::class, 'refundTracking']
+        );
+
         Route::get('/account/coupons', [\App\Http\Controllers\Api\Farmacia19CouponsApiController::class, 'index']);
         Route::post('/account/coupons/reveal', [\App\Http\Controllers\Api\Farmacia19CouponsApiController::class, 'reveal']);
 

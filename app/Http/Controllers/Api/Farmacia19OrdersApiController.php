@@ -125,6 +125,66 @@ class Farmacia19OrdersApiController extends Controller
         }
     }
 
+    public function refundTracking(Request $request, string $orderNumber)
+    {
+        $validated = $request->validate([
+            'return_token' => ['required', 'string'],
+            'tracking' => ['required', 'string', 'max:150'],
+        ]);
+
+        // Verifica che l'ordine appartenga all'utente autenticato.
+        $order = $this->mine($request, $orderNumber);
+
+        // Recupera esclusivamente il reso richiesto.
+        $refund = $order->returns()
+            ->where('token', $validated['return_token'])
+            ->firstOrFail();
+
+        // Il reso deve essere stato accettato.
+        if ((int) $refund->status !== 1) {
+            return response()->json([
+                'message' => 'Il reso deve essere accettato prima di inserire il tracking.',
+            ], 422);
+        }
+
+        // Il rimborso non deve essere già stato emesso.
+        if ($refund->refund_type !== null) {
+            return response()->json([
+                'message' => 'Il rimborso è già stato emesso.',
+            ], 422);
+        }
+
+        $tracking = trim($validated['tracking']);
+        $oldTracking = $refund->tracking_refund;
+
+        // Salva il codice nello stesso campo utilizzato dal sito.
+        $refund->tracking_refund = $tracking;
+        $refund->save();
+
+        // Aggiorna Track123 soltanto se il codice è cambiato.
+        if ($tracking !== $oldTracking) {
+            try {
+                $service = new Track123Service();
+                $service->track($tracking);
+            } catch (\Throwable $e) {
+                Log::warning('Farmacia19: errore tracking reso', [
+                    'order_id' => $order->id,
+                    'return_id' => $refund->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tracking del reso aggiornato con successo.',
+            'data' => [
+                'tracking_refund' => $refund->tracking_refund,
+                'return_token' => $refund->token,
+            ],
+        ]);
+    }
+
     public function cancel(Request $request, string $orderNumber)
     {
         $order = $this->mine($request, $orderNumber);
