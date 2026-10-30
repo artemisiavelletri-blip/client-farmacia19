@@ -266,27 +266,51 @@ class OrderController extends Controller
 
     }
 
-    public function refundRequestTracking(Request $request,$token)
+    public function refundRequestTracking(Request $request, $token)
     {
-        $order = Order::whereHas('returns', function ($q) use ($token) {
-            $q->where('token', $token);
-        })->firstOrFail();
+        $validated = $request->validate([
+            'tracking' => ['required', 'string', 'max:150'],
+        ]);
 
-        $refund = $order->returns->first();
+        $order = Order::where('user_id', auth()->id())
+            ->whereHas('returns', function ($query) use ($token) {
+                $query->where('token', $token);
+            })
+            ->firstOrFail();
+
+        $refund = $order->returns()
+            ->where('token', $token)
+            ->firstOrFail();
+
+        // Tracking consentito solo dopo l'accettazione.
+        if ((int) $refund->status !== 1) {
+            return back()->with(
+                'error',
+                'Il reso deve essere accettato prima di inserire il tracking.'
+            );
+        }
+
+        // Non modificare il tracking dopo il rimborso.
+        if ($refund->refund_type !== null) {
+            return back()->with(
+                'error',
+                'Il rimborso è già stato emesso.'
+            );
+        }
 
         $oldTracking = $refund->tracking_refund;
 
-        $refund->tracking_refund = $request->tracking;
+        $refund->tracking_refund = $validated['tracking'];
         $refund->save();
 
-        if (!empty($request->tracking) && $request->tracking !== $oldTracking) {
-
+        if ($validated['tracking'] !== $oldTracking) {
             $service = new Track123Service();
 
-            $trackingData = $service->track($request->tracking);
+            $service->track($validated['tracking']);
         }
 
-        return redirect()->route('orderDetail', $order->order_number)
+        return redirect()
+            ->route('orderDetail', $order->order_number)
             ->with('success', 'Tracking aggiornato con successo.');
     }
 }

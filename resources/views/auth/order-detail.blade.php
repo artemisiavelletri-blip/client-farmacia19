@@ -105,9 +105,22 @@
                                                                     <b>Codice tracciamento: </b>{{$order->returns->first()->tracking_refund}}
                                                                 </div>
                                                             @endif
-                                                            <button type="button" class="btn btn-md btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#userModal" style="width: 100%;">
-                                                                Aggiungi o modifica tracciamento del reso
-                                                            </button>
+                                                            @if(
+                                                                $order->returns->first()->status == 1 &&
+                                                                $order->returns->first()->refund_type === null
+                                                            )
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn btn-md btn-outline-secondary"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#userModal"
+                                                                    style="width: 100%;"
+                                                                >
+                                                                    {{ $order->returns->first()->tracking_refund
+                                                                        ? 'Modifica tracciamento del reso'
+                                                                        : 'Inserisci tracciamento del reso' }}
+                                                                </button>
+                                                            @endif
                                                         @endif
                                                     </div>
                                                 </div>
