@@ -71,4 +71,8 @@ return [
         'mode' => env('PAYPAL_MODE', 'live'),
     ],
 
+    'farmacia19' => [
+        'internal_push_token' => env('FARMACIA19_INTERNAL_PUSH_TOKEN'),
+    ],
+
 ];

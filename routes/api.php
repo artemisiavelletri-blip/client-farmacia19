@@ -15,6 +15,55 @@ use App\Http\Controllers\Api\Farmacia19PaypalCheckoutController;
 use App\Http\Controllers\Api\Farmacia19AuthController;
 use App\Http\Middleware\Farmacia19ApiToken;
 
+use App\Jobs\SendFarmacia19OrderPush;
+
+Route::post('/internal/farmacia19/order-push', function (Request $request) {
+
+    $expectedToken = config('services.farmacia19.internal_push_token');
+
+    abort_unless(
+        is_string($expectedToken)
+        && $expectedToken !== ''
+        && hash_equals($expectedToken, (string) $request->bearerToken()),
+        403
+    );
+
+    $data = $request->validate([
+        'order_id' => 'required|integer|exists:orders,id',
+        'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+    ]);
+
+    $order = Order::findOrFail($data['order_id']);
+
+    // Verifica lo stato effettivamente salvato nel database.
+    if ($order->status !== $data['status']) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Stato ordine non corrispondente',
+        ], 409);
+    }
+
+    if (!$order->user_id) {
+        return response()->json(['success' => true, 'queued' => false]);
+    }
+
+    if ($order->status !== 'cancelled' && $order->payment_status !== 'paid') {
+        return response()->json(['success' => true, 'queued' => false]);
+    }
+
+    SendFarmacia19OrderPush::dispatch(
+        (int) $order->id,
+        (string) $order->status,
+        (int) $order->user_id
+    );
+
+    return response()->json([
+        'success' => true,
+        'queued' => true,
+    ]);
+
+});
+
 Route::prefix('v1')->group(function () {
 
     // HOME
