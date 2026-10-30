@@ -167,7 +167,7 @@ class Farmacia19OrdersApiController extends Controller
     public function refund(Request $request, string $orderNumber)
     {
         $validated = $request->validate([
-            'option' => ['required', 'integer', 'exists:reason_returns,id'],
+            'option' => ['required', 'integer', 'exists:reason_return,id'],
             'message' => ['required', 'string', 'max:3000'],
             'products' => ['required', 'array', 'min:1'],
             'products.*' => ['required', 'integer', 'distinct'],
