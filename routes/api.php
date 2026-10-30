@@ -60,10 +60,15 @@ Route::post('/internal/farmacia19/order-push', function (\Illuminate\Http\Reques
         ]);
     }
 
-    // 6. Invia notifiche solo per ordini pagati,
-    //    tranne quelli annullati
+    // 6. Invia notifiche anche per ordini non pagati
+    // quando sono in preparazione, spediti, consegnati o annullati.
     if (
-        $order->status !== 'cancelled'
+        !in_array($order->status, [
+            'processing',
+            'shipped',
+            'delivered',
+            'cancelled'
+        ], true)
         && $order->payment_status !== 'paid'
     ) {
         return response()->json([
