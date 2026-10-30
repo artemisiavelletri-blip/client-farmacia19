@@ -79,9 +79,10 @@ class SendFarmacia19OrderPush implements ShouldQueue
                 $title,
                 $body,
                 [
-                    'type' => 'order',
+                    'type' => 'order_status',
                     'order_id' => (string) $order->id,
-                    'status' => $this->status,
+                    'order_number' => (string) $order->order_number,
+                    'status' => (string) $order->status,
                 ]
             );
         } catch (Throwable $e) {
