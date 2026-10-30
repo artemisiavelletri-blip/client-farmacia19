@@ -232,7 +232,43 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             $divisa = (string) $request->input('divisa', '');
             $expected = sha1('codTrans=' . $codTrans . 'esito=' . $esito
                 . 'importo=' . $importo . 'divisa=' . $divisa . $secret);
-            if (!$secret || !$mac || !hash_equals(strtolower($expected), strtolower($mac))
+            // Diagnostic logging: only whitelisted non-card fields. Never log
+            // XPAY_SECRET, full request payload, PAN, CVV, or complete MAC.
+            $dataNexi = (string) $request->input('data', '');
+            $orarioNexi = (string) $request->input('orario', '');
+            $codAut = (string) $request->input('codAut', '');
+            $candidateExtended = $secret !== '' ? sha1(
+                'codTrans=' . $codTrans . 'esito=' . $esito
+                . 'importo=' . $importo . 'divisa=' . $divisa
+                . 'data=' . $dataNexi . 'orario=' . $orarioNexi
+                . 'codAut=' . $codAut . $secret
+            ) : '';
+            $legacyMacMatches = $secret !== '' && preg_match('/^[a-f0-9]{40}$/i', $mac)
+                && hash_equals(strtolower($expected), strtolower($mac));
+            $extendedMacMatches = $candidateExtended !== '' && preg_match('/^[a-f0-9]{40}$/i', $mac)
+                && hash_equals(strtolower($candidateExtended), strtolower($mac));
+            Log::info('Nexi app callback diagnostic', [
+                'attempt_id' => $attempt->id,
+                'http_method' => $request->method(),
+                'field_names' => array_values(array_filter(array_keys($request->all()),
+                    fn ($key) => is_string($key) && preg_match('/^[a-zA-Z0-9_]{1,50}$/', $key))),
+                'cod_trans_matches' => hash_equals((string) $attempt->cod_trans, $codTrans),
+                'esito' => substr($esito, 0, 32),
+                'codice_esito' => substr((string) $request->input('codiceEsito', ''), 0, 16),
+                'importo_matches' => ctype_digit($importo) && (int) $importo === (int) $attempt->amount_cents,
+                'divisa' => substr($divisa, 0, 8),
+                'has_data' => $dataNexi !== '',
+                'has_orario' => $orarioNexi !== '',
+                'has_cod_aut' => $codAut !== '',
+                'mac_present' => $mac !== '',
+                'mac_length' => strlen($mac),
+                'mac_hex_sha1_format' => (bool) preg_match('/^[a-f0-9]{40}$/i', $mac),
+                'legacy_mac_matches' => (bool) $legacyMacMatches,
+                'extended_mac_matches' => (bool) $extendedMacMatches,
+            ]);
+            // Keep the existing acceptance rule unchanged until the official
+            // response specification is verified. The extended MAC is diagnostic only.
+            if (!$secret || !$legacyMacMatches
                 || !ctype_digit($importo) || (int) $importo !== (int) $attempt->amount_cents
                 || $divisa !== 'EUR') {
                 Log::warning('Nexi app callback rejected', ['attempt_id' => $attempt->id]);
