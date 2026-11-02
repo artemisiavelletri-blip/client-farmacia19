@@ -301,6 +301,35 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             ->header('Cache-Control', 'no-store');
     }
 
+    /** Registra l'uscita volontaria dalla pagina Nexi senza presumere che non sia avvenuto l'addebito. */
+    public function cancel(Request $request)
+    {
+        $data = $request->validate(['request_id' => ['required', 'uuid']]);
+        $user = $request->user();
+        if (!$user) return response()->json(['message' => 'Accesso richiesto.'], 401);
+        $lock = Cache::lock('farmacia19:checkout:user:' . $user->id, 120);
+        if (!$lock->get()) return response()->json(['message' => 'Verifica in corso.'], 409);
+        try {
+            $attempt = $this->attempt((int) $user->id, $data['request_id']);
+            if (!$attempt) return response()->json(['message' => 'Tentativo inesistente.'], 404);
+            if ($this->existingOrder($attempt)) return response()->json($this->state($attempt));
+            if (in_array($attempt->status, ['cancelled', 'failed', 'completed'], true)) {
+                return response()->json($this->state($attempt));
+            }
+            if ($attempt->status === 'paid_pending_order' || $attempt->verified_at) {
+                return response()->json(['status' => 'paid_pending_order',
+                    'message' => 'Pagamento ricevuto: ordine da verificare. Non ripetere il pagamento.']);
+            }
+            // Lo stato "pending" mantiene il tentativo protetto dal doppio pagamento.
+            // Per passare a "cancelled" serve una verifica affidabile del gateway Nexi.
+            $this->updateAttempt($attempt, ['status' => 'pending']);
+            return response()->json(['status' => 'pending',
+                'message' => 'Uscita dal pagamento registrata. Verificare l’esito Nexi prima di riprovare.']);
+        } finally {
+            $lock->release();
+        }
+    }
+
     public function recover(Request $request)
     {
         $data = $request->validate(['request_id' => ['nullable', 'uuid']]);
