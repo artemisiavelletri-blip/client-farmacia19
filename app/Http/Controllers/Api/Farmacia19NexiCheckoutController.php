@@ -438,6 +438,29 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             $attempt = $this->attempt((int) $user->id, $data['request_id']);
             if (!$attempt) return response()->json(['message' => 'Tentativo inesistente.'], 404);
             if ($this->existingOrder($attempt)) return response()->json($this->state($attempt));
+
+            // Nexi url_back returns to the app without calling cancel().
+            // Reconcile created/pending attempts when the app checks their status.
+            // Only the signed, contract-confirmed KO/2 response can release the attempt.
+            if (in_array($attempt->status, ['created', 'pending'], true)
+                && !$attempt->verified_at) {
+                $inquiry = $this->inspectNexiOrder($attempt);
+                if (($inquiry['result'] ?? '') === 'not_found') {
+                    $this->updateAttempt($attempt, ['status' => 'cancelled']);
+                    return response()->json([
+                        'status' => 'cancelled',
+                        'request_id' => $attempt->request_id,
+                        'message' => 'Operazione Nexi annullata. Puoi riprovare.',
+                    ]);
+                }
+                // No conclusive gateway result: keep the checkout locked.
+                $this->updateAttempt($attempt, ['status' => 'pending']);
+                return response()->json([
+                    'status' => 'pending',
+                    'request_id' => $attempt->request_id,
+                    'message' => 'Esito Nexi in verifica. Non ripetere il pagamento.',
+                ]);
+            }
             if ($attempt->status !== 'paid_pending_order' || !$attempt->verified_at) {
                 return response()->json($this->state($attempt));
             }
