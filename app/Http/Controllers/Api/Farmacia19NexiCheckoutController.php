@@ -356,6 +356,8 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                     : [],
                 'error_code' => is_array($body['errore'] ?? null)
                     ? substr((string) ($body['errore']['codice'] ?? ''), 0, 20) : null,
+                'error_description' => is_array($body['errore'] ?? null)
+                    ? substr((string) ($body['errore']['messaggio'] ?? ''), 0, 150) : null,
             ]);
             return ['result' => 'inspected'];
         } catch (Throwable $e) {
