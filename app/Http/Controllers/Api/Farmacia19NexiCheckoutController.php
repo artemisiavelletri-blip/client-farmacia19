@@ -304,8 +304,9 @@ class Farmacia19NexiCheckoutController extends CheckoutController
 
     /**
      * Consultazione di sola lettura dell'ordine XPay legacy.
-     * Nessuna risposta "non trovato" o report vuoto autorizza automaticamente
-     * un nuovo addebito: potrebbe esserci una callback in ritardo.
+     * Il codice KO/2 viene trattato come definitivo SOLO in base alla
+     * conferma dell'esercente sulle specifiche del proprio contratto Nexi.
+     * Le altre risposte non sbloccano un nuovo tentativo.
      */
     private function inspectNexiOrder($attempt): array
     {
@@ -359,6 +360,11 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                 'error_description' => is_array($body['errore'] ?? null)
                     ? substr((string) ($body['errore']['messaggio'] ?? ''), 0, 150) : null,
             ]);
+            if ($esito === 'KO'
+                && is_array($body['errore'] ?? null)
+                && (string) ($body['errore']['codice'] ?? '') === '2') {
+                return ['result' => 'not_found'];
+            }
             return ['result' => 'inspected'];
         } catch (Throwable $e) {
             Log::warning('Nexi order inquiry unavailable', [
@@ -391,8 +397,16 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                 return response()->json(['status' => 'paid_pending_order',
                     'message' => 'Pagamento ricevuto: ordine da verificare. Non ripetere il pagamento.']);
             }
-            // Consultazione read-only: non assumere che "non trovato" significhi annullato.
-            $this->inspectNexiOrder($attempt);
+            // L'esercente ha confermato KO/2 come assenza definitiva per il contratto XPay.
+            // Qualsiasi altro esito (inclusi timeout e MAC non valido) resta protetto.
+            $inquiry = $this->inspectNexiOrder($attempt);
+            if (($inquiry['result'] ?? '') === 'not_found') {
+                $this->updateAttempt($attempt, ['status' => 'cancelled']);
+                return response()->json([
+                    'status' => 'cancelled',
+                    'message' => 'Pagamento annullato. Puoi riprovare.',
+                ]);
+            }
             $this->updateAttempt($attempt, ['status' => 'pending']);
             return response()->json(['status' => 'pending',
                 'message' => 'Uscita dal pagamento registrata. Verificare l’esito Nexi prima di riprovare.']);
