@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Throwable;
@@ -301,6 +302,70 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             ->header('Cache-Control', 'no-store');
     }
 
+    /**
+     * Consultazione di sola lettura dell'ordine XPay legacy.
+     * Nessuna risposta "non trovato" o report vuoto autorizza automaticamente
+     * un nuovo addebito: potrebbe esserci una callback in ritardo.
+     */
+    private function inspectNexiOrder($attempt): array
+    {
+        $alias = (string) config('services.nexi.alias');
+        $secret = (string) config('services.nexi.secret');
+        if ($alias === '' || $secret === '') return ['result' => 'unavailable'];
+        $timeStamp = (string) round(microtime(true) * 1000);
+        $codiceTransazione = (string) $attempt->cod_trans;
+        $mac = sha1('apiKey=' . $alias . 'codiceTransazione=' . $codiceTransazione
+            . 'timeStamp=' . $timeStamp . $secret);
+        try {
+            $response = Http::acceptJson()->asJson()->timeout(12)->post(
+                'https://ecommerce.nexi.it/ecomm/api/bo/situazioneOrdine', [
+                    'apiKey' => $alias,
+                    'codiceTransazione' => $codiceTransazione,
+                    'timeStamp' => $timeStamp,
+                    'mac' => $mac,
+                ]
+            );
+            if (!$response->successful()) {
+                Log::warning('Nexi order inquiry HTTP error', [
+                    'attempt_id' => $attempt->id, 'http_status' => $response->status(),
+                ]);
+                return ['result' => 'unavailable'];
+            }
+            $body = $response->json();
+            if (!is_array($body)) return ['result' => 'unavailable'];
+            $esito = (string) ($body['esito'] ?? '');
+            $idOperazione = (string) ($body['idOperazione'] ?? '');
+            $responseTimeStamp = (string) ($body['timeStamp'] ?? '');
+            $responseMac = (string) ($body['mac'] ?? '');
+            $expected = sha1('esito=' . $esito . 'idOperazione=' . $idOperazione
+                . 'timeStamp=' . $responseTimeStamp . $secret);
+            if ($esito === '' || $idOperazione === '' || $responseTimeStamp === ''
+                || !preg_match('/^[a-f0-9]{40}$/i', $responseMac)
+                || !hash_equals(strtolower($expected), strtolower($responseMac))) {
+                Log::warning('Nexi order inquiry invalid MAC', ['attempt_id' => $attempt->id]);
+                return ['result' => 'unavailable'];
+            }
+            $report = $body['report'] ?? null;
+            Log::info('Nexi order inquiry', [
+                'attempt_id' => $attempt->id,
+                'esito' => substr($esito, 0, 12),
+                'report_count' => is_array($report) ? count($report) : null,
+                'report_states' => is_array($report)
+                    ? array_slice(array_map(fn ($r) => is_array($r)
+                        ? substr((string) ($r['stato'] ?? ''), 0, 32) : '', $report), 0, 10)
+                    : [],
+                'error_code' => is_array($body['errore'] ?? null)
+                    ? substr((string) ($body['errore']['codice'] ?? ''), 0, 20) : null,
+            ]);
+            return ['result' => 'inspected'];
+        } catch (Throwable $e) {
+            Log::warning('Nexi order inquiry unavailable', [
+                'attempt_id' => $attempt->id, 'exception' => get_class($e),
+            ]);
+            return ['result' => 'unavailable'];
+        }
+    }
+
     /** Registra l'uscita volontaria dalla pagina Nexi senza presumere che non sia avvenuto l'addebito. */
     public function cancel(Request $request)
     {
@@ -324,8 +389,8 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                 return response()->json(['status' => 'paid_pending_order',
                     'message' => 'Pagamento ricevuto: ordine da verificare. Non ripetere il pagamento.']);
             }
-            // Lo stato "pending" mantiene il tentativo protetto dal doppio pagamento.
-            // Per passare a "cancelled" serve una verifica affidabile del gateway Nexi.
+            // Consultazione read-only: non assumere che "non trovato" significhi annullato.
+            $this->inspectNexiOrder($attempt);
             $this->updateAttempt($attempt, ['status' => 'pending']);
             return response()->json(['status' => 'pending',
                 'message' => 'Uscita dal pagamento registrata. Verificare l’esito Nexi prima di riprovare.']);
