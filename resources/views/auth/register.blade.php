@@ -46,10 +46,13 @@
                                 <input type="password"
                                        class="form-control"
                                        placeholder="Password"
-                                       name="password"
-                                       value="{{ old('password') }}">
+                                       name="password">
 
-                                <div class="password-info">
+                                <div class="password-info" tabindex="0"
+                                     role="button"
+                                     aria-label="Mostra i requisiti della password"
+                                     aria-expanded="false">
+
                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
 
                                     <div class="password-tooltip">
@@ -572,6 +575,45 @@
                 });
 
         });
+        document.addEventListener('DOMContentLoaded', function () {
 
+            document.querySelectorAll('.password-info').forEach(function(info) {
+
+                info.addEventListener('click', function(e) {
+                    e.stopPropagation();
+
+                    const isActive = this.classList.contains('active');
+
+                    document.querySelectorAll('.password-info').forEach(function(el) {
+                        el.classList.remove('active');
+                        el.setAttribute('aria-expanded', 'false');
+                    });
+
+                    if (!isActive) {
+                        this.classList.add('active');
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                info.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.password-info')) {
+                    document.querySelectorAll('.password-info').forEach(function(el) {
+                        el.classList.remove('active');
+                        el.setAttribute('aria-expanded', 'false');
+                        el.blur();
+                    });
+                }
+            });
+
+        });
     </script>
 @endsection

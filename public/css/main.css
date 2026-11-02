@@ -1551,73 +1551,222 @@
     }
 }
 
+/* ==========================================
+   TOOLTIP PASSWORD - FARMACIA19
+   Compatibile con PC, iPhone e Android
+========================================== */
+
+/* Contenitore icona informazioni */
 .password-info {
     position: absolute;
-    top: 17px;
+    top: 10px;
     right: 12px;
+
+    min-width: 30px;
+    min-height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     cursor: pointer;
     color: #7186a3;
     z-index: 10;
+
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    outline: none;
 }
 
+/* Icona informazioni */
 .password-info i {
     font-size: 16px;
+    transition: color 0.2s ease;
 }
+
+/* Colore icona al passaggio del mouse */
+.password-info:hover i,
+.password-info.active i,
+.password-info:focus i {
+    color: #263448;
+}
+
+/* ==========================================
+   TOOLTIP
+========================================== */
 
 .password-tooltip {
     position: absolute;
+
     bottom: calc(100% + 12px);
     right: -10px;
+
     width: 250px;
+    max-width: calc(100vw - 40px);
+
     padding: 15px;
+
     background: #263448;
     color: #ffffff;
+
     border-radius: 10px;
+
     font-size: 12px;
+    font-weight: 400;
     line-height: 1.6;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 
     opacity: 0;
     visibility: hidden;
+
     transform: translateY(5px);
-    transition: all 0.2s ease;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
 
     z-index: 9999;
+
     text-align: left;
     pointer-events: none;
+
+    box-sizing: border-box;
 }
 
+/* Titolo tooltip */
+.password-tooltip strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+/* Lista requisiti password */
 .password-tooltip ul {
-    margin: 8px 0 0;
+    margin: 0;
     padding-left: 18px;
+    list-style-type: disc;
 }
 
+/* Elementi lista */
 .password-tooltip li {
     margin-bottom: 3px;
+    color: #ffffff;
 }
 
-/* Mostra tooltip al passaggio del mouse */
-.password-info:hover .password-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+/* Ultimo elemento senza margine */
+.password-tooltip li:last-child {
+    margin-bottom: 0;
 }
 
-/* Freccia del tooltip */
-.password-tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    right: 12px;
-    border-width: 6px;
-    border-style: solid;
-    border-color: #263448 transparent transparent transparent;
+/* ==========================================
+   APERTURA TOOLTIP
+========================================== */
+
+/* Desktop: apertura al passaggio del mouse */
+@media (hover: hover) {
+    .password-info:hover .password-tooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
 }
 
-.password-info:hover .password-tooltip,
+/* Apertura tramite click/tocco o tastiera */
+.password-info.active .password-tooltip,
 .password-info:focus .password-tooltip,
 .password-info:focus-within .password-tooltip {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+/* ==========================================
+   FRECCIA TOOLTIP
+========================================== */
+
+.password-tooltip::after {
+    content: "";
+
+    position: absolute;
+    top: 100%;
+    right: 18px;
+
+    border-width: 6px;
+    border-style: solid;
+
+    border-color:
+        #263448
+        transparent
+        transparent
+        transparent;
+}
+
+/* ==========================================
+   RESPONSIVE - IPHONE E ANDROID
+========================================== */
+
+@media (max-width: 768px) {
+
+    .password-info {
+        top: 8px;
+        right: 10px;
+
+        min-width: 36px;
+        min-height: 36px;
+    }
+
+    .password-info i {
+        font-size: 18px;
+    }
+
+    .password-tooltip {
+        width: 240px;
+        max-width: calc(100vw - 30px);
+
+        padding: 14px;
+
+        font-size: 12px;
+
+        right: -5px;
+
+        bottom: calc(100% + 10px);
+
+        border-radius: 10px;
+    }
+
+    .password-tooltip strong {
+        font-size: 12px;
+    }
+
+    .password-tooltip ul {
+        padding-left: 16px;
+    }
+
+    .password-tooltip::after {
+        right: 17px;
+    }
+}
+
+/* ==========================================
+   ACCESSIBILITÀ
+========================================== */
+
+/* Evidenziazione per navigazione da tastiera */
+.password-info:focus-visible {
+    outline: 2px solid #7186a3;
+    outline-offset: 3px;
+    border-radius: 50%;
+}
+
+/* Riduce animazioni se richiesto dal sistema */
+@media (prefers-reduced-motion: reduce) {
+
+    .password-tooltip,
+    .password-info i {
+        transition: none;
+    }
+
 }
