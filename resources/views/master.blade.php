@@ -24,7 +24,8 @@
         <link rel="stylesheet" href="{{ asset('/css/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ asset('/css/nice-select.min.css') }}">
         <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
-        <link rel="stylesheet" href="{{ asset('/css/main.css') }}">
+        <link rel="stylesheet"
+        href="{{ asset('css/main.css') }}?v={{ filemtime(public_path('css/main.css')) }}">
         @yield('css')
 
         <!-- Google Tag Manager -->
