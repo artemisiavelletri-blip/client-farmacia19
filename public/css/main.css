@@ -1874,3 +1874,31 @@
         height: 54px !important;
     }
 }
+
+/* FARMACIA19 - WALLET RESPONSIVE */
+
+@media (max-width: 767px) {
+
+    .payment .wallet-nav-item {
+        width: 100% !important;
+    }
+
+    .payment .wallet-buttons {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .payment .wallet-btn {
+        width: 100% !important;
+        flex: none !important;
+        height: 56px !important;
+        border-radius: 12px !important;
+    }
+
+    .payment .wallet-btn img {
+        max-height: 28px !important;
+        width: auto !important;
+    }
+}

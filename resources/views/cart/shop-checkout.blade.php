@@ -187,13 +187,73 @@
             font-weight: 700;
         }
 
-        /* Badge informativi wallet: non sono metodi di pagamento separati */
-        .wallet-accepted-badges { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-left: 12px; vertical-align: middle; }
-        .wallet-accepted-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 9px; border: 1px solid #d9dee5; border-radius: 6px; background: #fff; font-size: 13px; font-weight: 700; line-height: 1.3; color: #171717; white-space: nowrap; }
-        .wallet-apple { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        .wallet-google { font-family: Arial, sans-serif; font-weight: 600; }
-        .wallet-google-g { color: #4285f4; font-size: 16px; font-weight: 800; margin-right: 3px; }
-        @media (max-width: 576px) { .wallet-accepted-badges { margin-left: 0; margin-top: 8px; } }
+        /* Farmacia19 - restyling esclusivo della scelta pagamento */
+        #checkoutStep3 .accordion-body { padding: 22px 20px; }
+        #checkoutStep3 .payment { display:flex; flex-direction:column; gap:14px; margin-bottom:22px!important; }
+        #checkoutStep3 .payment > li[data-id] { width:100%!important; margin:0!important; }
+        #checkoutStep3 .payment > li[data-id] > .nav-link {
+            display:flex!important; align-items:center!important; gap:18px;
+            width:100%!important; min-height:90px; padding:18px 22px!important;
+            border:1px solid #e1e7ea!important; border-radius:15px!important;
+            background:#fff!important; box-shadow:0 2px 6px rgba(2,51,80,.025);
+            color:#233449!important; font-size:16px; font-weight:600;
+            transition:border-color .2s, background .2s, box-shadow .2s, transform .2s;
+        }
+        #checkoutStep3 .payment > li[data-id] > .nav-link:hover {
+            border-color:#86cfc9!important; background:#f8fdfc!important;
+            box-shadow:0 5px 16px rgba(2,51,80,.06);
+        }
+        #checkoutStep3 .payment > li[data-id] > .nav-link.active {
+            border-color:#03a297!important; background:linear-gradient(105deg,#f5fcfb,#e4f7f5)!important;
+            box-shadow:0 0 0 1px rgba(3,162,151,.13);
+        }
+        #checkoutStep3 .payment > li[data-id] > .nav-link::before { display:none!important; }
+        #checkoutStep3 .payment > li[data-id] > .nav-link::after {
+            content:''; display:block; order:-1; flex:0 0 19px; width:19px; height:19px;
+            border:2px solid #b7c1c9; border-radius:50%; background:#fff;
+        }
+        #checkoutStep3 .payment > li[data-id] > .nav-link.active::after {
+            border-color:#03a297; background:#03a297;
+            box-shadow:inset 0 0 0 4px #fff;
+        }
+        #checkoutStep3 .payment > li[data-id] .checkout-card-img,
+        #checkoutStep3 .payment > li[data-id] .checkout-payment-img {
+            display:flex!important; flex:0 0 78px; width:78px; height:50px;
+            align-items:center; justify-content:center; margin:0!important;
+            border-right:1px solid #e8edef; padding-right:13px;
+        }
+        #checkoutStep3 .payment > li[data-id] .checkout-card-img img,
+        #checkoutStep3 .payment > li[data-id] .checkout-payment-img img {
+            max-width:64px!important; max-height:48px!important; width:auto!important;
+            height:auto!important; object-fit:contain;
+        }
+        #checkoutStep3 .payment > li[data-id] .checkout-payment-img.cod img { padding:5px!important; }
+        #checkoutStep3 .payment > li[data-id] .nav-link > span { color:#233449!important; }
+        #checkoutStep3 .wallet-nav-item { width:100%!important; margin:2px 0 4px!important; padding:0!important; }
+        #checkoutStep3 .wallet-buttons { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; width:100%; margin:0; }
+        #checkoutStep3 .wallet-btn {
+            appearance:none; -webkit-appearance:none; display:flex!important; align-items:center;
+            justify-content:center; gap:7px; width:100%!important; height:60px!important;
+            padding:10px 16px!important; border-radius:13px!important;
+            font-size:25px!important; font-weight:600!important; line-height:1!important;
+            cursor:pointer; transition:transform .2s, box-shadow .2s, background .2s;
+        }
+        #checkoutStep3 .apple-pay-btn { background:#050505!important; color:#fff!important; border:1px solid #050505!important; }
+        #checkoutStep3 .google-pay-btn { background:#fff!important; color:#3c4043!important; border:1px solid #cbd3d9!important; }
+        #checkoutStep3 .wallet-btn:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,.10); }
+        #checkoutStep3 .wallet-btn:focus-visible { outline:3px solid #03a297; outline-offset:3px; }
+        #checkoutStep3 .wallet-btn img { display:block; width:auto!important; height:70px!important; max-width:140px!important; object-fit:contain; }
+        #checkoutStep3 .apple-pay-btn img { filter:brightness(0) invert(1); }
+        @media(max-width:576px) {
+            #checkoutStep3 .accordion-body { padding:16px 12px; }
+            #checkoutStep3 .payment { gap:11px; }
+            #checkoutStep3 .payment > li[data-id] > .nav-link { min-height:78px; padding:14px 12px!important; gap:11px; font-size:14px; }
+            #checkoutStep3 .payment > li[data-id] .checkout-card-img,
+            #checkoutStep3 .payment > li[data-id] .checkout-payment-img { flex-basis:64px; width:64px; padding-right:8px; }
+            #checkoutStep3 .wallet-buttons { gap:10px; }
+            #checkoutStep3 .wallet-btn { height:54px!important; }
+            #checkoutStep3 .wallet-btn img { height:23px!important; }
+        }
     </style>
 
 @endsection
@@ -360,6 +420,28 @@
 
                                                                 <span>Paga con Carta</span>
                                                             </a>
+                                                        </li>
+
+                                                        <li class="nav-item wallet-nav-item" role="presentation">
+                                                            <div class="wallet-buttons">
+
+                                                                <!-- APPLE PAY -->
+                                                                <button type="button"
+                                                                        id="applePayBtn"
+                                                                        class="wallet-btn google-pay-btn"
+                                                                        aria-label="Paga con Apple Pay">
+                                                                    <img src="{{ asset('/img/payment/apple-pay.png') }}" alt="Apple Pay">
+                                                                </button>
+
+                                                                <!-- GOOGLE PAY -->
+                                                                <button type="button"
+                                                                        id="googlePayBtn"
+                                                                        class="wallet-btn google-pay-btn"
+                                                                        aria-label="Paga con Google Pay">
+                                                                    <img src="{{ asset('/img/payment/google-pay.svg') }}" alt="Google Pay">
+                                                                </button>
+
+                                                            </div>
                                                         </li>
 
                                                         <!-- BONIFICO -->
@@ -574,7 +656,7 @@
 
 
 
-        $('.payment').on('click', 'li', function() {
+        $('.payment').on('click', 'li[data-id]', function() {
             $('#paymentMethod').val($(this).attr('data-id'));
         });
 
@@ -622,6 +704,14 @@
         });
 
         $('.addCard').on('click',function(){
+            $('#addCardForm').submit();
+        });
+
+        $('#applePayBtn').on('click',function(){
+            $('#addCardForm').submit();
+        });
+        
+        $('#googlePayBtn').on('click',function(){
             $('#addCardForm').submit();
         });
 
