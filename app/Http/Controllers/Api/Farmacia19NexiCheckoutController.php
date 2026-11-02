@@ -304,6 +304,10 @@ class Farmacia19NexiCheckoutController extends CheckoutController
     /** Registra l'uscita volontaria dalla pagina Nexi senza presumere che non sia avvenuto l'addebito. */
     public function cancel(Request $request)
     {
+        Log::info('NEXI CANCEL CHIAMATO', [
+            'request_id' => $request->input('request_id'),
+            'user_id' => $request->user()?->id,
+        ]);
         $data = $request->validate(['request_id' => ['required', 'uuid']]);
         $user = $request->user();
         if (!$user) return response()->json(['message' => 'Accesso richiesto.'], 401);
