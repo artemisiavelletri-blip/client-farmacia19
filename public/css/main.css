@@ -1898,7 +1898,7 @@
     }
 
     .payment .wallet-btn img {
-        max-height: 28px !important;
+        max-height: 60px !important;
         width: auto !important;
     }
 }

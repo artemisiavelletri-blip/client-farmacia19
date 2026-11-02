@@ -254,6 +254,10 @@
             #checkoutStep3 .wallet-btn { height:54px!important; }
             #checkoutStep3 .wallet-btn img { height:23px!important; }
         }
+        @media (max-width: 767px) {
+
+            #checkoutStep3 .wallet-buttons { grid-template-columns:repeat(1,minmax(0,1fr)); }
+        }
     </style>
 
 @endsection
@@ -710,7 +714,7 @@
         $('#applePayBtn').on('click',function(){
             $('#addCardForm').submit();
         });
-        
+
         $('#googlePayBtn').on('click',function(){
             $('#addCardForm').submit();
         });
