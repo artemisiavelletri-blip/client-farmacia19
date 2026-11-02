@@ -42,21 +42,26 @@
                             <div class="form-group">
                                 <input type="email" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}">
                             </div>
-                            <div class="form-group" style="position: relative;"> 
-                                <input type="password" class="form-control" placeholder="Password" name="password" value="{{ old('password') }}">
-                                <div style="
-                                    position: absolute;
-                                    top: 17px;
-                                    right: 12px;
-                                    "><i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip"
-                                       data-bs-placement="top"
-                                       data-bs-html="true"
-                                       data-bs-title="La password deve contenere:<br>
-                                       • Almeno 8 caratteri<br>
-                                       • Una lettera maiuscola<br>
-                                       • Una lettera minuscola<br>
-                                       • Un numero<br>
-                                       • Un carattere speciale"></i>
+                            <div class="form-group" style="position: relative;">
+                                <input type="password"
+                                       class="form-control"
+                                       placeholder="Password"
+                                       name="password"
+                                       value="{{ old('password') }}">
+
+                                <div class="password-info">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+
+                                    <div class="password-tooltip">
+                                        <strong>La password deve contenere:</strong>
+                                        <ul>
+                                            <li>Almeno 8 caratteri</li>
+                                            <li>Una lettera maiuscola</li>
+                                            <li>Una lettera minuscola</li>
+                                            <li>Un numero</li>
+                                            <li>Un carattere speciale</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                             <div class="privateUser">                                
@@ -567,9 +572,6 @@
                 });
 
         });
-
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        .forEach(el => new bootstrap.Tooltip(el));
 
     </script>
 @endsection

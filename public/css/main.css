@@ -1551,4 +1551,73 @@
     }
 }
 
+.password-info {
+    position: absolute;
+    top: 17px;
+    right: 12px;
+    cursor: pointer;
+    color: #7186a3;
+    z-index: 10;
+}
 
+.password-info i {
+    font-size: 16px;
+}
+
+.password-tooltip {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    right: -10px;
+    width: 250px;
+    padding: 15px;
+    background: #263448;
+    color: #ffffff;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 1.6;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(5px);
+    transition: all 0.2s ease;
+
+    z-index: 9999;
+    text-align: left;
+    pointer-events: none;
+}
+
+.password-tooltip ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+}
+
+.password-tooltip li {
+    margin-bottom: 3px;
+}
+
+/* Mostra tooltip al passaggio del mouse */
+.password-info:hover .password-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Freccia del tooltip */
+.password-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 12px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #263448 transparent transparent transparent;
+}
+
+.password-info:hover .password-tooltip,
+.password-info:focus .password-tooltip,
+.password-info:focus-within .password-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
