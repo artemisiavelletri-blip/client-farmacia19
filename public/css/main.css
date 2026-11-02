@@ -1770,3 +1770,35 @@
     }
 
 }
+
+/* Contenitore wallet nel checkout */
+
+.wallet-nav-item {
+    width: 100% !important;
+    display: block !important;
+    margin: 4px 0 16px;
+}
+
+.wallet-nav-item .wallet-buttons {
+    display: flex;
+    width: 100%;
+    gap: 12px;
+    margin-top: 0;
+}
+
+.wallet-nav-item .wallet-btn {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Responsive */
+
+@media (max-width: 576px) {
+    .wallet-nav-item .wallet-buttons {
+        flex-direction: column;
+    }
+
+    .wallet-nav-item .wallet-btn {
+        width: 100%;
+    }
+}

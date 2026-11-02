@@ -345,39 +345,88 @@
                                             <div class="accordion-body">
                                                 <div class="shop-checkout-payment">
                                                     <ul class="nav nav-pills mb-3 payment" id="pills-tab" role="tablist">
+                                                        <!-- PAGA CON CARTA -->
                                                         <li class="nav-item" role="presentation" data-id="stripe" style="width:100%!important">
                                                             <a class="nav-link" id="pills-tab-1" data-bs-toggle="pill"
-                                                                data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
-                                                                aria-selected="true" style="text-align: left!important;">
+                                                               data-bs-target="#pills-1" type="button" role="tab"
+                                                               aria-controls="pills-1" aria-selected="true"
+                                                               style="text-align: left!important;">
+
                                                                 <div class="checkout-card-img" style="display: inline;">
-                                                                    <img src="{{ asset('/img/payment/cards.png') }}" alt="" style="width: 80px!important;">
+                                                                    <img src="{{ asset('/img/payment/cards.png') }}"
+                                                                         alt="Carte di pagamento"
+                                                                         style="width: 80px!important;">
                                                                 </div>
+
                                                                 <span>Paga con Carta</span>
-                                                                    <span class="wallet-accepted-badges" aria-label="Accettiamo anche Apple Pay e Google Pay">
-                                                                        <span class="wallet-accepted-badge wallet-apple">Apple Pay</span>
-                                                                        <span class="wallet-accepted-badge wallet-google"><span class="wallet-google-g">G</span> Pay</span>
-                                                                    </span>
                                                             </a>
                                                         </li>
 
-                                                        
-                                                        <li class="nav-item" role="presentation" data-id="bank_transfer" style="width:100%!important">
+                                                        <!-- APPLE PAY E GOOGLE PAY -->
+                                                        <li class="nav-item wallet-nav-item" role="presentation">
+
+                                                            <div class="wallet-buttons">
+
+                                                                <!-- APPLE PAY -->
+                                                                <button type="button"
+                                                                        class="wallet-btn apple-pay-btn"
+                                                                        id="applePayBtn"
+                                                                        aria-label="Paga con Apple Pay">
+
+                                                                    <span class="apple-logo">&#xF8FF;</span>
+                                                                    <span>Pay</span>
+
+                                                                </button>
+
+                                                                <!-- GOOGLE PAY -->
+                                                                <button type="button"
+                                                                        class="wallet-btn google-pay-btn"
+                                                                        id="googlePayBtn"
+                                                                        aria-label="Paga con Google Pay">
+
+                                                                    <span class="google-logo">G</span>
+                                                                    <span class="google-pay-text">Pay</span>
+
+                                                                </button>
+
+                                                            </div>
+
+                                                        </li>
+
+                                                        <!-- BONIFICO -->
+                                                        <li class="nav-item" role="presentation"
+                                                            data-id="bank_transfer" style="width:100%!important">
+
                                                             <a class="nav-link" id="pills-tab-3" data-bs-toggle="pill"
-                                                                data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3"
-                                                                aria-selected="false" style="text-align: left!important;">
+                                                               data-bs-target="#pills-3" type="button" role="tab"
+                                                               aria-controls="pills-3" aria-selected="false"
+                                                               style="text-align: left!important;">
+
                                                                 <div class="checkout-payment-img" style="display: inline;">
-                                                                    <img src="{{ asset('/img/payment/bonifico.png') }}" alt="" style="width: 80px!important;">
+                                                                    <img src="{{ asset('/img/payment/bonifico.png') }}"
+                                                                         alt=""
+                                                                         style="width: 80px!important;">
                                                                 </div>
+
                                                                 <span>Paga con Bonifico</span>
                                                             </a>
                                                         </li>
-                                                        <li class="nav-item" role="presentation" data-id="cod" style="width:100%!important">
+
+                                                        <!-- PAGAMENTO ALLA CONSEGNA -->
+                                                        <li class="nav-item" role="presentation"
+                                                            data-id="cod" style="width:100%!important">
+
                                                             <a class="nav-link" id="pills-tab-4" data-bs-toggle="pill"
-                                                                data-bs-target="#pills-4" type="button" role="tab" aria-controls="pills-4"
-                                                                aria-selected="false" style="text-align: left!important;">
+                                                               data-bs-target="#pills-4" type="button" role="tab"
+                                                               aria-controls="pills-4" aria-selected="false"
+                                                               style="text-align: left!important;">
+
                                                                 <div class="checkout-payment-img cod" style="display: inline;">
-                                                                    <img src="{{ asset('/img/payment/cash.png') }}" alt="" style="width: 80px!important;padding: 10px!important;">
+                                                                    <img src="{{ asset('/img/payment/cash.png') }}"
+                                                                         alt=""
+                                                                         style="width: 80px!important;padding: 10px!important;">
                                                                 </div>
+
                                                                 <span>Paga alla Consegna</span>
                                                             </a>
                                                         </li>
