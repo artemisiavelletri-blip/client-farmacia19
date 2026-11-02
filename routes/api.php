@@ -237,6 +237,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/checkout/nexi/recover', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'recover']);
 
+        Route::post('/checkout/nexi/cancel', [\App\Http\Controllers\Api\Farmacia19NexiCheckoutController::class, 'cancel']);
+
     });
 
 });
