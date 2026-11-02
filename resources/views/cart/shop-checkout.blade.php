@@ -362,37 +362,6 @@
                                                             </a>
                                                         </li>
 
-                                                        <!-- APPLE PAY E GOOGLE PAY -->
-                                                        <li class="nav-item wallet-nav-item" role="presentation">
-
-                                                            <div class="wallet-buttons">
-
-                                                                <!-- APPLE PAY -->
-                                                                <button type="button"
-                                                                        class="wallet-btn apple-pay-btn"
-                                                                        id="applePayBtn"
-                                                                        aria-label="Paga con Apple Pay">
-
-                                                                    <span class="apple-logo">&#xF8FF;</span>
-                                                                    <span>Pay</span>
-
-                                                                </button>
-
-                                                                <!-- GOOGLE PAY -->
-                                                                <button type="button"
-                                                                        class="wallet-btn google-pay-btn"
-                                                                        id="googlePayBtn"
-                                                                        aria-label="Paga con Google Pay">
-
-                                                                    <span class="google-logo">G</span>
-                                                                    <span class="google-pay-text">Pay</span>
-
-                                                                </button>
-
-                                                            </div>
-
-                                                        </li>
-
                                                         <!-- BONIFICO -->
                                                         <li class="nav-item" role="presentation"
                                                             data-id="bank_transfer" style="width:100%!important">
