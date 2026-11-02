@@ -186,6 +186,14 @@
             font-size: 12px;
             font-weight: 700;
         }
+
+        /* Badge informativi wallet: non sono metodi di pagamento separati */
+        .wallet-accepted-badges { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-left: 12px; vertical-align: middle; }
+        .wallet-accepted-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 9px; border: 1px solid #d9dee5; border-radius: 6px; background: #fff; font-size: 13px; font-weight: 700; line-height: 1.3; color: #171717; white-space: nowrap; }
+        .wallet-apple { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        .wallet-google { font-family: Arial, sans-serif; font-weight: 600; }
+        .wallet-google-g { color: #4285f4; font-size: 16px; font-weight: 800; margin-right: 3px; }
+        @media (max-width: 576px) { .wallet-accepted-badges { margin-left: 0; margin-top: 8px; } }
     </style>
 
 @endsection
@@ -345,6 +353,10 @@
                                                                     <img src="{{ asset('/img/payment/cards.png') }}" alt="" style="width: 80px!important;">
                                                                 </div>
                                                                 <span>Paga con Carta</span>
+                                                                    <span class="wallet-accepted-badges" aria-label="Accettiamo anche Apple Pay e Google Pay">
+                                                                        <span class="wallet-accepted-badge wallet-apple">Apple Pay</span>
+                                                                        <span class="wallet-accepted-badge wallet-google"><span class="wallet-google-g">G</span> Pay</span>
+                                                                    </span>
                                                             </a>
                                                         </li>
 
