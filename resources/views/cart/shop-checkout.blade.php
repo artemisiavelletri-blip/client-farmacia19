@@ -84,6 +84,36 @@
     @endforeach
 </form>
 
+<form method="POST" id="gpayForm" action="{{ $requestUrl }}">
+    @foreach ($requestParams as $name => $value)
+        <input
+            type="hidden"
+            name="{{ $name }}"
+            value="{{ $value }}"
+        >
+    @endforeach
+    <input
+        type="hidden"
+        name="selectedcard"
+        value="GOOGLEPAY"
+    >
+</form>
+
+<form method="POST" id="applePayForm" action="{{ $requestUrl }}">
+    @foreach ($requestParams as $name => $value)
+        <input
+            type="hidden"
+            name="{{ $name }}"
+            value="{{ $value }}"
+        >
+    @endforeach
+    <input
+        type="hidden"
+        name="selectedcard"
+        value="APPLEPAY"
+    >
+</form>
+
 
 @section('css')
 
@@ -712,11 +742,11 @@
         });
 
         $('#applePayBtn').on('click',function(){
-            $('#addCardForm').submit();
+            $('#applePayForm').submit();
         });
 
         $('#googlePayBtn').on('click',function(){
-            $('#addCardForm').submit();
+            $('#gpayForm').submit();
         });
 
         /*paypal.Buttons({
