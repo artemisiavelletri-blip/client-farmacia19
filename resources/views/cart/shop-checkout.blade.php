@@ -405,6 +405,304 @@
                 padding-right: 8px !important;
             }
         }
+
+        /* ========================================
+           FARMACIA19 - INDIRIZZI SPEDIZIONE
+        ======================================== */
+
+        #checkoutStep2 .f19-shipping-section {
+            width: 100%;
+            padding: 20px !important;
+            margin: 0 !important;
+            background: #fff !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        #checkoutStep2 .f19-address-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* CARD */
+
+        #checkoutStep2 .f19-address-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            padding: 24px;
+
+            background: #fff;
+            border: 1px solid #e1e7ea;
+            border-radius: 16px;
+
+            box-shadow: 0 3px 12px rgba(0,0,0,.025);
+
+            transition: all .2s ease;
+        }
+
+        #checkoutStep2 .f19-address-card.is-selected {
+            background: #f2fbfa;
+            border-color: #00a399;
+            box-shadow: 0 0 0 1px rgba(0,163,153,.08);
+        }
+
+        #checkoutStep2 .f19-address-card:hover {
+            border-color: #00a399;
+        }
+
+        /* RADIO NASCOSTO */
+
+        #checkoutStep2 .f19-address-radio {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* LABEL */
+
+        #checkoutStep2 .f19-address-details {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+
+            flex: 1;
+            min-width: 0;
+            margin: 0;
+
+            cursor: pointer;
+        }
+
+        /* ICONA GRANDE */
+
+        #checkoutStep2 .f19-address-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex: 0 0 76px;
+            width: 76px;
+            height: 76px;
+
+            border-right: 1px solid #dce8e8;
+
+            color: #009f96;
+            font-size: 27px;
+        }
+
+        /* CONTENUTO */
+
+        #checkoutStep2 .f19-address-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            flex: 1;
+            min-width: 0;
+        }
+
+        #checkoutStep2 .f19-address-name {
+            color: #132c47;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        #checkoutStep2 .f19-address-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+
+            color: #263b50;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        #checkoutStep2 .f19-address-line i {
+            flex: 0 0 18px;
+            margin-top: 4px;
+
+            color: #009f96;
+            font-size: 16px;
+        }
+
+        /* NOTE */
+
+        #checkoutStep2 .f19-address-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            align-self: flex-start;
+
+            padding: 8px 12px;
+
+            background: #e9f0f1;
+            border-radius: 9px;
+
+            color: #263b50;
+            font-size: 14px;
+        }
+
+        #checkoutStep2 .f19-address-note i {
+            color: #009f96;
+        }
+
+        /* MODIFICA */
+
+        #checkoutStep2 .f19-edit-address {
+            flex-shrink: 0;
+
+            padding: 11px 18px;
+
+            background: #fff;
+            border: 1px solid #00a399;
+            border-radius: 10px;
+
+            color: #008e86;
+            font-size: 14px;
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        #checkoutStep2 .f19-edit-address:hover {
+            background: #e8f8f6;
+        }
+
+        #checkoutStep2 .f19-edit-address.hidden {
+            display: none !important;
+        }
+
+        /* AGGIUNGI INDIRIZZO */
+
+        #checkoutStep2 .f19-add-address-wrapper {
+            margin-top: 20px;
+        }
+
+        #checkoutStep2 .f19-add-address {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            width: 100%;
+            min-height: 54px;
+
+            border-radius: 12px;
+
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 767px) {
+
+            #checkoutStep2 .f19-shipping-section {
+                padding: 10px !important;
+            }
+
+            #checkoutStep2 .f19-address-card {
+                flex-wrap: wrap;
+                padding: 16px 12px;
+                gap: 12px;
+            }
+
+            #checkoutStep2 .f19-address-details {
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            #checkoutStep2 .f19-address-icon {
+                flex: 0 0 40px;
+                width: 40px;
+                height: 48px;
+                font-size: 22px;
+            }
+
+            #checkoutStep2 .f19-address-name {
+                font-size: 16px;
+            }
+
+            #checkoutStep2 .f19-address-line {
+                font-size: 13px;
+                gap: 8px;
+            }
+
+            #checkoutStep2 .f19-address-note {
+                font-size: 12px;
+            }
+
+            #checkoutStep2 .f19-edit-address {
+                width: 100%;
+                margin-left: 0;
+                text-align: center;
+            }
+
+            #checkoutStep2 .f19-add-address-wrapper {
+                margin-top: 14px;
+            }
+
+            #checkoutStep2 .f19-add-address {
+                min-height: 48px;
+                font-size: 14px;
+            }
+        }
+
+        /* FARMACIA19 - CORREZIONE AGGIUNGI INDIRIZZO */
+
+        #checkoutStep2 .f19-add-address {
+            background: #009f96 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border: 1px solid #009f96 !important;
+            opacity: 1 !important;
+        }
+
+        #checkoutStep2 .f19-add-address i,
+        #checkoutStep2 .f19-add-address span {
+            color: #ffffff !important;
+        }
+
+        /* Disattiva eventuali sovrapposizioni del tema */
+        #checkoutStep2 .f19-add-address::before,
+        #checkoutStep2 .f19-add-address::after {
+            display: none !important;
+        }
+
+        /* Hover */
+        #checkoutStep2 .f19-add-address:hover {
+            background: #00877f !important;
+            border-color: #00877f !important;
+            color: #ffffff !important;
+        }
+
+        /* Mobile */
+        @media (max-width: 767px) {
+            #checkoutStep2 .f19-add-address {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 10px !important;
+
+                width: 100% !important;
+                min-height: 50px !important;
+
+                background: #009f96 !important;
+                color: #ffffff !important;
+
+                border-radius: 12px !important;
+                font-size: 14px !important;
+                font-weight: 600 !important;
+            }
+}
     </style>
 
 @endsection
@@ -480,70 +778,105 @@
                                                 Indirizzo di Spedizione
                                             </button>
                                           </h2>
-                                          <div id="checkoutStep2" class="accordion-collapse collapse show" data-bs-parent="#shopCheckout">
+                                          <div id="checkoutStep2"
+                                             class="accordion-collapse collapse show"
+                                             data-bs-parent="#shopCheckout">
+
                                             <div class="accordion-body">
                                                 <div class="row shop-checkout-form">
-                                                    <!-- <div class="col-8"> 
-                                                        @if($user->shippingAddresses())
-                                                            <b>Nome: </b>{{$user->shippingAddresses()->first()->recipient_name}}<br>
-                                                            <b>Indirizzo: </b>{{$user->shippingAddresses()->first()->address}}<br>
-                                                            <b>Note: </b>{{$user->shippingAddresses()->first()->note}}<br>
-                                                            <b>CAP: </b>{{$user->shippingAddresses()->first()->cap}}<br>
-                                                            <b>Città (Provincia): </b>{{$user->shippingAddressesCity()->name . ' (' . $user->shippingAddressesCity()->province . ')'}}<br>
-                                                            <b>Telefono: </b>{{$user->shippingAddresses()->first()->phone}}<br>
-                                                        @else
-                                                            <b>Nome: </b>{{$user->name . ' ' . $user->surname}}<br>
-                                                            <b>Indirizzo: </b>{{$user->billingAddresses()->first()->address}}<br>
-                                                            <b>Note: </b>{{$user->billingAddresses()->first()->note}}<br>
-                                                            <b>CAP: </b>{{$user->billingAddresses()->first()->cap}}<br>
-                                                            <b>Città (Provincia): </b>{{$user->billingAddressesCity()->name . ' (' . $user->billingAddressesCity()->province . ')'}}<br>
-                                                            <b>Telefono: </b>{{$user->billingAddresses()->first()->phone}}<br>
-                                                        @endif
-                                                        <div class="shop-checkout-payment mt-10">
-                                                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                                                <li class="nav-item" role="presentation">
-                                                                    <a class="nav-link active" id="pills-tab-0" data-bs-toggle="pill"
-                                                                        data-bs-target="#pills-0" type="button" role="tab" aria-controls="pills-0"
-                                                                        aria-selected="true">
-                                                                        <div class="checkout-card-img">
-                                                                            <img src="{{asset('/img/shipping.png')}}" alt="">
-                                                                        </div>
-                                                                        <span><b>1-2 Giorni</b></span>
-                                                                        @if(number_format((float)auth()->user()->cartItems()->with('product')->get()->sum->subtotal, 2, '.', '') <= 49.90)
-                                                                            <span><b>€5.90</b></span>
-                                                                        @endif
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-4 align-right">
-                                                        <a href="/settings/shipping-address"><i class="fas fa-edit"></i></a>
-                                                    </div> --> 
-                                                    <div class="section-radio">
-                                                        <div class="vertical-list">
+
+                                                    <div class="section-radio f19-shipping-section">
+
+                                                        <div class="vertical-list f19-address-list">
+
                                                             @foreach(Auth::user()->shippingAddresses as $address)
-                                                                <div class="vertical-list-item">
-                                                                    <input type="radio" id="vl1" name="shipping_address" value="{{$address->id}}" @if($address->default) checked @endif>
-                                                                    <label for="vl1">
-                                                                        {{$address->recipient_name}}<br>
-                                                                        {{$address->address . ',' . $address->city->name . ',' . $address->city->province . ',' . $address->cap}}<br>
-                                                                        Numero di telefono: {{$address->phone}}
-                                                                        @if($address->note)
-                                                                            <br>Note: {{$address->note}}
-                                                                        @endif <br>  
-                                                                        <button type="button" class="edit-address btn btn-sm btn-secondary w-100 @if(!$address->default) hidden @endif" onclick="window.location.href='/settings/edit-address/shipping/{{$address->id}}'">Modifica Indirizzo</button>
+
+                                                                <div class="vertical-list-item f19-address-card {{ $address->default ? 'is-selected' : '' }}">
+
+                                                                    <input
+                                                                        type="radio"
+                                                                        class="f19-address-radio"
+                                                                        id="shipping_address_{{ $address->id }}"
+                                                                        name="shipping_address"
+                                                                        value="{{ $address->id }}"
+                                                                        @checked($address->default)
+                                                                    >
+
+                                                                    <label for="shipping_address_{{ $address->id }}"
+                                                                           class="f19-address-details">
+
+                                                                        <span class="f19-address-icon">
+                                                                            <i class="fas fa-map-marker-alt"></i>
+                                                                        </span>
+
+                                                                        <span class="f19-address-content">
+
+                                                                            <span class="f19-address-name">
+                                                                                {{ $address->recipient_name }}
+                                                                            </span>
+
+                                                                            <span class="f19-address-line">
+                                                                                <i class="fas fa-map-marker-alt"></i>
+
+                                                                                <span>
+                                                                                    {{ $address->address }},
+                                                                                    {{ $address->cap }}
+                                                                                    {{ $address->city->name }}
+                                                                                    ({{ $address->city->province }})
+                                                                                </span>
+                                                                            </span>
+
+                                                                            <span class="f19-address-line">
+                                                                                <i class="fas fa-phone-alt"></i>
+                                                                                <span>{{ $address->phone }}</span>
+                                                                            </span>
+
+                                                                            @if($address->note)
+                                                                                <span class="f19-address-note">
+                                                                                    <i class="far fa-sticky-note"></i>
+                                                                                    {{ $address->note }}
+                                                                                </span>
+                                                                            @endif
+
+                                                                        </span>
+
                                                                     </label>
+
+                                                                    <button
+                                                                        type="button"
+                                                                        class="edit-address f19-edit-address {{ $address->default ? '' : 'hidden' }}"
+                                                                        onclick="window.location.href='/settings/edit-address/shipping/{{ $address->id }}'">
+
+                                                                        <i class="far fa-edit"></i>
+                                                                        Modifica indirizzo
+
+                                                                    </button>
+
                                                                 </div>
+
                                                             @endforeach
+
                                                         </div>
-                                                        <div class="text-center">
-                                                            <button class="theme-btn w-100 btn-sm" type="button" onclick="window.location.href='/settings/create-address/shipping'"><span class="far fa-plus-circle"></span>Aggiungi Indirizzo</button>
+
+                                                        <div class="f19-add-address-wrapper">
+
+                                                            <button
+                                                                type="button"
+                                                                class="theme-btn f19-add-address"
+                                                                onclick="window.location.href='/settings/create-address/shipping'">
+
+                                                                <i class="far fa-plus-circle"></i>
+                                                                Aggiungi Indirizzo
+
+                                                            </button>
+
                                                         </div>
+
                                                     </div>
-                                                </div> 
+
+                                                </div>
                                             </div>
-                                          </div>
+                                        </div>
                                         </div>
                                         <div class="accordion-item">
                                           <h2 class="accordion-header">
@@ -878,12 +1211,23 @@
         });
 
         $(document).on('change', 'input[name="shipping_address"]', function () {
-            $('.edit-address').addClass('hidden');
 
-            $(this)
-                .closest('.vertical-list-item')
+            const selectedCard = $(this).closest('.f19-address-card');
+
+            // Aggiorna la selezione grafica
+            $('#checkoutStep2 .f19-address-card')
+                .removeClass('is-selected');
+
+            selectedCard.addClass('is-selected');
+
+            // Aggiorna il pulsante modifica
+            $('#checkoutStep2 .edit-address')
+                .addClass('hidden');
+
+            selectedCard
                 .find('.edit-address')
                 .removeClass('hidden');
+
         });
 
         $('.card-box').on('click', function() {
