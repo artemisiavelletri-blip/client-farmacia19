@@ -238,10 +238,10 @@
             box-shadow:0 0 0 1px rgba(3,162,151,.13);
         }
         #checkoutStep3 .payment > li[data-id] > .nav-link::before { display:none!important; }
-        #checkoutStep3 .payment > li[data-id] > .nav-link::after {
+        /*#checkoutStep3 .payment > li[data-id] > .nav-link::after {
             content:''; display:block; order:-1; flex:0 0 19px; width:19px; height:19px;
             border:2px solid #b7c1c9; border-radius:50%; background:#fff;
-        }
+        }*/
         #checkoutStep3 .payment > li[data-id] > .nav-link.active::after {
             border-color:#03a297; background:#03a297;
             box-shadow:inset 0 0 0 4px #fff;
@@ -290,6 +290,120 @@
         @media (max-width: 767px) {
 
             #checkoutStep3 .wallet-buttons { grid-template-columns:repeat(1,minmax(0,1fr)); }
+        }
+        #paypalButtons {
+            position: absolute;
+            top: 22px;
+            opacity: 0;
+            width: 100%;
+            left: 0;
+        }
+        /* =========================================
+           FARMACIA19 - SOLO APPLE PAY E GOOGLE PAY
+           ========================================= */
+
+        #checkoutStep3 .payment > li.f19-wallet-item {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Riquadro wallet */
+
+        #checkoutStep3 .payment > li.f19-wallet-item > .nav-link {
+            display: flex !important;
+            align-items: center !important;
+            gap: 18px !important;
+
+            width: 100% !important;
+            min-height: 90px !important;
+            padding: 18px 22px !important;
+
+            border: 1px solid #e1e7ea !important;
+            border-radius: 15px !important;
+            background: #fff !important;
+
+            box-shadow: 0 2px 6px rgba(2, 51, 80, 0.025);
+
+            color: #233449 !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+
+            text-decoration: none !important;
+            cursor: pointer;
+        }
+
+        /* Hover */
+
+        #checkoutStep3 .payment > li.f19-wallet-item > .nav-link:hover {
+            border-color: #86cfc9 !important;
+            background: #f8fdfc !important;
+        }
+
+        /* Elimina eventuali pseudo-elementi del tema */
+
+        #checkoutStep3 .payment > li.f19-wallet-item > .nav-link::before,
+        #checkoutStep3 .payment > li.f19-wallet-item > .nav-link::after {
+            display: none !important;
+        }
+
+        /* Contenitore logo */
+
+        #checkoutStep3 .payment > li.f19-wallet-item .checkout-card-img {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            flex: 0 0 78px !important;
+            width: 78px !important;
+            height: 50px !important;
+
+            margin: 0 !important;
+            padding-right: 13px !important;
+
+            border-right: 1px solid #e8edef !important;
+        }
+
+        /* Logo */
+
+        #checkoutStep3 .payment > li.f19-wallet-item .checkout-card-img img {
+            display: block !important;
+
+            max-width: 64px !important;
+            max-height: 48px !important;
+
+            width: auto !important;
+            height: auto !important;
+
+            object-fit: contain !important;
+        }
+
+        /* Testo */
+
+        #checkoutStep3 .payment > li.f19-wallet-item .nav-link > span {
+            color: #233449 !important;
+            font-size: inherit !important;
+            font-weight: 600 !important;
+        }
+
+        /* =========================================
+           MOBILE
+           ========================================= */
+
+        @media (max-width: 576px) {
+
+            #checkoutStep3 .payment > li.f19-wallet-item > .nav-link {
+                min-height: 78px !important;
+                padding: 14px 12px !important;
+                gap: 11px !important;
+                font-size: 14px !important;
+            }
+
+            #checkoutStep3 .payment > li.f19-wallet-item .checkout-card-img {
+                flex: 0 0 64px !important;
+                width: 64px !important;
+                padding-right: 8px !important;
+            }
         }
     </style>
 
@@ -443,7 +557,7 @@
                                                 <div class="shop-checkout-payment">
                                                     <ul class="nav nav-pills mb-3 payment" id="pills-tab" role="tablist">
                                                         <!-- PAGA CON CARTA -->
-                                                        <li class="nav-item" role="presentation" data-id="stripe" style="width:100%!important">
+                                                        <li class="nav-item" role="presentation" data-id="stripe" style="width:100%!important;">
                                                             <a class="nav-link" id="pills-tab-1" data-bs-toggle="pill"
                                                                data-bs-target="#pills-1" type="button" role="tab"
                                                                aria-controls="pills-1" aria-selected="true"
@@ -459,28 +573,55 @@
                                                             </a>
                                                         </li>
 
-                                                        <li class="nav-item wallet-nav-item" role="presentation">
-                                                            <div class="wallet-buttons">
+                                                        {{-- ========================================= --}}
+                                                        {{-- APPLE PAY --}}
+                                                        {{-- ========================================= --}}
 
-                                                                <!-- APPLE PAY -->
-                                                                <button type="button"
-                                                                        id="applePayBtn"
-                                                                        class="wallet-btn google-pay-btn"
-                                                                        style="display:none !important;"
-                                                                        aria-label="Paga con Apple Pay">
-                                                                    <img src="{{ asset('/img/payment/apple-pay.png') }}" alt="Apple Pay">
-                                                                </button>
+                                                        <li class="nav-item f19-wallet-item"
+                                                            role="presentation"
+                                                            id="applePayItem"
+                                                            style="width:100%!important; display:none;">
 
-                                                                <!-- GOOGLE PAY -->
-                                                                <button type="button"
-                                                                        id="googlePayBtn"
-                                                                        class="wallet-btn google-pay-btn"
-                                                                        style="display:none !important;"
-                                                                        aria-label="Paga con Google Pay">
-                                                                    <img src="{{ asset('/img/payment/google-pay.svg') }}" alt="Google Pay">
-                                                                </button>
+                                                            <a class="nav-link"
+                                                               id="applePayBtn"
+                                                               role="button"
+                                                               tabindex="0"
+                                                               style="text-align:left!important; cursor:pointer;">
 
-                                                            </div>
+                                                                <div class="checkout-card-img">
+                                                                    <img src="{{ asset('/img/payment/apple-pay.png') }}"
+                                                                         alt="Apple Pay">
+                                                                </div>
+
+                                                                <span>Apple Pay</span>
+
+                                                            </a>
+                                                        </li>
+
+
+                                                        {{-- ========================================= --}}
+                                                        {{-- GOOGLE PAY --}}
+                                                        {{-- ========================================= --}}
+
+                                                        <li class="nav-item f19-wallet-item"
+                                                            role="presentation"
+                                                            id="googlePayItem"
+                                                            style="width:100%!important;">
+
+                                                            <a class="nav-link"
+                                                               id="googlePayBtn"
+                                                               role="button"
+                                                               tabindex="0"
+                                                               style="text-align:left!important; cursor:pointer;">
+
+                                                                <div class="checkout-card-img">
+                                                                    <img src="{{ asset('/img/payment/google-pay.svg') }}"
+                                                                         alt="Google Pay">
+                                                                </div>
+
+                                                                <span>Google Pay</span>
+
+                                                            </a>
                                                         </li>
 
                                                         <!-- BONIFICO -->
@@ -520,9 +661,23 @@
                                                                 <span>Paga alla Consegna</span>
                                                             </a>
                                                         </li>
+                                                        <li class="nav-item" role="presentation"
+                                                            data-id="cod" style="width:100%!important">
+
+                                                            <a class="nav-link" type="button">
+                                                                <div class="checkout-payment-img cod" style="display: inline;">
+                                                                    <img src="{{ asset('/img/payment/paypal-3.png') }}"
+                                                                         alt=""
+                                                                         style="width: 80px!important;padding: 10px!important;">
+                                                                </div>
+
+                                                                <span>PayPal</span>
+                                                                <div class="mb-15" id="paypalButtons" style="position:absolute;top: 0;opacity: 0;">
+                                                                </div>
+                                                            </a>
+                                                        </li>
                                                     </ul>
-                                                    <div class="mb-15" id="paypalButtons">
-                                                    </div>
+                                                    
                                                     <div class="tab-content" id="pills-tabContent">
                                                         <div class="tab-pane fade show" id="pills-1" role="tabpanel"
                                                             aria-labelledby="pills-tab-1" tabindex="0">
@@ -825,79 +980,54 @@
 
         }).render("#paypalButtons");
 
-        document.addEventListener('DOMContentLoaded', async function () {
+        document.addEventListener('DOMContentLoaded', function () {
 
-            const applePayBtn = document.getElementById('applePayBtn');
+            const applePayItem = document.getElementById('applePayItem');
+            const googlePayItem = document.getElementById('googlePayItem');
 
-            if (!applePayBtn) return;
+            // =========================================
+            // APPLE PAY
+            // =========================================
 
-            if (window.ApplePaySession) {
+            if (applePayItem) {
+
+                let applePayAvailable = false;
 
                 try {
-                    if (ApplePaySession.canMakePayments()) {
-                        applePayBtn.style.setProperty(
-                            'display',
-                            'flex',
-                            'important'
-                        );
-                    }
+
+                    applePayAvailable =
+                        typeof window.ApplePaySession !== 'undefined' &&
+                        ApplePaySession.canMakePayments();
+
                 } catch (error) {
+
                     console.warn('Apple Pay non disponibile:', error);
+
                 }
+
+                applePayItem.style.setProperty(
+                    'display',
+                    applePayAvailable ? 'block' : 'none',
+                    'important'
+                );
+
+            }
+
+            // =========================================
+            // GOOGLE PAY
+            // =========================================
+
+            if (googlePayItem) {
+
+                googlePayItem.style.setProperty(
+                    'display',
+                    'block',
+                    'important'
+                );
+
             }
 
         });
-
-        async function checkGooglePayAvailability() {
-
-            const googlePayBtn = document.getElementById('googlePayBtn');
-
-            if (!googlePayBtn || !window.google?.payments?.api) {
-                return;
-            }
-
-            const paymentsClient = new google.payments.api.PaymentsClient({
-                environment: 'PRODUCTION'
-            });
-
-            const request = {
-                apiVersion: 2,
-                apiVersionMinor: 0,
-                allowedPaymentMethods: [
-                    {
-                        type: 'CARD',
-                        parameters: {
-                            allowedAuthMethods: [
-                                'PAN_ONLY',
-                                'CRYPTOGRAM_3DS'
-                            ],
-                            allowedCardNetworks: [
-                                'VISA',
-                                'MASTERCARD'
-                            ]
-                        }
-                    }
-                ]
-            };
-
-            try {
-
-                const response = await paymentsClient.isReadyToPay(request);
-
-                if (response.result) {
-
-                    googlePayBtn.style.setProperty(
-                        'display',
-                        'flex',
-                        'important'
-                    );
-
-                }
-
-            } catch (error) {
-                console.warn('Google Pay non disponibile:', error);
-            }
-        }
 
     </script>
 
