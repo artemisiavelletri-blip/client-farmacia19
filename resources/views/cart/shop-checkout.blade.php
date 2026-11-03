@@ -463,6 +463,7 @@
                                                                 <button type="button"
                                                                         id="applePayBtn"
                                                                         class="wallet-btn google-pay-btn"
+                                                                        style="display:none !important;"
                                                                         aria-label="Paga con Apple Pay">
                                                                     <img src="{{ asset('/img/payment/apple-pay.png') }}" alt="Apple Pay">
                                                                 </button>
@@ -471,6 +472,7 @@
                                                                 <button type="button"
                                                                         id="googlePayBtn"
                                                                         class="wallet-btn google-pay-btn"
+                                                                        style="display:none !important;"
                                                                         aria-label="Paga con Google Pay">
                                                                     <img src="{{ asset('/img/payment/google-pay.svg') }}" alt="Google Pay">
                                                                 </button>
@@ -625,6 +627,7 @@
 @section('js')
     <script src="https://www.paypal.com/sdk/js?client-id=AdLiHCQZdcgZtNRYGnSfulxjw5X1cxJrb3SwXkZudYjuNCa2h104dWSJNLLFl8HmO2Gm8VIU478vX6d-&currency=EUR"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
             // Seleziona tutti i tab
@@ -818,6 +821,80 @@
             }
 
         }).render("#paypalButtons");
+
+        document.addEventListener('DOMContentLoaded', async function () {
+
+            const applePayBtn = document.getElementById('applePayBtn');
+
+            if (!applePayBtn) return;
+
+            if (window.ApplePaySession) {
+
+                try {
+                    if (ApplePaySession.canMakePayments()) {
+                        applePayBtn.style.setProperty(
+                            'display',
+                            'flex',
+                            'important'
+                        );
+                    }
+                } catch (error) {
+                    console.warn('Apple Pay non disponibile:', error);
+                }
+            }
+
+        });
+
+        async function checkGooglePayAvailability() {
+
+            const googlePayBtn = document.getElementById('googlePayBtn');
+
+            if (!googlePayBtn || !window.google?.payments?.api) {
+                return;
+            }
+
+            const paymentsClient = new google.payments.api.PaymentsClient({
+                environment: 'PRODUCTION'
+            });
+
+            const request = {
+                apiVersion: 2,
+                apiVersionMinor: 0,
+                allowedPaymentMethods: [
+                    {
+                        type: 'CARD',
+                        parameters: {
+                            allowedAuthMethods: [
+                                'PAN_ONLY',
+                                'CRYPTOGRAM_3DS'
+                            ],
+                            allowedCardNetworks: [
+                                'VISA',
+                                'MASTERCARD'
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            try {
+
+                const response = await paymentsClient.isReadyToPay(request);
+
+                if (response.result) {
+
+                    googlePayBtn.style.setProperty(
+                        'display',
+                        'flex',
+                        'important'
+                    );
+
+                }
+
+            } catch (error) {
+                console.warn('Google Pay non disponibile:', error);
+            }
+        }
 
     </script>
 
