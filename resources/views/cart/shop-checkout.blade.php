@@ -702,7 +702,541 @@
                 font-size: 14px !important;
                 font-weight: 600 !important;
             }
-}
+        }
+        /* ==========================================
+           FARMACIA19 - CARTE SALVATE
+           VERSIONE DEFINITIVA
+        ========================================== */
+
+        /* CONTENITORE */
+
+        #pills-1 .f19-cards-section {
+            width: 100%;
+            padding: 20px !important;
+            margin: 0 !important;
+            background: #ffffff !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* LISTA CARTE */
+
+        #pills-1 .f19-cards-list {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* ==========================================
+           SINGOLA CARTA
+        ========================================== */
+
+        #pills-1 .f19-saved-card {
+            position: relative !important;
+
+            display: block !important;
+            width: 100% !important;
+
+            padding: 0 !important;
+            margin: 0 !important;
+
+            background: #ffffff !important;
+            border: 1px solid #dce5e9 !important;
+            border-radius: 14px !important;
+
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.025);
+
+            overflow: hidden;
+
+            transition:
+                background-color 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        /* CARTA SELEZIONATA */
+
+        #pills-1 .f19-saved-card.is-selected,
+        #pills-1 .f19-saved-card:has(
+            input[name="selected_card_id"]:checked
+        ) {
+            background: #eaf9f7 !important;
+            border-color: #00a399 !important;
+            box-shadow: 0 0 0 1px rgba(0, 163, 153, 0.06) !important;
+        }
+
+        /* HOVER */
+
+        #pills-1 .f19-saved-card:hover {
+            border-color: #00a399 !important;
+        }
+
+        /* ==========================================
+           RADIO BUTTON NASCOSTO
+        ========================================== */
+
+        #pills-1 .f19-card-radio {
+            position: absolute !important;
+
+            width: 1px !important;
+            height: 1px !important;
+
+            margin: -1px !important;
+            padding: 0 !important;
+
+            opacity: 0 !important;
+            overflow: hidden !important;
+
+            border: 0 !important;
+        }
+
+        /* ACCESSIBILITÀ TASTIERA */
+
+        #pills-1 .f19-saved-card:focus-within {
+            outline: 2px solid #00a399;
+            outline-offset: 2px;
+        }
+
+        /* ==========================================
+           LABEL CLICCABILE
+        ========================================== */
+
+        #pills-1 .f19-card-label {
+            display: flex !important;
+            align-items: center !important;
+
+            gap: 16px !important;
+
+            width: 100% !important;
+            min-height: 88px !important;
+
+            padding: 16px 18px !important;
+            margin: 0 !important;
+
+            background: transparent !important;
+
+            cursor: pointer !important;
+        }
+
+        /* ==========================================
+           LOGO CARTA
+        ========================================== */
+
+        #pills-1 .f19-card-brand {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            flex: 0 0 82px !important;
+
+            width: 82px !important;
+            height: 58px !important;
+
+            padding-right: 16px !important;
+            margin: 0 !important;
+
+            border-right: 1px solid #dce8e8 !important;
+        }
+
+        /* IMMAGINI VISA / MASTERCARD */
+
+        #pills-1 .f19-card-brand img {
+            display: block !important;
+
+            width: auto !important;
+            height: auto !important;
+
+            max-width: 65px !important;
+            max-height: 42px !important;
+
+            object-fit: contain !important;
+        }
+
+        /* ALTRE CARTE */
+
+        #pills-1 .f19-brand-text {
+            color: #16334b !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+        }
+
+        /* ==========================================
+           INFORMAZIONI CARTA
+        ========================================== */
+
+        #pills-1 .f19-card-information {
+            display: flex !important;
+            flex-direction: column !important;
+
+            align-items: flex-start !important;
+            justify-content: center !important;
+
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+
+            gap: 5px !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+
+            text-align: left !important;
+        }
+
+        /* BRAND */
+
+        #pills-1 .f19-card-name {
+            display: block !important;
+
+            color: #132c47 !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+
+            line-height: 1.3 !important;
+        }
+
+        /* TITOLARE */
+
+        #pills-1 .f19-card-holder {
+            display: block !important;
+
+            color: #263b50 !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+
+            line-height: 1.4 !important;
+
+            overflow-wrap: anywhere;
+        }
+
+        /* SCADENZA */
+
+        #pills-1 .f19-card-expiry {
+            position: static !important;
+
+            display: block !important;
+
+            width: auto !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+
+            color: #64748b !important;
+            font-size: 12px !important;
+            font-weight: 400 !important;
+
+            line-height: 1.4 !important;
+            text-align: left !important;
+
+            transform: none !important;
+        }
+
+        /* ==========================================
+           SPUNTA CARTA SELEZIONATA
+        ========================================== */
+
+        #pills-1 .f19-card-check {
+            display: none !important;
+
+            align-items: center !important;
+            justify-content: center !important;
+
+            flex: 0 0 28px !important;
+
+            width: 28px !important;
+            height: 28px !important;
+
+            margin-left: auto !important;
+
+            border-radius: 50% !important;
+
+            background: #00a399 !important;
+            color: #ffffff !important;
+
+            font-size: 12px !important;
+        }
+
+        /* SPUNTA VISIBILE SOLO SULLA CARTA SELEZIONATA */
+
+        #pills-1 .f19-saved-card.is-selected .f19-card-check,
+        #pills-1 .f19-saved-card:has(
+            input[name="selected_card_id"]:checked
+        ) .f19-card-check {
+            display: flex !important;
+        }
+
+        #pills-1 .f19-card-check i {
+            color: #ffffff !important;
+        }
+
+        /* ==========================================
+           AGGIUNGI CARTA
+        ========================================== */
+
+        #pills-1 .f19-add-card-wrapper {
+            width: 100%;
+            margin-top: 14px !important;
+        }
+
+        /* PULSANTE */
+
+        #pills-1 .f19-add-card {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            gap: 10px !important;
+
+            width: 100% !important;
+            min-height: 52px !important;
+
+            padding: 12px 18px !important;
+
+            background: #009f96 !important;
+            background-image: none !important;
+
+            border: 1px solid #009f96 !important;
+            border-radius: 12px !important;
+
+            color: #ffffff !important;
+
+            font-size: 15px !important;
+            font-weight: 600 !important;
+
+            line-height: 1.4 !important;
+
+            opacity: 1 !important;
+            cursor: pointer !important;
+
+            transition:
+                background-color 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        /* ICONA E TESTO BIANCHI */
+
+        #pills-1 .f19-add-card span,
+        #pills-1 .f19-add-card i {
+            color: #ffffff !important;
+        }
+
+        /* ELIMINA EFFETTI DEL TEMA */
+
+        #pills-1 .f19-add-card::before,
+        #pills-1 .f19-add-card::after {
+            display: none !important;
+        }
+
+        /* HOVER */
+
+        #pills-1 .f19-add-card:hover {
+            background: #00877f !important;
+            border-color: #00877f !important;
+            color: #ffffff !important;
+        }
+
+        /* FOCUS */
+
+        #pills-1 .f19-add-card:focus-visible {
+            outline: 2px solid #006f69 !important;
+            outline-offset: 3px !important;
+        }
+
+        /* ==========================================
+           TABLET
+        ========================================== */
+
+        @media (max-width: 991px) {
+
+            #pills-1 .f19-cards-section {
+                padding: 15px !important;
+            }
+
+            #pills-1 .f19-card-label {
+                padding: 14px 15px !important;
+            }
+
+        }
+
+        /* ==========================================
+           MOBILE
+        ========================================== */
+
+        @media (max-width: 767px) {
+
+            /* CONTENITORE */
+
+            #pills-1 .f19-cards-section {
+                padding: 10px !important;
+            }
+
+            /* LISTA */
+
+            #pills-1 .f19-cards-list {
+                gap: 10px !important;
+            }
+
+            /* CARD */
+
+            #pills-1 .f19-saved-card {
+                border-radius: 12px !important;
+            }
+
+            /* LABEL */
+
+            #pills-1 .f19-card-label {
+                min-height: 84px !important;
+
+                padding: 12px !important;
+
+                gap: 12px !important;
+            }
+
+            /* LOGO */
+
+            #pills-1 .f19-card-brand {
+                flex: 0 0 60px !important;
+
+                width: 60px !important;
+                height: 50px !important;
+
+                padding-right: 10px !important;
+            }
+
+            #pills-1 .f19-card-brand img {
+                max-width: 48px !important;
+                max-height: 34px !important;
+            }
+
+            /* BRAND */
+
+            #pills-1 .f19-card-name {
+                font-size: 14px !important;
+            }
+
+            /* TITOLARE */
+
+            #pills-1 .f19-card-holder {
+                font-size: 13px !important;
+            }
+
+            /* SCADENZA */
+
+            #pills-1 .f19-card-expiry {
+                font-size: 12px !important;
+            }
+
+            /* SPUNTA */
+
+            #pills-1 .f19-card-check {
+                flex: 0 0 24px !important;
+
+                width: 24px !important;
+                height: 24px !important;
+
+                font-size: 10px !important;
+            }
+
+            /* PULSANTE AGGIUNGI CARTA */
+
+            #pills-1 .f19-add-card-wrapper {
+                margin-top: 12px !important;
+            }
+
+            #pills-1 .f19-add-card {
+                min-height: 48px !important;
+
+                padding: 11px 14px !important;
+
+                border-radius: 11px !important;
+
+                font-size: 14px !important;
+
+                background: #009f96 !important;
+                color: #ffffff !important;
+            }
+
+        }
+
+        /* ==========================================
+           SMARTPHONE PICCOLI
+        ========================================== */
+
+        @media (max-width: 375px) {
+
+            #pills-1 .f19-card-label {
+                gap: 9px !important;
+                padding: 10px !important;
+            }
+
+            #pills-1 .f19-card-brand {
+                flex-basis: 52px !important;
+                width: 52px !important;
+                padding-right: 8px !important;
+            }
+
+            #pills-1 .f19-card-brand img {
+                max-width: 42px !important;
+            }
+
+            #pills-1 .f19-card-check {
+                flex-basis: 22px !important;
+                width: 22px !important;
+                height: 22px !important;
+            }
+
+        }
+    
+        /* FARMACIA19 - INTESTAZIONE CARTE SALVATE (solo #pills-1) */
+        #pills-1 .f19-cards-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e6eeee;
+        }
+        #pills-1 .f19-cards-header-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 46px;
+            width: 46px;
+            height: 46px;
+            background: #e8f8f6;
+            border-radius: 12px;
+            color: #009f96;
+            font-size: 21px;
+        }
+        #pills-1 .f19-cards-header-text { flex: 1; min-width: 0; }
+        #pills-1 .f19-cards-header-text h4 {
+            margin: 0 0 4px !important;
+            color: #132c47 !important;
+            font-size: 18px !important;
+            font-weight: 700 !important;
+        }
+        #pills-1 .f19-cards-header-text p {
+            margin: 0 !important;
+            color: #64748b !important;
+            font-size: 13px !important;
+            line-height: 1.5;
+        }
+        @media (max-width: 767px) {
+            #pills-1 .f19-cards-header {
+                gap: 11px;
+                margin-bottom: 16px;
+                padding-bottom: 14px;
+            }
+            #pills-1 .f19-cards-header-icon {
+                flex-basis: 40px; width: 40px; height: 40px; font-size: 18px;
+            }
+            #pills-1 .f19-cards-header-text h4 { font-size: 16px !important; }
+            #pills-1 .f19-cards-header-text p { font-size: 12px !important; }
+        }
+
     </style>
 
 @endsection
@@ -1012,39 +1546,125 @@
                                                     </ul>
                                                     
                                                     <div class="tab-content" id="pills-tabContent">
-                                                        <div class="tab-pane fade show" id="pills-1" role="tabpanel"
-                                                            aria-labelledby="pills-tab-1" tabindex="0">
-                                                            <div class="shop-checkout-form">
-                                                                <div class="section-radio">
-                                                                    <div class="vertical-list">
-                                                                        @foreach($user->paymentMethods()->get() as $card)
-                                                                            @php
-                                                                                $brand = strtolower($card->brand);
-                                                                            @endphp
-                                                                            <div class="vertical-list-item">
-                                                                                <input type="radio" id="vl1" name="selected_card_id" value="{{ $card->id }}" @if($card->default) checked @endif>
-                                                                                <div class="card-brand">
-                                                                                    @if($brand === 'visa')
-                                                                                        <img src="{{ asset('/img/payment/visa.svg') }}" alt="Visa">
-                                                                                    @elseif($brand === 'mastercard')
-                                                                                        <img src="{{ asset('/img/payment/mastercard.png') }}" alt="Mastercard">
-                                                                                    @else
-                                                                                        <span>{{ strtoupper($card->brand) }}</span>
-                                                                                    @endif
-                                                                                </div>
-                                                                                <label for="vl1">
-                                                                                    {{$card->brand}}<br>
-                                                                                    {{$card->holder_name}} : {{$card->exp_month}}/{{$card->exp_year}}
-                                                                                </label>
-                                                                            </div>
-                                                                        @endforeach
+                                                        <div class="tab-pane fade show"
+                                                         id="pills-1"
+                                                         role="tabpanel"
+                                                         aria-labelledby="pills-tab-1"
+                                                         tabindex="0">
+
+                                                        <div class="shop-checkout-form">
+
+                                                            <div class="section-radio f19-cards-section">
+
+                                                                {{-- Intestazione carte salvate --}}
+                                                                <div class="f19-cards-header">
+                                                                    <div class="f19-cards-header-icon" aria-hidden="true">
+                                                                        <i class="far fa-credit-card"></i>
                                                                     </div>
-                                                                    <div class="text-center">
-                                                                        <button class="theme-btn addCard w-100 btn-sm" type="button"><span class="far fa-plus-circle"></span>Aggiungi Carta</button>
+                                                                    <div class="f19-cards-header-text">
+                                                                        <h4>Carte Salvate</h4>
+                                                                        <p>Seleziona una carta per completare il pagamento</p>
                                                                     </div>
                                                                 </div>
+
+                                                                <div class="vertical-list f19-cards-list">
+
+                                                                    @foreach($user->paymentMethods()->get() as $card)
+
+                                                                        @php
+                                                                            $brand = strtolower($card->brand);
+                                                                        @endphp
+
+                                                                        <div class="vertical-list-item f19-saved-card {{ $card->default ? 'is-selected' : '' }}">
+
+                                                                            {{-- Radio nascosto, ma funzionante --}}
+                                                                            <input
+                                                                                type="radio"
+                                                                                class="f19-card-radio"
+                                                                                id="saved_card_{{ $card->id }}"
+                                                                                name="selected_card_id"
+                                                                                value="{{ $card->id }}"
+                                                                                @checked($card->default)
+                                                                            >
+
+                                                                            {{-- Card cliccabile --}}
+                                                                            <label
+                                                                                for="saved_card_{{ $card->id }}"
+                                                                                class="f19-card-label">
+
+                                                                                <span class="f19-card-brand">
+
+                                                                                    @if($brand === 'visa')
+
+                                                                                        <img
+                                                                                            src="{{ asset('/img/payment/visa.svg') }}"
+                                                                                            alt="Visa">
+
+                                                                                    @elseif($brand === 'mastercard')
+
+                                                                                        <img
+                                                                                            src="{{ asset('/img/payment/mastercard.png') }}"
+                                                                                            alt="Mastercard">
+
+                                                                                    @else
+
+                                                                                        <span class="f19-brand-text">
+                                                                                            {{ strtoupper($card->brand) }}
+                                                                                        </span>
+
+                                                                                    @endif
+
+                                                                                </span>
+
+                                                                                <span class="f19-card-information">
+
+                                                                                    <span class="f19-card-name">
+                                                                                        {{ strtoupper($card->brand) }}
+                                                                                    </span>
+
+                                                                                    <span class="f19-card-holder">
+                                                                                        {{ $card->holder_name }}
+                                                                                    </span>
+
+                                                                                    <span class="f19-card-expiry">
+                                                                                        Scadenza:
+                                                                                        {{ str_pad($card->exp_month, 2, '0', STR_PAD_LEFT) }}/{{ $card->exp_year }}
+                                                                                    </span>
+
+                                                                                </span>
+
+                                                                                {{-- Indicatore carta selezionata --}}
+                                                                                <span class="f19-card-check" aria-hidden="true">
+                                                                                    <i class="fas fa-check"></i>
+                                                                                </span>
+
+                                                                            </label>
+
+                                                                        </div>
+
+                                                                    @endforeach
+
+                                                                </div>
+
+                                                                {{-- Aggiungi carta: mantiene la classe addCard --}}
+                                                                <div class="f19-add-card-wrapper">
+
+                                                                    <button
+                                                                        class="theme-btn addCard f19-add-card w-100 btn-sm"
+                                                                        type="button">
+
+                                                                        <span class="far fa-plus-circle"></span>
+                                                                        Aggiungi Carta
+
+                                                                    </button>
+
+                                                                </div>
+
                                                             </div>
+
                                                         </div>
+
+                                                    </div>
                                                         <div class="tab-pane fade" id="pills-2" role="tabpanel"
                                                             aria-labelledby="pills-tab-2" tabindex="0">
                                                             <div class="shop-checkout-form">
