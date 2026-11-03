@@ -58,6 +58,7 @@
         'num_contratto' => $numContratto,
         'tipo_servizio' => 'paga_oc3d',
         'tipo_richiesta' => $tipoRichiesta,
+        'selectedcard' => 'GOOGLEPAY',
 
         // Dati cliente
         'nome' => auth()->user()->name,
