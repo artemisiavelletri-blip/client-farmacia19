@@ -274,6 +274,9 @@
         #checkoutStep3 .wallet-btn:focus-visible { outline:3px solid #03a297; outline-offset:3px; }
         #checkoutStep3 .wallet-btn img { display:block; width:auto!important; height:70px!important; max-width:140px!important; object-fit:contain; }
         #checkoutStep3 .apple-pay-btn img { filter:brightness(0) invert(1); }
+        .payment .wallet-nav-item:has(.wallet-btn[style*="display: none"] + .wallet-btn[style*="display: none"]) {
+            display: none;
+        }
         @media(max-width:576px) {
             #checkoutStep3 .accordion-body { padding:16px 12px; }
             #checkoutStep3 .payment { gap:11px; }
