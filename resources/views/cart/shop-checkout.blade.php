@@ -1237,6 +1237,33 @@
             #pills-1 .f19-cards-header-text p { font-size: 12px !important; }
         }
 
+
+    /* FARMACIA19 - SOLO INDIRIZZO DI FATTURAZIONE */
+    #checkoutStep1 .f19-billing-card {
+        background: #f2fbfa; border: 1px solid #13b6ad; border-radius: 15px;
+        padding: 24px 28px; color: #142d46; width: 100%;
+    }
+    #checkoutStep1 .f19-billing-top { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; }
+    #checkoutStep1 .f19-billing-symbol { display: flex; align-items: center; justify-content: center; flex: 0 0 62px; height: 62px; border-radius: 14px; background: #def4f1; color: #009f96; font-size: 28px; }
+    #checkoutStep1 .f19-billing-identity { flex: 1; min-width: 0; }
+    #checkoutStep1 .f19-billing-identity h3 { font-size: 21px; font-weight: 700; color: #142d46; margin: 0; line-height: 1.35; }
+    #checkoutStep1 .f19-billing-company { font-size: 14px; margin-bottom: 5px; color: #008f87; font-weight: 600; }
+    #checkoutStep1 .f19-billing-edit { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 16px; border: 1px solid #009f96; border-radius: 11px; color: #008f87; background: #fff; font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+    #checkoutStep1 .f19-billing-edit:hover { background: #e6f7f4; color: #007d76; }
+    #checkoutStep1 .f19-billing-details { display: flex; flex-direction: column; }
+    #checkoutStep1 .f19-billing-row { display: flex; align-items: flex-start; gap: 16px; padding: 11px 2px; border-bottom: 1px solid #d6e9e7; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+    #checkoutStep1 .f19-billing-row:last-child { border-bottom: none; }
+    #checkoutStep1 .f19-billing-row > i { flex: 0 0 22px; color: #009f96; text-align: center; font-size: 17px; margin-top: 3px; }
+    #checkoutStep1 .f19-billing-row strong { color: #142d46; margin-right: 5px; }
+    @media (max-width: 767px) {
+        #checkoutStep1 .f19-billing-card { padding: 16px 14px; border-radius: 12px; }
+        #checkoutStep1 .f19-billing-top { gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+        #checkoutStep1 .f19-billing-symbol { flex-basis: 42px; height: 42px; font-size: 20px; border-radius: 10px; }
+        #checkoutStep1 .f19-billing-identity h3 { font-size: 16px; }
+        #checkoutStep1 .f19-billing-edit { margin-left: auto; padding: 8px 11px; font-size: 12px; }
+        #checkoutStep1 .f19-billing-row { font-size: 13px; gap: 10px; padding: 10px 0; }
+        #checkoutStep1 .f19-billing-row > i { flex-basis: 18px; font-size: 15px; }
+    }
     </style>
 
 @endsection
@@ -1278,31 +1305,35 @@
                                           </h2>
                                           <div id="checkoutStep1" class="accordion-collapse collapse" data-bs-parent="#shopCheckout">
                                             <div class="accordion-body">
-                                                <div class="row shop-checkout-form">
-                                                    <div class="col-8">
-                                                        @if($user->user_type)
-                                                            <b>Ragione Sociale: </b>{{$user->company_society}}<br>
+                                                <div class="f19-billing-card">
+                                                    <div class="f19-billing-top">
+                                                        <div class="f19-billing-symbol" aria-hidden="true"><i class="far fa-file-alt"></i></div>
+                                                        <div class="f19-billing-identity">
+                                                            @if($user->user_type)
+                                                                <div class="f19-billing-company">{{ $user->company_society }}</div>
+                                                            @endif
+                                                            <h3>{{ $user->name }} {{ $user->surname }}</h3>
+                                                        </div>
+                                                        <a class="f19-billing-edit" href="/settings/billing-address"><i class="fas fa-edit" aria-hidden="true"></i> Modifica</a>
+                                                    </div>
+                                                    <div class="f19-billing-details">
+                                                        <div class="f19-billing-row"><i class="fas fa-map-marker-alt" aria-hidden="true"></i><div><strong>Indirizzo:</strong> {{ $user->billingAddresses()->first()->address }}</div></div>
+                                                        @if($user->billingAddresses()->first()->note)
+                                                            <div class="f19-billing-row"><i class="far fa-sticky-note" aria-hidden="true"></i><div><strong>Note:</strong> {{ $user->billingAddresses()->first()->note }}</div></div>
                                                         @endif
-                                                        <b>Nome: </b>{{$user->name}}<br>
-                                                        <b>Cognome: </b>{{$user->surname}}<br>
-                                                        <b>Indirizzo: </b>{{$user->billingAddresses()->first()->address}}<br>
-                                                        <b>Note: </b>{{$user->billingAddresses()->first()->note}}<br>
-                                                        <b>CAP: </b>{{$user->billingAddresses()->first()->cap}}<br>
-                                                        <b>Città (Provincia): </b>{{$user->billingAddressesCity()->name . ' (' . $user->billingAddressesCity()->province . ')'}}<br>
-                                                        <b>Telefono: </b>{{$user->billingAddresses()->first()->phone}}<br>
+                                                        <div class="f19-billing-row"><i class="fas fa-building" aria-hidden="true"></i><div><strong>CAP:</strong> {{ $user->billingAddresses()->first()->cap }}</div></div>
+                                                        <div class="f19-billing-row"><i class="fas fa-map-marked-alt" aria-hidden="true"></i><div><strong>Città (Provincia):</strong> {{ $user->billingAddressesCity()->name }} ({{ $user->billingAddressesCity()->province }})</div></div>
+                                                        <div class="f19-billing-row"><i class="fas fa-phone-alt" aria-hidden="true"></i><div><strong>Telefono:</strong> {{ $user->billingAddresses()->first()->phone }}</div></div>
                                                         @if(!$user->user_type)
-                                                            <b>C.F.: </b>{{$user->cf}}<br>
+                                                            <div class="f19-billing-row"><i class="far fa-id-card" aria-hidden="true"></i><div><strong>C.F.:</strong> {{ $user->cf }}</div></div>
                                                         @else
-                                                            <b>C.F.: </b>{{$user->company_cf}}<br>
-                                                            <b>P.Iva: </b>{{$user->company_pi}}<br>
-                                                            <b>Pec: </b>{{$user->company_pec}}<br>
-                                                            <b>Codice SDI: </b>{{$user->company_sdi}}<br>
+                                                            <div class="f19-billing-row"><i class="far fa-id-card" aria-hidden="true"></i><div><strong>C.F.:</strong> {{ $user->company_cf }}</div></div>
+                                                            <div class="f19-billing-row"><i class="far fa-file-alt" aria-hidden="true"></i><div><strong>P.Iva:</strong> {{ $user->company_pi }}</div></div>
+                                                            <div class="f19-billing-row"><i class="far fa-envelope" aria-hidden="true"></i><div><strong>Pec:</strong> {{ $user->company_pec }}</div></div>
+                                                            <div class="f19-billing-row"><i class="fas fa-hashtag" aria-hidden="true"></i><div><strong>Codice SDI:</strong> {{ $user->company_sdi }}</div></div>
                                                         @endif
                                                     </div>
-                                                    <div class="col-4 align-right">
-                                                        <a href="/settings/billing-address"><i class="fas fa-edit"></i></a>
-                                                    </div>
-                                                </div> 
+                                                </div>
                                             </div>
                                           </div>
                                         </div>
