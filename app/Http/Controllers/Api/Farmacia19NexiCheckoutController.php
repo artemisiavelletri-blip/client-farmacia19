@@ -93,11 +93,18 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             'shipping_address' => ['required', 'integer'],
             'card_id' => ['nullable', 'integer'],
             'new_card' => ['nullable', 'boolean'],
+            'selectedcard' => ['nullable', 'in:GOOGLEPAY,APPLEPAY'],
         ]);
         $newCard = (bool) ($data['new_card'] ?? false);
         if ($newCard === isset($data['card_id'])) {
             throw ValidationException::withMessages([
                 'card_id' => ['Seleziona una carta salvata oppure una nuova carta.'],
+            ]);
+        }
+        $selectedcard = $data['selectedcard'] ?? null;
+        if ($selectedcard !== null && (!$newCard || isset($data['card_id']))) {
+            throw ValidationException::withMessages([
+                'selectedcard' => ['Il wallet richiede una nuova transazione PP senza carta salvata.'],
             ]);
         }
         $user = $request->user();
@@ -154,6 +161,7 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                 'payment_method_id' => $card?->id,
                 'tipo_richiesta' => $newCard ? 'PP' : 'PR',
                 'num_contratto' => $contract,
+                'selectedcard' => $selectedcard,
                 'amount_cents' => $amount,
                 'currency' => 'EUR',
                 'cart_hash' => $this->cartHash($user),
@@ -193,6 +201,9 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             'tipo_servizio' => 'paga_oc3d',
             'tipo_richiesta' => $attempt->tipo_richiesta,
         ];
+        if (in_array($attempt->selectedcard, ['GOOGLEPAY', 'APPLEPAY'], true)) {
+            $params['selectedcard'] = $attempt->selectedcard;
+        }
         $params['mac'] = sha1('codTrans=' . $params['codTrans']
             . 'divisa=' . $params['divisa'] . 'importo=' . $params['importo'] . $secret);
 
@@ -278,6 +289,7 @@ class Farmacia19NexiCheckoutController extends CheckoutController
                 return redirect()->route('farmacia19.nexi.app.return', ['codTrans' => $codTrans]);
             }
             if ($attempt->tipo_richiesta === 'PP'
+                && $attempt->selectedcard === null
                 && (string) $request->input('num_contratto') !== $attempt->num_contratto) {
                 abort(403, 'Contratto Nexi non valido.');
             }
@@ -476,7 +488,7 @@ class Farmacia19NexiCheckoutController extends CheckoutController
             }
             try {
                 Auth::setUser($user);
-                if ($attempt->tipo_richiesta === 'PP') {
+                if ($attempt->tipo_richiesta === 'PP' && $attempt->selectedcard === null) {
                     $card = PaymentMethod::withTrashed()
                         ->where('user_id', $user->id)
                         ->where('stripe_payment_method_id', $attempt->num_contratto)->first();
